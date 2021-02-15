@@ -1,5 +1,5 @@
 import firebaseInstance from "../config/firebase";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 //const list = []
 
@@ -9,26 +9,28 @@ import {useState} from "react";
 
 function Queries() {
 
-    const [list, setList] = useState([]);
+    const [list, setList] = useState(null);
 
 
-
-    function getData() {
+    useEffect(() => {
         try {
             const gamesCollection = firebaseInstance.firestore().collection("games")
             
+            let tempList = [];
+
             gamesCollection.where("year", "==", "1995").get()
             .then((querySnapshot) => {
                 querySnapshot.forEach(doc => {
                     console.log(doc.id, " => ", doc.data());
                     
-                    setList(
-                    ...[{
+                    tempList.push({
                         id: doc.id,
                         ...doc.data()
-                        }] 
-                    )
+                    })  
+                    
                 });
+
+                setList(tempList);
     
             })
             .catch(error => {
@@ -43,16 +45,51 @@ function Queries() {
                 error: error.message
             }
         }
+
+
+    }, [])
+    
+    
+    function getData() {
+        
         
     }
 
-    getData();
-   console.log(list);
+    function showItems() {
+       
+
+        console.log(list);
+    }
+   
+   //console.log(list);
+
+    function renderList() {
+        return(
+            <ul>
+                {list.forEach(item => {
+                    <li>{item.title}</li>
+                })} 
+
+            </ul>
+        )
+    }
+
+    //<p>{list[0].title}</p>
+    //<p>{list[1].title}</p>
+    //{list.forEach(item => {
+   //     return <li>{item.title}</li>
+    //})}
 
     return(
         <>
         <h1>Queries</h1>
-        
+        <button onClick={showItems}>Vis</button>
+        <p>{list[0].title}</p>
+        <p>{list[1].title}</p>
+        <ul>
+            
+        </ul>
+        {list !== null ? renderList() : <h2>null</h2>}
         </>
     )
 }
