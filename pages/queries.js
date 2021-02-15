@@ -1,22 +1,19 @@
 import firebaseInstance from "../config/firebase";
 import {useEffect, useState} from "react";
 
-//const list = []
-
-
-
-
 
 function Queries() {
 
     const [list, setList] = useState(null);
-
+    const [before, setBefore] = useState(null);
+    const [highRate, setHighRate] = useState(null);
 
     useEffect(() => {
         try {
             const gamesCollection = firebaseInstance.firestore().collection("games")
             
             let tempList = [];
+            let beforeList = []
 
             gamesCollection.where("year", "==", "1995").get()
             .then((querySnapshot) => {
@@ -36,9 +33,32 @@ function Queries() {
             .catch(error => {
                 console.log(error);
             })
-    
+
+
+            gamesCollection.where("year", ">", "1995").get()
+            .then((querySnapshot) => {
+                querySnapshot.forEach(doc => {
+                    console.log(doc.id, " => ", doc.data());
+                    
+                    beforeList.push({
+                        id: doc.id,
+                        ...doc.data()
+                    })  
+                    
+                });
             
-          
+                let filtered = beforeList.filter(item => {
+                    return (item.rating >= 7)
+                })
+
+               
+                setBefore(beforeList);
+                setHighRate(filtered);
+    
+            })
+            .catch(error => {
+                console.log(error);
+            })
     
         } catch (error) {
             return {
@@ -46,27 +66,32 @@ function Queries() {
             }
         }
 
-
     }, [])
     
-    
-    function getData() {
-        
-        
-    }
 
     function showItems() {
-       
-
         console.log(list);
+        console.log(before);
+        console.log(highRate);
     }
    
-   //console.log(list);
+    
+    const listItems = list.map(item => {
+        return (<li>{item.title + ": " + item.rating}</li>)
+    })
+
+    const beforeItems = before.map(item => {
+        return (<li>{item.title + ": " + item.rating}</li>)
+    })
+
+    const highRateItems = highRate.map(item => {
+        return (<li>{item.title + ": " + item.rating}</li>)
+    })
 
     function renderList() {
         return(
             <ul>
-                {list.forEach(item => {
+                {list.map(item => {
                     <li>{item.title}</li>
                 })} 
 
@@ -74,22 +99,27 @@ function Queries() {
         )
     }
 
-    //<p>{list[0].title}</p>
-    //<p>{list[1].title}</p>
-    //{list.forEach(item => {
-   //     return <li>{item.title}</li>
-    //})}
-
     return(
         <>
         <h1>Queries</h1>
         <button onClick={showItems}>Vis</button>
-        <p>{list[0].title}</p>
-        <p>{list[1].title}</p>
+        <h2>Kom ut i 1995</h2>
+        
         <ul>
-            
+            {listItems}
         </ul>
-        {list !== null ? renderList() : <h2>null</h2>}
+
+        <h2>Kom ut etter 1995</h2>
+        <ul>
+            {beforeItems}
+        </ul>
+
+        <h2>Kom ut etter 95, over 7 rating</h2>
+        <ul>
+            {highRateItems}
+        </ul>
+        
+        
         </>
     )
 }
