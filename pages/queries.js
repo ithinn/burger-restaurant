@@ -1,13 +1,77 @@
 import firebaseInstance from "../config/firebase";
+import {useState} from "react";
 
-function Queries( {list, data} ) {
+//const list = []
+
+
+
+
+
+function Queries() {
+
+    const [list, setList] = useState([]);
+
+
+
+    function getData() {
+        try {
+            const gamesCollection = firebaseInstance.firestore().collection("games")
+            
+            gamesCollection.where("year", "==", "1995").get()
+            .then((querySnapshot) => {
+                querySnapshot.forEach(doc => {
+                    console.log(doc.id, " => ", doc.data());
+                    
+                    setList(
+                    ...[{
+                        id: doc.id,
+                        ...doc.data()
+                        }] 
+                    )
+                });
+    
+            })
+            .catch(error => {
+                console.log(error);
+            })
+    
+            
+          
+    
+        } catch (error) {
+            return {
+                error: error.message
+            }
+        }
+        
+    }
+
+    getData();
+   console.log(list);
+
+    return(
+        <>
+        <h1>Queries</h1>
+        
+        </>
+    )
+}
+
+export default Queries
+
+/*
+function Queries( {list, data1} ) {
+
+    const [data, useData] = useState(null);
+
+    function renderList() {
     try {
         const gamesCollection = firebaseInstance.firestore().collection("games");
         const gamesData = gamesCollection.get();
     
         list = [];
-    
-        const datarfsddf = gamesCollection.where("year", "==", "1995")
+        
+        const data1 = gamesCollection.where("year", "==", "1995")
             .get()
             .then((querySnapshot) => {
                 querySnapshot.forEach((doc) => {
@@ -26,25 +90,34 @@ function Queries( {list, data} ) {
                 console.log("Error getting documents: ", error)
             }); 
         
-        return { list };
+            setData(list);
+
+        return(
+        <ul>
+            {list.forEach(game => {
+                 return <li>game</li>
+            })}
+            </ul>
+        ) ;
     
         }catch (error) {
             return {
                 error: error.message
             };
         }
-
-    console.log(data);
+    }    
+    
+    
     return(
         <>
         <h1>Query</h1>
-      
+        {renderList()}
         </>
     )
 }
 
 export default Queries;
-
+*/
 //Queries.initialProps = async () => {
    /* try {
     const gamesCollection = await firebaseInstance.firestore().collection("games");
