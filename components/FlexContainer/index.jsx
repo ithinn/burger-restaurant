@@ -7,6 +7,7 @@ const FlexBase = styled.article`
     justify-content: ${props => props.justify};
     align-items: ${props => props.align};
     display: flex;
+    
 `
 
 function FlexContainer({flexWidth, flexHeight, direction, justify, align, children}) {

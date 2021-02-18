@@ -7,6 +7,7 @@ const ButtonBase = styled.button`
     background: ${props => props.btnColor};
     padding: .7em;
     text-transform: uppercase;
+    margin: 2em;
     &:hover {
         background: rgba(0, 0, 0, .5);
         color: white;
