@@ -13,7 +13,7 @@ function AddGame() {
     const [title, setTitle] = useState(null)
     const [rating, setRating] = useState(null)
     const [year, setYear] = useState(null)
-
+    const [company, setCompany] = useState(null)
 
     function handleSubmit(event) {
         event.preventDefault();
@@ -24,7 +24,8 @@ function AddGame() {
         collection.doc().set({
             rating: rating,
             title: title,
-            year: year
+            year: year,
+            company: company
         })
         .then(() => {
             console.log("lagt til")
@@ -47,6 +48,10 @@ function AddGame() {
     function handleYearChange(event) {
         console.log(event.target.value);
         setYear(event.target.value)
+    }
+    function handleCompanyChange(event) {
+        console.log(event.target.value);
+        setCompany(event.target.value)
     }
 
     return(
@@ -82,8 +87,15 @@ function AddGame() {
                     labelText="Utgivelsesår"
                     inputChangeHandler={event => handleYearChange(event)}
                 />
+                <InputBlock
+                    inputName="company"
+                    inputId="company"
+                    inputType="text"
+                    labelText="Selskap"
+                    inputChangeHandler={event => handleCompanyChange(event)}
+                />
 
-                <button type="submit">Send inn</button>
+                <button type="submit" >Send inn</button>
 
             </form>
         </main>

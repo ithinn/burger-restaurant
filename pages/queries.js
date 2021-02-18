@@ -1,7 +1,7 @@
 import firebaseInstance from "../config/firebase";
 import {useEffect, useState} from "react";
 
-
+//Dette virker på en måte
 function Queries() {
 
     const [list, setList] = useState(null);
@@ -11,7 +11,6 @@ function Queries() {
     useEffect(() => {
         try {
             const gamesCollection = firebaseInstance.firestore().collection("games")
-            
             let tempList = [];
             let beforeList = []
 
@@ -75,56 +74,91 @@ function Queries() {
         console.log(highRate);
     }
    
-    
-    const listItems = list.map(item => {
-        return (<li>{item.title + ": " + item.rating}</li>)
-    })
-
-    const beforeItems = before.map(item => {
-        return (<li>{item.title + ": " + item.rating}</li>)
-    })
-
-    const highRateItems = highRate.map(item => {
-        return (<li>{item.title + ": " + item.rating}</li>)
-    })
-
-    function renderList() {
-        return(
-            <ul>
-                {list.map(item => {
-                    <li>{item.title}</li>
-                })} 
-
-            </ul>
-        )
-    }
-
+ 
     return(
         <>
-        <h1>Queries</h1>
-        <button onClick={showItems}>Vis</button>
-        <h2>Kom ut i 1995</h2>
-        
-        <ul>
-            {listItems}
-        </ul>
+            <h1>Queries</h1>
+            <button onClick={showItems}>Vis</button>
+            <h2>Kom ut i 1995</h2>
+            <ul>
+                {list !== null && (list.map(item => {
+                    return (<li>{item.title + ": " + item.rating}</li>)
+                }))}
+            </ul>
 
-        <h2>Kom ut etter 1995</h2>
-        <ul>
-            {beforeItems}
-        </ul>
+            <h2>Kom ut etter 1995</h2>
+            <ul>
+                {before !== null && (before.map(item => {
+                    return (<li>{item.title + ": " + item.rating}</li>)
+                }))}
+            </ul>
 
-        <h2>Kom ut etter 95, over 7 rating</h2>
-        <ul>
-            {highRateItems}
-        </ul>
-        
-        
+            <h2>Kom ut etter 95, over 7 rating</h2>
+            <ul>
+                {highRate !== null && (highRate.map(item => {
+                    return (<li>{item.title + ": " + item.rating}</li>)
+                }))}
+            </ul>
         </>
     )
 }
 
 export default Queries
+
+/*  <ul>
+            {listItems}
+        </ul>
+
+        
+        <ul>
+            {beforeItems}
+        </ul>
+
+        
+        <ul>
+            {highRateItems}
+        </ul>
+        */ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /*
 function Queries( {list, data1} ) {

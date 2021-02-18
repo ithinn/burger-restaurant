@@ -43,19 +43,6 @@ GamesList.getInitialProps = async () => {
             );
         });
         
-        const query = gamesData.where("year", "==", "1995")
-        .get()
-        .then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-                console.log(doc.id, "=>", doc.data());
-            })
-        })
-        .catch(error => {
-            console.log("Error getting documents: ", error)
-        }); 
-
-
-
         return { games };
         
     }catch (error) {
