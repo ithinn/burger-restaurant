@@ -4,7 +4,7 @@ import FlexContainer from "../FlexContainer";
 const InvisibleInput = styled.input`
     width: 1px;
     height: 1px;
-    display: inline-block;
+   
     :focus ~ label {
         background-color: purple;
     }
@@ -15,10 +15,8 @@ const LabelAsButton = styled.label`
     border: 1px solid black;
     padding: .5em;
     margin: .2em;
-    :focus {
-        border: 3px solid red;
-    }
-    display: inline;
+  
+
 
 `
 

@@ -14,12 +14,15 @@ const ButtonBase = styled.button`
     }
 `
 
-function Button( {type, btnColor, txtColor, children} ) {
+function Button( {type, btnColor, txtColor, children, id} ) {
     return(
+        
         <ButtonBase 
+            id={id}
             type={type}
             btnColor={btnColor} 
-            txtColor={txtColor}> {children} </ButtonBase>
+            txtColor={txtColor}> {children} </ButtonBase> 
+        
     )
 }
 

@@ -22,6 +22,7 @@ function User( {food} ) {
     function handleSubmit(event) {
         event.preventDefault();
         console.log(burger, burgerSize, drink, drinkSize, sides, sidesSize, bread)
+        
         const collection = firebaseInstance.firestore().collection("orders");
         collection.doc().set({
             bread: bread,
@@ -30,7 +31,10 @@ function User( {food} ) {
             sideDish: sides,
             sideDishSize: sidesSize,
             drink: drink,
-            drinkSize: drinkSize
+            drinkSize: drinkSize,
+            orderNumber: 300,
+            userNumber: 200,
+            state: "pending"
 
         })
         .then(() => {
