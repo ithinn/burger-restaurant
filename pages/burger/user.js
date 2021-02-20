@@ -6,11 +6,12 @@ import readCollection from "../database/readCollection";
 import Select from "../../components/Select";
 import FlexContainer from "../../components/FlexContainer";
 import Button from "../../components/Button";
-import {useState} from "react"
+import {useEffect, useState} from "react"
 import RadioInput from "../../components/RadioInput";
 import firebaseInstance from "firebase";
 
-function User( {food} ) {
+function User( {food, orders} ) {
+    
     const [burger, setBurger] = useState(null);
     const [burgerSize, setBurgerSize] = useState(null);
     const [drink, setDrink] = useState(null);
@@ -18,13 +19,45 @@ function User( {food} ) {
     const [bread, setBread] = useState(null);
     const [sides, setSides] = useState(null);
     const [sidesSize, setSidesSize] = useState(null);
-    
+    const [userNumber, setUserNumber] = useState(201)
+    const [orderNumber, setOrderNumber] = useState(null);
+    const [order, setOrder] = useState([{
+        userNumber: userNumber,
+        orderNumber: orderNumber,
+        state: 1
+    }])
+    useEffect(() => {
+        setOrderNumber(orders.length + 1 );
+    }, [])
+
+    function handleAdd(event) {
+        console.log(event.target);
+        let test = {
+            bread: bread,
+                burgerType: burger,
+                burgerSize: burgerSize,
+                sideDish: sides,
+                sideDishSize: sidesSize,
+                drink: drink,
+                drinkSize: drinkSize,
+        }
+        
+        setOrder(prev => {
+            [...prev, test]
+        })
+        console.log(order);
+    }
+
+    console.log(order);
+     
     function handleSubmit(event) {
         event.preventDefault();
-        console.log(burger, burgerSize, drink, drinkSize, sides, sidesSize, bread)
+        //console.log(orders);
+       
+        //console.log(burger, burgerSize, drink, drinkSize, sides, sidesSize, bread, userNumber, orderNumber)
         
         const collection = firebaseInstance.firestore().collection("orders");
-        collection.doc().set({
+        collection.doc("testtest").set({
             bread: bread,
             burgerType: burger,
             burgerSize: burgerSize,
@@ -32,9 +65,9 @@ function User( {food} ) {
             sideDishSize: sidesSize,
             drink: drink,
             drinkSize: drinkSize,
-            orderNumber: 300,
-            userNumber: 200,
-            state: "pending"
+            orderNumber: orderNumber,
+            userNumber: userNumber,
+            state: 1
 
         })
         .then(() => {
@@ -46,7 +79,7 @@ function User( {food} ) {
         })
 
     }
-    console.log(food);
+    //console.log(food);
 
     let menu2 = food.map(category => {
         return(
@@ -72,35 +105,6 @@ function User( {food} ) {
     })
 
 
-/*
-
-    let menu = food.map(item => {
-        return (
-            <>
-        <FlexContainer flexWidth="20em" justify="space-around">
-        <Select handleChange={event => handleChange(event)} key={item.id} inputId={item.id} labelText={item.id}>
-            
-
-
-            {item.type.map(el => {
-                return(<option value={el}>{el}</option>)
-            })}
-             
-         </Select>
-  
-         <Select key={item.id + "size"} inputId={item.id + "size"} labelText="Velg størrelse">
- 
-         {item.sizes.map(el => {
-         return(<option value={el}>{el}</option>)
-         })}
- 
-         </Select>
-        </FlexContainer>
-        </>
-        )
-
-
-    })*/
 
     function handleChange(event) {
         console.log(event.target);
@@ -144,12 +148,21 @@ function User( {food} ) {
             
             <form onSubmit={event => handleSubmit(event)}>
             {menu2}
+
+            
             
             <Button
                 type="submit"
                 btnColor="green"
                 txtColor="white"> Send bestilling </Button>
             </form>
+
+            <Button
+                onClick={event => handleAdd(event)}
+                btnColor="blue"
+                txtColor="white">
+                    Legg til i bestilling
+            </Button>
            
 
        
@@ -168,7 +181,8 @@ export default User;
 User.getInitialProps = async () => {
     try {
         const food = await readCollection("food")
-        return { food }
+        const orders = await readCollection("orders")
+        return { food, orders }
     }
     catch (error) {
         return {

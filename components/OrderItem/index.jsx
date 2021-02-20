@@ -3,13 +3,23 @@ import Checkbox from "../Checkbox";
 import Button from "../Button";
 import FlexContainer from "../FlexContainer";
 import ListItem from "../ListItem";
-import {useRef} from "react"
-
 
 
 function OrderItem( {data} ) {
 
-   
+    let buttonClr;
+    let buttonInnerText;
+
+    if (data.state === 1) {
+        buttonClr = "red";
+        buttonInnerText = "Klar til henting"
+    } else if ( data.state === 2) {
+        buttonClr = "yellow";
+        buttonInnerText = "Hentet"
+    } else {
+        buttonClr = "green";
+        buttonInnerText = "Fullført"
+    }
 
     return(
         <>
@@ -18,7 +28,7 @@ function OrderItem( {data} ) {
         <FlexContainer flexWidth="100%" flexHeight="auto" direction="row" justify="space-between" align="center">
             <ul>
                 <ListItem>
-                    <Checkbox className="orderCheckbox" labelText={data.burger + ", " + data.burgerSize}/>
+                    <Checkbox className="orderCheckbox" labelText={data.burgerType + ", " + data.burgerSize}/>
                 </ListItem>
 
                 <ListItem>
@@ -26,7 +36,7 @@ function OrderItem( {data} ) {
                 </ListItem>
 
                 <ListItem>
-                    <Checkbox className="orderCheckbox" labelText={data.side + ", " + data.sideSize}/>
+                    <Checkbox className="orderCheckbox" labelText={data.sideDish + ", " + data.sideDishSize}/>
                 </ListItem>
 
                 <ListItem>
@@ -35,8 +45,9 @@ function OrderItem( {data} ) {
 
             </ul>
 
-            <Button id={data.orderNumber} btnColor={data.state === "pending" ? "red" : "yellow"} txtColor="black" type="submit" >
-                {data.state === "pending" ? "Klar til henting" : "Hentet" }</Button>
+            <Button id={data.orderNumber} btnColor={buttonClr} txtColor="black" type="submit" >
+                {buttonInnerText}
+            </Button>
             
         </FlexContainer>
     

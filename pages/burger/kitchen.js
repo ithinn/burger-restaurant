@@ -9,44 +9,17 @@ function Kitchen( {labelText, orderData} ) {
     console.log(orderData);
 
     const [button, setButton] = useState(1)
-    const [orderList, setOrderList] = useState([
-        {
-            burger: "storfe",
-            burgerSize: "500g",
-            bread: "grovt",
-            drink: "Sprite",
-            drinkSize: "500ml",
-            side: "Pommes Frites",
-            sideSize: "300g",
-            orderNumber: 300,
-            userNumber: 101,
-            state: "pending"
-        },
-        {
-            burger: "fisk",
-            burgerSize: "200g",
-            bread: "grovt",
-            drink: "Fanta",
-            drinkSize: "250ml",
-            side: "Salat",
-            sideSize: "300g",
-            orderNumber: 301,
-            userNumber: 120,
-            state: "pending"
-        }
-    ])
-//Hent alle bestillinger med status "pending"
-//Lagre dem i state(?)
-//Map ut ett order-item for hvert - send inn state som props til labelText og andre detaljer
+    const [orderList, setOrderList] = useState(orderData);
+
 let index;
+
     function handleSubmit(event) {
         event.preventDefault();
    
         const formNum = Number(event.target.id.replace(/\D/g,''))
-        
-
+        console.log(formNum);
         orderList.forEach(order => {
-     
+            console.log(order);
             if (order.orderNumber === formNum) {
                 index = orderList.indexOf(order);
             }
@@ -54,10 +27,9 @@ let index;
 
 
         let newArr = [...orderList];
-        newArr[index].state = "pending" ? "kitchen" : "completed"
 
-        console.log(newArr);
-       
+        newArr[index].state = newArr[index].state === 1 ? 2 : 3
+ 
         setOrderList(newArr);
  
         
@@ -75,7 +47,7 @@ let index;
                 method="GET"
                 onSubmit={event => handleSubmit(event)}
                 >
-                <OrderItem data={order} state={order.state} buttonState={button}/>
+                <OrderItem data={order}/>
             </form>
             
         )
