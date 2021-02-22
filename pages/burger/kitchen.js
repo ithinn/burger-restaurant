@@ -3,15 +3,17 @@ import OrderItem from "../../components/OrderItem"
 import { useState } from "react";
 import firebase from "../../config/firebase";
 import readCollection from "../database/readCollection";
+import Button from "../../components/Button";
 
 function Kitchen( {labelText, orderData} ) {
 
     console.log(orderData);
 
-    const [button, setButton] = useState(1)
+    //const [button, setButton] = useState(1)
     const [orderList, setOrderList] = useState(orderData);
 
-let index;
+    let index;
+
 
     function handleSubmit(event) {
         event.preventDefault();
@@ -39,6 +41,7 @@ let index;
     }
 
     const orders = orderList.map(order => {
+        console.log(order.order)
         return(
             <form
                 name={"form" + order.orderNumber}
@@ -47,7 +50,9 @@ let index;
                 method="GET"
                 onSubmit={event => handleSubmit(event)}
                 >
-                <OrderItem data={order}/>
+
+               <OrderItem data={order}></OrderItem>
+               
             </form>
             
         )

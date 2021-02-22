@@ -15,11 +15,12 @@ const ButtonBase = styled.button`
 `
 
 function Button( {type, btnColor, txtColor, children, id, onClick} ) {
+ 
     return(
         
         <ButtonBase 
             id={id}
-            onClick={event => onClick(event)}
+            onClick={onClick !== undefined ? () => onClick() : null}
             type={type}
             btnColor={btnColor} 
             txtColor={txtColor}> {children} </ButtonBase> 

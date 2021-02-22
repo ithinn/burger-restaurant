@@ -24,41 +24,51 @@ function User( {food, orders} ) {
     const [order, setOrder] = useState([{
         userNumber: userNumber,
         orderNumber: orderNumber,
-        state: 1
+        state: 1,
+        
     }])
     useEffect(() => {
         setOrderNumber(orders.length + 1 );
+        
     }, [])
 
-    function handleAdd(event) {
-        console.log(event.target);
-        let test = {
+    function resetState() {
+        setBread(null);
+        setDrink(null);
+        setBurgerSize(null);
+        setSides(null);
+        setSidesSize(null);
+        setDrinkSize(null);
+        setBurger(null);
+    }
+
+    function handleAdd() {
+        console.log("handleAdd")
+
+        let newOrder = {
             bread: bread,
-                burgerType: burger,
-                burgerSize: burgerSize,
-                sideDish: sides,
-                sideDishSize: sidesSize,
-                drink: drink,
-                drinkSize: drinkSize,
+            burgerType: burger,
+            burgerSize: burgerSize,
+            sideDish: sides,
+            sideDishSize: sidesSize,
+            drink: drink,
+            drinkSize: drinkSize,
         }
-        
-        setOrder(prev => {
-            [...prev, test]
-        })
+
+        setOrder(searches => [...searches, newOrder])
+        resetState();
+ 
         console.log(order);
     }
 
-    console.log(order);
-     
+    console.log(order)
+
     function handleSubmit(event) {
         event.preventDefault();
-        //console.log(orders);
-       
-        //console.log(burger, burgerSize, drink, drinkSize, sides, sidesSize, bread, userNumber, orderNumber)
-        
+  
         const collection = firebaseInstance.firestore().collection("orders");
-        collection.doc("testtest").set({
-            bread: bread,
+        collection.doc().set({
+            /*bread: bread,
             burgerType: burger,
             burgerSize: burgerSize,
             sideDish: sides,
@@ -67,11 +77,19 @@ function User( {food, orders} ) {
             drinkSize: drinkSize,
             orderNumber: orderNumber,
             userNumber: userNumber,
-            state: 1
+            state: 1*/
+            order: order
 
         })
         .then(() => {
             console.log("lagt til")
+            setOrder([{
+                userNumber: userNumber,
+                orderNumber: orderNumber,
+                state: 1,
+                
+            }]);
+            resetState();
             //State - endre grensesnittet - melding. Eller send dem til en annen side. 
         })
         .catch(error => {
@@ -158,7 +176,7 @@ function User( {food, orders} ) {
             </form>
 
             <Button
-                onClick={event => handleAdd(event)}
+                onClick={() => handleAdd()}
                 btnColor="blue"
                 txtColor="white">
                     Legg til i bestilling
