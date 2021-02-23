@@ -6,7 +6,7 @@ import ListItem from "../ListItem";
 
 
 function OrderItem( {data} ) {
-    console.log(data.order);
+    
 
     let buttonClr;
     let buttonInnerText;
@@ -31,7 +31,7 @@ function OrderItem( {data} ) {
 
     }
 
-    console.log(tempList);
+    //console.log(tempList);
 
     //console.log(orderList);
 
@@ -75,8 +75,8 @@ function OrderItem( {data} ) {
         </>
     )*/
     return(<>
-    <h3>Bestilling</h3>
-    <FlexContainer flexWidth="100%" flexHeight="auto" direction="row" justify="space-between" align="center">
+    <h3>{"Bestilling" + " " + data.order[0].orderNumber}</h3>
+    <FlexContainer border="1px solid black" flexWidth="100%" flexHeight="auto" direction="row" justify="space-between" align="center">
             
          
     

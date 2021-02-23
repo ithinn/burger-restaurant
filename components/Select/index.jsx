@@ -7,7 +7,7 @@ function Select( {children, labelText, inputId, handleChange} ) {
     return(
         <div>
         <Label htmlFor={inputId}>{labelText}</Label>
-        <select name={inputId} id={inputId} onChange={event => handleChange(event)}> {children} </select>
+        <select required name={inputId} id={inputId} onChange={event => handleChange(event)}> {children} </select>
         </div>
 
     )

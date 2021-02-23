@@ -1,7 +1,6 @@
 
 import Layout from "../../components/Layout";
 import Login from "../../components/Login";
-import Register from "../../components/Register";
 import readCollection from "../database/readCollection";
 import Select from "../../components/Select";
 import FlexContainer from "../../components/FlexContainer";
@@ -20,17 +19,20 @@ function User( {food, orders} ) {
     const [sides, setSides] = useState(null);
     const [sidesSize, setSidesSize] = useState(null);
     const [userNumber, setUserNumber] = useState(201)
-    const [orderNumber, setOrderNumber] = useState(null);
+    const [orderNumber, setOrderNumber] = useState(orders.length + 1);
     const [order, setOrder] = useState([{
         userNumber: userNumber,
         orderNumber: orderNumber,
-        state: 1,
-        
+        state: 1,    
     }])
+
+    console.log(orderNumber);
+    console.log(orders.length);
+    /*
     useEffect(() => {
         setOrderNumber(orders.length + 1 );
-        
-    }, [])
+     
+    }, [])*/
 
     function resetState() {
         setBread(null);
@@ -55,37 +57,33 @@ function User( {food, orders} ) {
             drinkSize: drinkSize,
         }
 
+        setOrderNumber(orders.length + 1);
+        console.log(orderNumber);
+     
         setOrder(searches => [...searches, newOrder])
         resetState();
- 
-        console.log(order);
+        
     }
 
-    console.log(order)
+
 
     function handleSubmit(event) {
         event.preventDefault();
-  
+        
+       
         const collection = firebaseInstance.firestore().collection("orders");
+        
         collection.doc().set({
-            /*bread: bread,
-            burgerType: burger,
-            burgerSize: burgerSize,
-            sideDish: sides,
-            sideDishSize: sidesSize,
-            drink: drink,
-            drinkSize: drinkSize,
-            orderNumber: orderNumber,
-            userNumber: userNumber,
-            state: 1*/
+            
             order: order
 
         })
         .then(() => {
             console.log("lagt til")
+            
             setOrder([{
                 userNumber: userNumber,
-                orderNumber: orderNumber,
+                orderNumber: orderNumber +1,
                 state: 1,
                 
             }]);
@@ -100,6 +98,7 @@ function User( {food, orders} ) {
     //console.log(food);
 
     let menu2 = food.map(category => {
+       // console.log(category.type);
         return(
             <>
             <h3>{category.id}</h3>
@@ -109,10 +108,12 @@ function User( {food, orders} ) {
                 })}
 
                 {category.sizes !== undefined ?
-                <Select handleChange={event => handleChange(event)} key={category.id + "size"} inputId={category.id + "size"} labelText="Velg størrelse">
+                <Select requiredCondition={category.type} handleChange={event => handleChange(event)} key={category.id + "size"} inputId={category.id + "size"} labelText="Velg størrelse">
  
-                {category.sizes.map(el => {
-                return(<option value={el}>{el}</option>)
+                {category.sizes.map((el, index) => {
+                return(
+                
+                index === 1 ? <option selected value={el}>{el}</option> : <option value={el}>{el}</option> )
                 })}
 
                 </Select> : null}
