@@ -20,7 +20,7 @@ function AddUser({ handleSubmit, users }) {
     const [password, setPassword] = useState(null);
     const [userNumber, setUserNumber] = useState(null);
     const [added, setAdded] = useState(false);
-
+    const [isRegistered, setIsRegistered] = useState(false);
 
     function generateUserNumber() {
   
@@ -46,10 +46,26 @@ function AddUser({ handleSubmit, users }) {
 
     function handleSubmit(event) {
         event.preventDefault();
-        generateUserNumber();
 
-        console.log(name, email, city, userNumber);
+        firebaseInstance.auth().createUserWithEmailAndPassword(email, password)
+            .then((userCredential) => {
+                //Signed in
+                let user = userCredential.user;
+                setIsRegistered(true);
+                console.log(user);
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+            });
 
+
+
+
+       // generateUserNumber();
+
+        //console.log(name, email, city, userNumber);
+/*
         const collection = firebaseInstance.firestore().collection("users");
         collection.doc().set({
             adress: adress,
@@ -69,7 +85,7 @@ function AddUser({ handleSubmit, users }) {
         })
         .catch(error => {
             console.error(error)
-        })
+        })*/
    
     }
     
@@ -108,30 +124,23 @@ function AddUser({ handleSubmit, users }) {
             )}/>
 
 */ 
-
-
-    return(
-        <Layout>
-       
-
+    function renderForm() {
+        return( 
         <LoginBase>
             <h3>Registrer deg</h3>
             <form 
                 onSubmit={event => handleSubmit(event)}
                 name="add-user"
                 action="/"
-                method="GET"
+                method="post"
                 id="addUser"
                             >
             <Input inputType="email" inputId="mailInp" labelText="Epost (brukernavn): " inputChangeHandler={event => handleChange(event)} ></Input>
-            <Input inputType="text" inputId="nameInp" labelText="Navn: " inputChangeHandler={event => handleChange(event)}></Input>
+            <Input inputType="password" inputId="passwordInp" labelText="Passord: " inputChangeHandler={event => handleChange(event)}></Input>
             <Input inputType="text" inputId="adressInp" labelText="Adresse: " inputChangeHandler={event => handleChange(event)}></Input>
             <Input inputType="number" inputId="zipInp" labelText="Postnummer: " inputChangeHandler={event => handleChange(event)}></Input>
             <Input inputType="text" inputId="cityInp" labelText="Sted: " inputChangeHandler={event => handleChange(event)}></Input>
             <Input inputType="number" inputId="phoneInp" labelText="Telefonnummer: " inputChangeHandler={event => handleChange(event)}></Input>
-            <Input inputType="password" inputId="passwordInp" labelText="Passord: " inputChangeHandler={event => handleChange(event)}></Input>
-            <Input inputType="password" inputId="passwordValidate" labelText="Bekreft passord: " ></Input>
-            
             <Button type="submit" btnColor="blue" txtColor="white">Logg inn</Button>
             </form>
 
@@ -143,6 +152,30 @@ function AddUser({ handleSubmit, users }) {
             </Link>
 
         </LoginBase>
+        )
+    }
+
+    function renderRegistered() {
+        return(
+            <LoginBase>
+                <h3>Du er registrert</h3>
+                <Link href="/burger/user">
+                    <a>Til login-siden</a>
+                </Link>
+            </LoginBase>
+        )
+    }
+console.log(isRegistered);
+
+    return(
+        <Layout>
+       
+       
+       
+        {isRegistered ? renderRegistered() : renderForm()}
+        
+     
+       
         </Layout>
     )
 }
@@ -174,4 +207,10 @@ import { Route, Redirect } from 'react-router'
     <PublicHomePage/>
   )
 )}/>
+
+ <Input inputType="text" inputId="nameInp" labelText="Navn: " inputChangeHandler={event => handleChange(event)}></Input>
+            <Input inputType="text" inputId="adressInp" labelText="Adresse: " inputChangeHandler={event => handleChange(event)}></Input>
+            <Input inputType="number" inputId="zipInp" labelText="Postnummer: " inputChangeHandler={event => handleChange(event)}></Input>
+            <Input inputType="text" inputId="cityInp" labelText="Sted: " inputChangeHandler={event => handleChange(event)}></Input>
+            <Input inputType="number" inputId="phoneInp" labelText="Telefonnummer: " inputChangeHandler={event => handleChange(event)}></Input>
 */ 

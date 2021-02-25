@@ -1,6 +1,5 @@
 
 import Layout from "../../components/Layout";
-import Login from "../../components/Login";
 import readCollection from "../database/readCollection";
 import Select from "../../components/Select";
 import FlexContainer from "../../components/FlexContainer";
@@ -9,8 +8,9 @@ import {useEffect, useState} from "react"
 import RadioInput from "../../components/RadioInput";
 import firebaseInstance from "firebase";
 
+
 function User( {food, orders} ) {
-    
+
     const [burger, setBurger] = useState(null);
     const [burgerSize, setBurgerSize] = useState(null);
     const [drink, setDrink] = useState(null);
@@ -18,22 +18,29 @@ function User( {food, orders} ) {
     const [bread, setBread] = useState(null);
     const [sides, setSides] = useState(null);
     const [sidesSize, setSidesSize] = useState(null);
-    const [userNumber, setUserNumber] = useState(201)
-    const [orderNumber, setOrderNumber] = useState(orders.length + 1);
-    const [order, setOrder] = useState([{
-        userNumber: userNumber,
-        orderNumber: orderNumber,
-        state: 1,    
-    }])
-
-    console.log(orderNumber);
-    console.log(orders.length);
-    /*
+    const [userId, setUserId] = useState(null)
+    const [orderNumber, setOrderNumber] = useState();
+    const [order, setOrder] = useState(null)
+    const [orderList, setOrderList] = useState(orders.length)
+    const [userHasOrdered, setUserHasOrdered] = useState(false);
+    
+    //Get userId from Auth
     useEffect(() => {
-        setOrderNumber(orders.length + 1 );
-     
-    }, [])*/
+        firebaseInstance.auth().onAuthStateChanged((user) => {
+            if (user) {
+                //User is signed in
+                let uid = user.uid
+              
+                setUserId(uid);
+            } else {
+                console.log(user + "is signed out")
+            }
+        })
 
+        setOrderNumber(orderList + 1);
+    }, [order, resetState]);
+
+    
     function resetState() {
         setBread(null);
         setDrink(null);
@@ -43,9 +50,25 @@ function User( {food, orders} ) {
         setDrinkSize(null);
         setBurger(null);
     }
-
+    
     function handleAdd() {
-        console.log("handleAdd")
+        console.log("added to order");
+ 
+        let fullOrder = 
+        [{
+            userId: userId,
+            orderNumber: orderNumber,
+            state: 1   
+        },
+        {
+            bread: bread,
+            burgerType: burger,
+            burgerSize: burgerSize,
+            sideDish: sides,
+            sideDishSize: sidesSize,
+            drink: drink,
+            drinkSize: drinkSize,
+        }]
 
         let newOrder = {
             bread: bread,
@@ -57,20 +80,15 @@ function User( {food, orders} ) {
             drinkSize: drinkSize,
         }
 
-        setOrderNumber(orders.length + 1);
-        console.log(orderNumber);
-     
-        setOrder(searches => [...searches, newOrder])
-        resetState();
-        
-    }
+        order === null ? setOrder(fullOrder) : setOrder(prev => [...prev, newOrder]) ;
 
+        resetState();
+    }
 
 
     function handleSubmit(event) {
         event.preventDefault();
         
-       
         const collection = firebaseInstance.firestore().collection("orders");
         
         collection.doc().set({
@@ -81,24 +99,20 @@ function User( {food, orders} ) {
         .then(() => {
             console.log("lagt til")
             
-            setOrder([{
-                userNumber: userNumber,
-                orderNumber: orderNumber +1,
-                state: 1,
-                
-            }]);
             resetState();
-            //State - endre grensesnittet - melding. Eller send dem til en annen side. 
+            setOrder(null);
+            setOrderList(orderList + 1);
+            setUserHasOrdered(true);
+    
         })
         .catch(error => {
             console.error(error)
         })
 
     }
-    //console.log(food);
 
-    let menu2 = food.map(category => {
-       // console.log(category.type);
+    let menu = food.map(category => {
+      
         return(
             <>
             <h3>{category.id}</h3>
@@ -124,9 +138,20 @@ function User( {food, orders} ) {
     })
 
 
+    export function handleSignOutClick() {
+        firebaseInstance.auth().signOut().then(() => {
+           
+            console.log("is signed out")
+          }).catch((error) => {
+            console.log(error);
+          });
+
+        setUserHasOrdered(false);  
+    }
+
+
 
     function handleChange(event) {
-        console.log(event.target);
         switch( event.target.name) {
             case "burgers":
                 setBurger(event.target.id);
@@ -153,23 +178,17 @@ function User( {food, orders} ) {
                 setSidesSize(event.target.value);
                 break;
         }
-
-
     }
-/*
-    */
 
-    return(
-        <>
-        <Layout user>
 
-            <h2>Du kan bestille:</h2>
+    function renderPlaceYourOrder() {
+        return(
+            <>
+                <h2>Du kan bestille:</h2>
             
             <form onSubmit={event => handleSubmit(event)}>
-            {menu2}
+            {menu}
 
-            
-            
             <Button
                 type="submit"
                 btnColor="green"
@@ -182,12 +201,22 @@ function User( {food, orders} ) {
                 txtColor="white">
                     Legg til i bestilling
             </Button>
-           
+            </>
+        )
+    }
 
-       
-       
-            <Login/>
+    return(
+        <>
+        <Layout user>
+    
+        {renderPlaceYourOrder() }   
 
+            <Button
+                id="signOutBtn"
+                onClick={() => handleSignOutClick()}
+                btnColor="purple"
+                txtColor="white"
+            >Logg ut</Button>
     
         </Layout>
         </>
@@ -195,6 +224,7 @@ function User( {food, orders} ) {
 }
 
 export default User;
+
 
 
 User.getInitialProps = async () => {

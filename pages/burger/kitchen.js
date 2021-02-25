@@ -1,17 +1,25 @@
 import Layout from "../../components/Layout";
 import OrderItem from "../../components/OrderItem"
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import readCollection from "../database/readCollection";
 import Button from "../../components/Button";
+import firebaseInstance from "../../config/firebase";
 
 function Kitchen( {orderData} ) {
-
+   
     const [orderList, setOrderList] = useState(orderData);
     let index;
 
+    function sortOrders() {
+        let sortedList = orderList.sort((a,b) => (a.order[0].orderNumber < b.order[0].orderNumber) ? 1 : -1 );
+        console.log(sortedList);
+    }
+
+    sortOrders();
 
     function handleSubmit(event) {
         event.preventDefault();
+      
         const formNum = Number(event.target.id.replace(/\D/g,''))
 
         orderList.forEach(item => {
@@ -32,7 +40,6 @@ function Kitchen( {orderData} ) {
     let buttonInnerText;
 
     const orders = orderList.map(order => {
-        console.log(order.order)
 
         if (order.order[0].state === 1) {
             buttonClr = "red";
@@ -47,6 +54,7 @@ function Kitchen( {orderData} ) {
 
         return(
             <form
+                key={order.id}
                 name={"form" + order.order[0].orderNumber}
                 id={"form" + order.order[0].orderNumber}
                 action="/"

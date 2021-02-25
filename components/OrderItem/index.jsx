@@ -80,10 +80,10 @@ function OrderItem( {data} ) {
             
          
     
-        {tempList.map(item => {
+        {tempList.map((item, index) => {
             
             return(
-                <ul>
+                <ul key={"item.id" + index}>
                 { item.burgerType !== null  ?
 
                     <ListItem>
