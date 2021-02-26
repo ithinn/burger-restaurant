@@ -1,4 +1,3 @@
-
 import Layout from "../../components/Layout";
 import readCollection from "../database/readCollection";
 import Select from "../../components/Select";
@@ -53,22 +52,21 @@ function User( {food, orders} ) {
     
     function handleAdd() {
         console.log("added to order");
- 
-        let fullOrder = 
-        [{
+        
+        let fullOrder = {
             userId: userId,
             orderNumber: orderNumber,
-            state: 1   
-        },
-        {
-            bread: bread,
-            burgerType: burger,
-            burgerSize: burgerSize,
-            sideDish: sides,
-            sideDishSize: sidesSize,
-            drink: drink,
-            drinkSize: drinkSize,
-        }]
+            state: 1,
+            orderList: [{
+                bread: bread,
+                burgerType: burger,
+                burgerSize: burgerSize,
+                sideDish: sides,
+                sideDishSize: sidesSize,
+                drink: drink,
+                drinkSize: drinkSize,
+            }]
+        }
 
         let newOrder = {
             bread: bread,
@@ -80,11 +78,17 @@ function User( {food, orders} ) {
             drinkSize: drinkSize,
         }
 
-        order === null ? setOrder(fullOrder) : setOrder(prev => [...prev, newOrder]) ;
+        if (order === null) {
+            setOrder(fullOrder);
+        } else {
+            setOrder({...order, orderList: [...order.orderList, newOrder]});
+        }
 
         resetState();
     }
 
+    console.log(order);
+    //setTheObject(prevState => ({ ...prevState, currentOrNewKey: newValue}));
 
     function handleSubmit(event) {
         event.preventDefault();
@@ -138,7 +142,7 @@ function User( {food, orders} ) {
     })
 
 
-    export function handleSignOutClick() {
+    function handleSignOutClick() {
         firebaseInstance.auth().signOut().then(() => {
            
             console.log("is signed out")

@@ -11,10 +11,10 @@ function OrderItem( {data} ) {
     let buttonClr;
     let buttonInnerText;
 
-    if (data.state === 1) {
+    if (data.order.state === 1) {
         buttonClr = "red";
         buttonInnerText = "Klar til henting"
-    } else if ( data.state === 2) {
+    } else if ( data.order.state === 2) {
         buttonClr = "yellow";
         buttonInnerText = "Hentet"
     } else {
@@ -25,7 +25,7 @@ function OrderItem( {data} ) {
     let list = data.order;
     let tempList = []
 
-    for (let i = 1; i < list.length; i++) {
+    for (let i = 0; i < list.length; i++) {
        // console.log(list[i]);
         tempList.push(list[i]);
 
@@ -75,15 +75,15 @@ function OrderItem( {data} ) {
         </>
     )*/
     return(<>
-    <h3>{"Bestilling" + " " + data.order[0].orderNumber}</h3>
+    <h3>{"Bestilling" + " " + data.order.orderNumber}</h3>
     <FlexContainer border="1px solid black" flexWidth="100%" flexHeight="auto" direction="row" justify="space-between" align="center">
             
          
     
-        {tempList.map((item, index) => {
+        {data.order.orderList.map((item, index) => {
             
             return(
-                <ul key={"item.id" + index}>
+                <ul key={"key" + index}>
                 { item.burgerType !== null  ?
 
                     <ListItem>

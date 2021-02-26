@@ -19,30 +19,8 @@ function AddUser({ handleSubmit, users }) {
     const [phone, setPhone] = useState(null);
     const [password, setPassword] = useState(null);
     const [userNumber, setUserNumber] = useState(null);
-    const [added, setAdded] = useState(false);
     const [isRegistered, setIsRegistered] = useState(false);
 
-    function generateUserNumber() {
-  
-        let userNum = Math.floor(Math.random()* 100000000)
-
-        let tempList = []
-
-        users.forEach(user => {
-     
-            if (userNum === user.usernumber ) {
-                tempList.push(user.usernumber);
-            }
-        })
-
-        if (tempList.length === 0) {
-            setUserNumber(userNum);
-        } else {
-            generateUserNumber();
-        }
-
-        
-    }
 
     function handleSubmit(event) {
         event.preventDefault();
@@ -57,36 +35,8 @@ function AddUser({ handleSubmit, users }) {
             .catch((error) => {
                 const errorCode = error.code;
                 const errorMessage = error.message;
+                console.log(errorMessage);
             });
-
-
-
-
-       // generateUserNumber();
-
-        //console.log(name, email, city, userNumber);
-/*
-        const collection = firebaseInstance.firestore().collection("users");
-        collection.doc().set({
-            adress: adress,
-            email: email,
-            city: city,
-            name: name,
-            phone: phone,
-            password: password,
-            usernumber: userNumber,
-            zip: zip,
-        })
-        .then(() => {
-            console.log("lagt til")
-            setAdded(true)
-            
-            //State - endre grensesnittet - melding. Eller send dem til en annen side. 
-        })
-        .catch(error => {
-            console.error(error)
-        })*/
-   
     }
     
     function handleChange(event) {
@@ -116,14 +66,7 @@ function AddUser({ handleSubmit, users }) {
         }
     }
 
-/*
-     <Route exact path="/burger/addUser" render={() => (
-            added ? (
-            <Redirect to="/burger/user"/>
-            ) : null
-            )}/>
 
-*/ 
     function renderForm() {
         return( 
         <LoginBase>
@@ -143,9 +86,6 @@ function AddUser({ handleSubmit, users }) {
             <Input inputType="number" inputId="phoneInp" labelText="Telefonnummer: " inputChangeHandler={event => handleChange(event)}></Input>
             <Button type="submit" btnColor="blue" txtColor="white">Logg inn</Button>
             </form>
-
-            <button onClick={generateUserNumber}>testbutton</button>
-     
 
             <Link href="/burger/user">
                 <a>Til login-siden</a>

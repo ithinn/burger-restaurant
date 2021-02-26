@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {Label} from "../Checkbox";
+import { Label } from "../Checkbox";
 
 
 
@@ -9,7 +9,6 @@ function Select( {children, labelText, inputId, handleChange} ) {
         <Label htmlFor={inputId}>{labelText}</Label>
         <select required name={inputId} id={inputId} onChange={event => handleChange(event)}> {children} </select>
         </div>
-
     )
 }
 

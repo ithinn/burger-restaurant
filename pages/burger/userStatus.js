@@ -6,12 +6,19 @@ import OrderStatusCircle from "../../components/OrderStatusCircle";
 import Button from "../../components/Button";
 
 function UserStatus({orders}) {
-    console.log(orders);
-
+   
     const [user, setUser] = useState(null);
     const [allOrders, setAllOrders] = useState(orders);
     const [usersOrders, setUsersOrders] = useState([])
     
+    if(usersOrders[0] !== undefined) {
+        console.log("userOrders")
+        firebaseInstance.firestore().collection("orders").doc(usersOrders[0].orderId)
+        .onSnapshot((doc) => {
+        console.log("Current data: ", doc.data());
+        })
+    }
+
     useEffect(() => {
         firebaseInstance.auth().onAuthStateChanged((user) => {
             if (user) {
@@ -27,7 +34,7 @@ function UserStatus({orders}) {
        
     }, []);
 
-    console.log(allOrders)
+    //console.log(allOrders)
 
     console.log(user);
 
@@ -35,21 +42,42 @@ function UserStatus({orders}) {
         let tempArr = [];
 
         allOrders.forEach(order => {
-            if (order.order[0].userId === user) {
+            if (order.order.userId === user) {
                 console.log("Order: " + order.id);
                 tempArr.push({
                     orderId: order.id,
-                    orderNumber: order.order[0].orderNumber,
-                    state: order.order[0].state
+                    orderNumber: order.order.orderNumber,
+                    state: order.order.state
                 })
             }
         })
 
         setUsersOrders(tempArr);
     }, [user])
+
+    useEffect(() => {
+        console.log(usersOrders[0]);
+        /*
+        
+        */
+        if(usersOrders[0] !== undefined) {
+            console.log("userOrders")
+            firebaseInstance.firestore().collection("orders").doc(usersOrders[0].orderId)
+            .onSnapshot((doc) => {
+            console.log("Current data: ", doc.data());
+    })
+        }
+        
+    })
     
-    console.log(usersOrders);
-  
+    //console.log(usersOrders[0].orderId);
+  /*
+    
+    firebaseInstance.firestore().collection("orders").doc(usersOrders[0].orderId)
+    .onSnapshot((doc) => {
+        console.log("Current data: ", doc.data());
+    })
+*/
     return (
         <article>
          <h2>Din bestilling er sendt.</h2>

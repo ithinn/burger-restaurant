@@ -6,12 +6,25 @@ import Button from "../../components/Button";
 import firebaseInstance from "../../config/firebase";
 
 function Kitchen( {orderData} ) {
+    //console.log(orderData);
+  /*
+    firebaseInstance.firestore().collection("orders").where("orderNumber", "==", "3")
+        .onSnapshot((querySnapshot) => {
+            console.log(querySnapshot);
+            let orders = [];
+            querySnapshot.forEach((doc) => {
+                orders.push(doc.data())
+            })
+            console.log(orders);
+        })*/
+        
    
-    const [orderList, setOrderList] = useState(orderData);
+    const [allOrders, setAllOrders] = useState(orderData);
+    const [testList, setTestList] = useState(null);
     let index;
 
     function sortOrders() {
-        let sortedList = orderList.sort((a,b) => (a.order[0].orderNumber < b.order[0].orderNumber) ? 1 : -1 );
+        let sortedList = allOrders.sort((a,b) => (a.orderNumber < b.orderNumber) ? 1 : -1 );
         console.log(sortedList);
     }
 
@@ -19,32 +32,33 @@ function Kitchen( {orderData} ) {
 
     function handleSubmit(event) {
         event.preventDefault();
-      
+        console.log(event.target.id);
         const formNum = Number(event.target.id.replace(/\D/g,''))
 
-        orderList.forEach(item => {
-
-            if (item.order[0].orderNumber === formNum) {
-                index = orderList.indexOf(item);
+        allOrders.forEach(item => {
+            console.log(item.order.orderNumber);
+            console.log(formNum);
+            if (item.order.orderNumber === formNum) {
+                index = allOrders.indexOf(item);
             }
 
         })
-
-        let newArr = [...orderList];
-        newArr[index].order[0].state = newArr[index].order[0].state === 1 ? 2 : 3
+        console.log(index);
+        let newArr = [...allOrders];
+        newArr[index].order.state = newArr[index].order.state === 1 ? 2 : 3
  
-        setOrderList(newArr);
+        setAllOrders(newArr);
     }
 
     let buttonClr;
     let buttonInnerText;
 
-    const orders = orderList.map(order => {
+    const orders = allOrders.map(order => {
 
-        if (order.order[0].state === 1) {
+        if (order.order.state === 1) {
             buttonClr = "red";
             buttonInnerText = "Klar til henting"
-        } else if ( order.order[0].state === 2) {
+        } else if ( order.order.state === 2) {
             buttonClr = "yellow";
             buttonInnerText = "Hentet"
         } else {
@@ -55,15 +69,15 @@ function Kitchen( {orderData} ) {
         return(
             <form
                 key={order.id}
-                name={"form" + order.order[0].orderNumber}
-                id={"form" + order.order[0].orderNumber}
+                name={"form" + order.order.orderNumber}
+                id={"form" + order.order.orderNumber}
                 action="/"
                 method="GET"
                 onSubmit={event => handleSubmit(event)}
                 >
 
                <OrderItem data={order}></OrderItem>
-               <Button id={order.order.orderNumber} btnColor={buttonClr} txtColor="black" type="submit" >
+               <Button id={order.orderNumber} btnColor={buttonClr} txtColor="black" type="submit" >
                 {buttonInnerText}
                 </Button>
             </form>
