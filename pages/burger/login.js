@@ -25,8 +25,6 @@ function Login({ handleSubmit, users }) {
     
     // Here you would fetch and return the user
     const useUser = () => ({ user: null, loading: false })
-    
-    
     const { user, loading } = useUser()
     const router = useRouter()
     

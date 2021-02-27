@@ -6,7 +6,7 @@ import Button from "../../components/Button";
 import {useEffect, useState} from "react"
 import RadioInput from "../../components/RadioInput";
 import firebaseInstance from "firebase";
-
+import Link from "next/link";
 
 function User( {food, orders} ) {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -188,7 +188,8 @@ function User( {food, orders} ) {
     function renderLoginFirst() {
         return(
             <>
-            <h2>Logg inn for å bestille mat</h2>
+            <h2>
+                <Link href="/burger/login"><a>Logg inn</a></Link> for å bestille mat</h2>
             
             <form>
             {menu}

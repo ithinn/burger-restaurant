@@ -2,7 +2,7 @@ import firebaseInstance from "../../config/firebase";
 import readCollection from "../database/readCollection";
 import { useState, useEffect } from "react";
 import OrderStatusCircle from "../../components/OrderStatusCircle";
-//import {handleSignOutClick} from "../burger/user";
+//import {useRouter} from "next/router";
 import Button from "../../components/Button";
 
 function UserStatus({orders}) {
@@ -10,14 +10,9 @@ function UserStatus({orders}) {
     const [user, setUser] = useState(null);
     const [allOrders, setAllOrders] = useState(orders);
     const [usersOrders, setUsersOrders] = useState([])
-    
-    if(usersOrders[0] !== undefined) {
-        console.log("userOrders")
-        firebaseInstance.firestore().collection("orders").doc(usersOrders[0].orderId)
-        .onSnapshot((doc) => {
-        console.log("Current data: ", doc.data());
-        })
-    }
+    const [stateArr, setStateArr] = useState(null);
+    const [changeOfState, setChangeOfState] = useState(null)
+
 
     useEffect(() => {
         firebaseInstance.auth().onAuthStateChanged((user) => {
@@ -30,20 +25,14 @@ function UserStatus({orders}) {
                 console.log(user + "is signed out")
             }
         })
-
-       
     }, []);
 
-    //console.log(allOrders)
-
-    console.log(user);
-
+    
     useEffect(() => {
         let tempArr = [];
 
         allOrders.forEach(order => {
             if (order.order.userId === user) {
-                console.log("Order: " + order.id);
                 tempArr.push({
                     orderId: order.id,
                     orderNumber: order.order.orderNumber,
@@ -55,20 +44,33 @@ function UserStatus({orders}) {
         setUsersOrders(tempArr);
     }, [user])
 
+
+   // const router = useRouter();
+
     useEffect(() => {
-        console.log(usersOrders[0]);
-        /*
-        
-        */
+
         if(usersOrders[0] !== undefined) {
-            console.log("userOrders")
-            firebaseInstance.firestore().collection("orders").doc(usersOrders[0].orderId)
-            .onSnapshot((doc) => {
-            console.log("Current data: ", doc.data());
-    })
+            
+            usersOrders.forEach((el, index) => {
+             
+                firebaseInstance.firestore().collection("orders").doc(usersOrders[index].orderId)
+                .onSnapshot((doc) => {
+                console.log("Index: ", index, "Current data: ", doc.data());
+                console.log(doc.data().order.state);
+                    setChangeOfState(el);
+                })
+            })
+        }  
+    }, []);
+
+    useEffect(() => {
+        if (changeOfState !== null) {
+            console.log("effekt")
+            //router.reload();
+            //window.location.reload()
         }
         
-    })
+    }, [changeOfState])
     
     //console.log(usersOrders[0].orderId);
   /*
@@ -80,7 +82,7 @@ function UserStatus({orders}) {
 */
     return (
         <article>
-         <h2>Din bestilling er sendt.</h2>
+         <h2>{"Hei, " + user + "! Din bestilling er sendt."}</h2>
             {usersOrders.map(item => {
                 return(
                     <article key={item.orderId}>

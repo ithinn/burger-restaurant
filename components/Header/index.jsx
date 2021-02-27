@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import Link from "next/link";
+import Image from "next/image";
+
 
 const HeaderBase = styled.header`
 display: flex;
@@ -24,6 +26,17 @@ function Header({heading}) {
             </Link>
             
             <h1>{heading}</h1>
+
+            <Image
+             src="/../../../images/Ida.jpg"
+             alt="user image"
+             width= {50}
+             height= {50}
+             border-radius="50%"
+            />
+                
+           
+
         </HeaderBase>
     )
 }
