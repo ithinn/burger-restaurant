@@ -9,7 +9,7 @@ import firebaseInstance from "firebase";
 
 
 function User( {food, orders} ) {
-
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [burger, setBurger] = useState(null);
     const [burgerSize, setBurgerSize] = useState(null);
     const [drink, setDrink] = useState(null);
@@ -31,6 +31,7 @@ function User( {food, orders} ) {
                 let uid = user.uid
               
                 setUserId(uid);
+                setIsLoggedIn(true);
             } else {
                 console.log(user + "is signed out")
             }
@@ -38,7 +39,7 @@ function User( {food, orders} ) {
 
         setOrderNumber(orderList + 1);
     }, [order, resetState]);
-
+    console.log(userId);
     
     function resetState() {
         setBread(null);
@@ -149,7 +150,7 @@ function User( {food, orders} ) {
           }).catch((error) => {
             console.log(error);
           });
-
+          setIsLoggedIn(false);
         setUserHasOrdered(false);  
     }
 
@@ -184,11 +185,21 @@ function User( {food, orders} ) {
         }
     }
 
-
+    function renderLoginFirst() {
+        return(
+            <>
+            <h2>Logg inn for å bestille mat</h2>
+            
+            <form>
+            {menu}
+            </form>
+            </>
+        )
+    }
     function renderPlaceYourOrder() {
         return(
             <>
-                <h2>Du kan bestille:</h2>
+                <h2>{"Velkommen " + userId}</h2>
             
             <form onSubmit={event => handleSubmit(event)}>
             {menu}
@@ -213,7 +224,7 @@ function User( {food, orders} ) {
         <>
         <Layout user>
     
-        {renderPlaceYourOrder() }   
+        {isLoggedIn ? renderPlaceYourOrder() : renderLoginFirst() }   
 
             <Button
                 id="signOutBtn"

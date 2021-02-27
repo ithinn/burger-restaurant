@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components"
 import {LoginBase} from "../../components/Login";
 import Input from "../../components/Input"
@@ -9,7 +9,7 @@ import firebaseInstance from "../../config/firebase"
 import readCollection from "../database/readCollection";
 import { useRouter } from "next/router";
 
-function AddUser({ handleSubmit, users }) {
+function Login({ handleSubmit, users }) {
     
     const [isLoggedIn, setIsLoggedIn] = useState(false)
     const [email, setEmail] = useState(null);
@@ -19,8 +19,53 @@ function AddUser({ handleSubmit, users }) {
     const [city, setCity] = useState(null);
     const [phone, setPhone] = useState(null);
     const [password, setPassword] = useState(null);
-    const [userNumber, setUserNumber] = useState(null);
+    const [userId, setUserId] = useState(null);
     const [added, setAdded] = useState(false);
+
+    
+    // Here you would fetch and return the user
+    const useUser = () => ({ user: null, loading: false })
+    
+    
+    const { user, loading } = useUser()
+    const router = useRouter()
+    
+      useEffect(() => {
+        if (isLoggedIn === true) {
+            if (!(user || loading)) {
+                router.push('/burger/user')
+                console.log("login");
+            }
+
+            return <p>Redirecting...</p>
+        }
+
+
+        
+      }, [isLoggedIn, user, loading])
+    
+      
+    
+
+
+
+
+
+
+        firebaseInstance.auth().onAuthStateChanged((user) => {
+            if (user) {
+                //User is signed in
+                let uid = user.uid
+                console.log(uid);
+                setUserId(uid);
+                setIsLoggedIn(true);
+            } else {
+                console.log(user + "is signed out")
+            }
+        })
+
+        
+   // }, []);
 
     function handleSubmit(event) {
         event.preventDefault();
@@ -31,6 +76,7 @@ function AddUser({ handleSubmit, users }) {
                 let user = userCredential.user;
                 console.log(user);
                 console.log("signed in")
+                isLoggedIn(true);
             })
             .catch((error) => {
                 const errorCode = error.code;
@@ -67,10 +113,24 @@ function AddUser({ handleSubmit, users }) {
         }
     }
 
+    function handleSignOutClick() {
+        firebaseInstance.auth().signOut().then(() => {
+           
+        console.log( userId + "is signed out")
+        }).catch((error) => {
+            console.log(error);
+        });
+
+        setIsLoggedIn(false);
+      
+    }
+
+   
 
     return(
         <Layout>
- 
+
+        {isLoggedIn === false ?     
         <LoginBase>
             <h3>Logg inn</h3>
             <form
@@ -88,9 +148,20 @@ function AddUser({ handleSubmit, users }) {
             </form>
             
         </LoginBase> 
-       
+        :
+
+        <LoginBase>
+            <h3>{ userId + ", du er logget inn"}</h3>
+        
+            <Button
+                id="signOutBtn"
+                onClick={() => handleSignOutClick()}
+                btnColor="purple"
+                txtColor="white"
+            >Logg ut</Button>
+        </LoginBase> }
         </Layout>
     )
 }
 
-export default AddUser
+export default Login;

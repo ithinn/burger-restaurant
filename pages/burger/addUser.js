@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components"
 import {LoginBase} from "../../components/Login";
 import Input from "../../components/Input"
@@ -21,7 +21,26 @@ function AddUser({ handleSubmit, users }) {
     const [userNumber, setUserNumber] = useState(null);
     const [isRegistered, setIsRegistered] = useState(false);
 
+    const useUser = () => ({ user: null, loading: false })
+    const { user, loading } = useUser()
+    const router = useRouter()
+    
+      useEffect(() => {
+        if (isRegistered === true) {
+            if (!(user || loading)) {
+                router.push('/burger/login')
+                console.log("login");
+            }
 
+            return <p>Redirecting...</p>
+        }
+
+
+        
+      }, [isRegistered, user, loading])
+    
+      
+    
     function handleSubmit(event) {
         event.preventDefault();
 
@@ -84,7 +103,7 @@ function AddUser({ handleSubmit, users }) {
             <Input inputType="number" inputId="zipInp" labelText="Postnummer: " inputChangeHandler={event => handleChange(event)}></Input>
             <Input inputType="text" inputId="cityInp" labelText="Sted: " inputChangeHandler={event => handleChange(event)}></Input>
             <Input inputType="number" inputId="phoneInp" labelText="Telefonnummer: " inputChangeHandler={event => handleChange(event)}></Input>
-            <Button type="submit" btnColor="blue" txtColor="white">Logg inn</Button>
+            <Button type="submit" btnColor="blue" txtColor="white">Registrer deg</Button>
             </form>
 
             <Link href="/burger/user">
