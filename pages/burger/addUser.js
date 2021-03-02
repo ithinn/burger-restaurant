@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import styled from "styled-components"
 import {LoginBase} from "../../components/Login";
 import Input from "../../components/Input"
 import Button from "../../components/Button"
@@ -10,6 +9,8 @@ import readCollection from "../database/readCollection";
 import { useRouter } from "next/router";
 
 function AddUser({ handleSubmit, users }) {
+
+
     
     const [email, setEmail] = useState(null);
     const [name, setName] = useState(null);
@@ -18,7 +19,7 @@ function AddUser({ handleSubmit, users }) {
     const [city, setCity] = useState(null);
     const [phone, setPhone] = useState(null);
     const [password, setPassword] = useState(null);
-    const [userNumber, setUserNumber] = useState(null);
+    const [userId, setUserId] = useState(null);
     const [isRegistered, setIsRegistered] = useState(false);
 
     const useUser = () => ({ user: null, loading: false })
@@ -28,7 +29,7 @@ function AddUser({ handleSubmit, users }) {
       useEffect(() => {
         if (isRegistered === true) {
             if (!(user || loading)) {
-                router.push('/burger/login')
+                router.push('/burger/user')
                 console.log("login");
             }
 
@@ -36,33 +37,62 @@ function AddUser({ handleSubmit, users }) {
         }
 
 
-        
       }, [isRegistered, user, loading])
     
-      
+
+        const today = new Date();
+        const date = today.getDate() + "." + (today.getMonth()+1) + "." + today.getFullYear();
     
-    function handleSubmit(event) {
+    console.log(date);
+
+
+    async function handleSubmit(event) {
         event.preventDefault();
 
-        firebaseInstance.auth().createUserWithEmailAndPassword(email, password)
-            .then((userCredential) => {
-                //Signed in
-                let user = userCredential.user;
+
+        
+        try{
+            const userCredential =  
+            await firebaseInstance.auth().createUserWithEmailAndPassword(email, password)
+      
+            console.log(userCredential);
+
+            const user = userCredential.user.uid;
                 setIsRegistered(true);
-                console.log(user);
-            })
-            .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                console.log(errorMessage);
-            });
+                //setUserId(user);
+                console.log(typeof user);
+                console.log(user + "is addded to auth");
+            
+            
+            const collection = firebaseInstance.firestore().collection("users");
+                await collection.doc(user).set({
+                    name: name,
+                    adress: adress,
+                    zip: zip,
+                    city: city,
+                    email: email,
+                    usersOrders: [],
+                    registered: date,
+                    
+                })
+            
+            
+
+            console.log("User is added to base")
+        }
+        catch(error) {
+            console.log(error)
+            //alert(error);
+        }
+        
     }
+
+
     
     function handleChange(event) {
         switch (event.target.id) {
             case "nameInp":
                 setName(event.target.value);
-                generateUserNumber();
                 break;
             case "mailInp":
                 setEmail(event.target.value);
@@ -88,7 +118,7 @@ function AddUser({ handleSubmit, users }) {
 
     function renderForm() {
         return( 
-        <LoginBase>
+        <LoginBase register>
             <h3>Registrer deg</h3>
             <form 
                 onSubmit={event => handleSubmit(event)}
@@ -99,6 +129,7 @@ function AddUser({ handleSubmit, users }) {
                             >
             <Input inputType="email" inputId="mailInp" labelText="Epost (brukernavn): " inputChangeHandler={event => handleChange(event)} ></Input>
             <Input inputType="password" inputId="passwordInp" labelText="Passord: " inputChangeHandler={event => handleChange(event)}></Input>
+            <Input inputType="text" inputId="nameInp" labelText="Navn: " inputChangeHandler={event => handleChange(event)}></Input>
             <Input inputType="text" inputId="adressInp" labelText="Adresse: " inputChangeHandler={event => handleChange(event)}></Input>
             <Input inputType="number" inputId="zipInp" labelText="Postnummer: " inputChangeHandler={event => handleChange(event)}></Input>
             <Input inputType="text" inputId="cityInp" labelText="Sted: " inputChangeHandler={event => handleChange(event)}></Input>

@@ -7,6 +7,7 @@ import {useEffect, useState} from "react"
 import RadioInput from "../../components/RadioInput";
 import firebaseInstance from "firebase";
 import Link from "next/link";
+import utilStyles from '../../styles/utils.module.css'
 
 function User( {food, orders} ) {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -21,26 +22,34 @@ function User( {food, orders} ) {
     const [orderNumber, setOrderNumber] = useState();
     const [order, setOrder] = useState(null)
     const [orderList, setOrderList] = useState(orders.length)
-    const [userHasOrdered, setUserHasOrdered] = useState(false);
+    const [onlyOrder, setOnlyOrder] = useState(null);
+
+
+    //Orderlist: Lag en lytter - må oppdateres hver gang order list endres. Se også på hele 
+    //orderlist - ordernummer-koden - den settes både i useEffect og handleSubmit
+    //UU: 
+
+  
     
     //Get userId from Auth
     useEffect(() => {
         firebaseInstance.auth().onAuthStateChanged((user) => {
             if (user) {
-                //User is signed in
+
                 let uid = user.uid
-              
                 setUserId(uid);
                 setIsLoggedIn(true);
+
             } else {
                 console.log(user + "is signed out")
+                setIsLoggedIn(false);
             }
         })
 
         setOrderNumber(orderList + 1);
     }, [order, resetState]);
-    console.log(userId);
     
+
     function resetState() {
         setBread(null);
         setDrink(null);
@@ -51,6 +60,8 @@ function User( {food, orders} ) {
         setBurger(null);
     }
     
+
+    //Add to the order
     function handleAdd() {
         console.log("added to order");
         
@@ -82,37 +93,47 @@ function User( {food, orders} ) {
         if (order === null) {
             setOrder(fullOrder);
         } else {
-            setOrder({...order, orderList: [...order.orderList, newOrder]});
+            setOrder({
+                ...order, orderList: [...order.orderList, newOrder]
+            });
         }
+
+       // console.log(order.orderList);
+       // setOnlyOrder(order.orderList);
 
         resetState();
     }
 
-    console.log(order);
-    //setTheObject(prevState => ({ ...prevState, currentOrNewKey: newValue}));
-
-    function handleSubmit(event) {
+    //Submit the order
+    async function handleSubmit(event) {
         event.preventDefault();
-        
-        const collection = firebaseInstance.firestore().collection("orders");
-        
-        collection.doc().set({
-            
-            order: order
 
-        })
-        .then(() => {
-            console.log("lagt til")
+        try {
+            const ref = firebaseInstance.database().ref("liveOrders");
+            const newOrder = ref.push()
+            await newOrder.set({
+                order: order
+            })
             
+            const collection = firebaseInstance.firestore().collection("orders");
+            await collection.doc().set({
+                order: order
+            })
+
+            const userInFirestore = firebaseInstance.firestore().collection("users").doc(userId);
+            await userInFirestore.update({
+                usersOrders: onlyOrder
+            })
+
+            
+
             resetState();
             setOrder(null);
             setOrderList(orderList + 1);
-            setUserHasOrdered(true);
-    
-        })
-        .catch(error => {
-            console.error(error)
-        })
+        }
+        catch(error) {
+            console.log(error);
+        }
 
     }
 
@@ -151,7 +172,7 @@ function User( {food, orders} ) {
             console.log(error);
           });
           setIsLoggedIn(false);
-        setUserHasOrdered(false);  
+       // setUserHasOrdered(false);  
     }
 
 
@@ -189,11 +210,12 @@ function User( {food, orders} ) {
         return(
             <>
             <h2>
-                <Link href="/burger/login"><a>Logg inn</a></Link> for å bestille mat</h2>
+                <Link href="/burger/login"><a className={utilStyles.link}>Logg inn</a></Link> for å bestille mat</h2>
             
             <form>
             {menu}
             </form>
+            
             </>
         )
     }
@@ -217,22 +239,23 @@ function User( {food, orders} ) {
                 txtColor="white">
                     Legg til i bestilling
             </Button>
-            </>
-        )
-    }
-
-    return(
-        <>
-        <Layout user>
-    
-        {isLoggedIn ? renderPlaceYourOrder() : renderLoginFirst() }   
-
             <Button
                 id="signOutBtn"
                 onClick={() => handleSignOutClick()}
                 btnColor="purple"
                 txtColor="white"
             >Logg ut</Button>
+            </>
+        )
+    }
+
+    return(
+        <>
+        <Layout user isLoggedIn={isLoggedIn}>
+    
+        {isLoggedIn ? renderPlaceYourOrder() : renderLoginFirst() }   
+
+            
     
         </Layout>
         </>

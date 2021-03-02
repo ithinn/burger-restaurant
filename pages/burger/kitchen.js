@@ -7,6 +7,8 @@ import firebaseInstance from "../../config/firebase";
 
 function Kitchen( {orderData} ) {
     //console.log(orderData);
+
+
   /*
     firebaseInstance.firestore().collection("orders").where("orderNumber", "==", "3")
         .onSnapshot((querySnapshot) => {
@@ -16,19 +18,40 @@ function Kitchen( {orderData} ) {
                 orders.push(doc.data())
             })
             console.log(orders);
-        })*/
+        })
         
-   
-    const [allOrders, setAllOrders] = useState(orderData);
+   */
+    const [allOrders, setAllOrders] = useState([]);
     const [testList, setTestList] = useState(null);
     let index;
 
+    const ref = firebaseInstance.database().ref("liveOrders");
+
+    useEffect(() => {
+        ref.on("value", (snapshot) => {
+            const data = snapshot.val();
+            console.log(data);
+
+            let tempArray = []
+
+            for (let key in data) {
+                tempArray.push(key);
+            }
+
+            console.log(tempArray);
+            //setAllOrders([data]);
+        })
+    }, [])
+
+    /*
     function sortOrders() {
         let sortedList = allOrders.sort((a,b) => (a.orderNumber < b.orderNumber) ? 1 : -1 );
         console.log(sortedList);
     }
 
-    sortOrders();
+    sortOrders();*/
+
+
 
     function handleSubmit(event) {
         event.preventDefault();
@@ -53,7 +76,9 @@ function Kitchen( {orderData} ) {
     let buttonClr;
     let buttonInnerText;
 
-    const orders = allOrders.map(order => {
+    console.log(allOrders);
+    /*
+    const orders = allOrders!== null ? allOrders.map(order => {
 
         if (order.order.state === 1) {
             buttonClr = "red";
@@ -83,9 +108,9 @@ function Kitchen( {orderData} ) {
             </form>
             
         )
-    })
+    }) : null
 
-
+*/
     return(
 
         <>
@@ -93,7 +118,7 @@ function Kitchen( {orderData} ) {
         
         <h2>Bestillinger</h2>
         
-        {orders}
+       
         
         </Layout>
         </>

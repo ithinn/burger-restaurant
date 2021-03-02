@@ -1,19 +1,23 @@
 import GlobalStyle from "../GlobalStyle";
 import Header from "../Header";
 
-function Layout( {children, home, restaurant, user} ) {
+function Layout( {isLoggedIn, children, home, login, register, restaurant, user} ) {
     return(
         <>
         
             <GlobalStyle/>
             
             {home ? 
-                <Header heading="home"/>
+                <Header heading="Billy's burger" isUser={false}/>
+            : login ? 
+                <Header heading="Billy's burger" isUser={true} isLoggedIn={isLoggedIn}/>        
+            : register ? 
+                <Header heading="Billy's burger" isUser={false}/>        
             : restaurant ? 
-                <Header heading="restaurant"/>
+                <Header heading="Billy's burger" isUser={false}/>
             : user ? 
-                <Header heading="user"/>
-            : <Header heading="kitchen"/> }
+                <Header heading="Billy's burger" isUser={true} isLoggedIn={isLoggedIn}/>
+            : <Header heading="Billy's burger" isUser={false}/> }
             
             <main>{children}</main>
         </>

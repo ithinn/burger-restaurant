@@ -3,6 +3,7 @@ import Layout from "../../components/Layout";
 import StatusList from "../../components/StatusList";
 import FlexContainer from "../../components/FlexContainer";
 
+
 function Restaurant() {
     return(
         
@@ -11,7 +12,7 @@ function Restaurant() {
         <FlexContainer
                 flexWidth="100%"
                 flexHeight="auto"
-                direction="row"
+                direction="column"
                 justify="center"
                 align="center">
             

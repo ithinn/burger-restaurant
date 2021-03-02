@@ -8,6 +8,7 @@ import Layout from "../../components/Layout"
 import firebaseInstance from "../../config/firebase"
 import readCollection from "../database/readCollection";
 import { useRouter } from "next/router";
+import Header from "../../components/Header";
 
 function Login({ handleSubmit, users }) {
     
@@ -54,7 +55,7 @@ function Login({ handleSubmit, users }) {
             if (user) {
                 //User is signed in
                 let uid = user.uid
-                console.log(uid);
+               // console.log(uid);
                 setUserId(uid);
                 setIsLoggedIn(true);
             } else {
@@ -126,8 +127,8 @@ function Login({ handleSubmit, users }) {
    
 
     return(
-        <Layout>
-
+        <Layout login isLoggedIn={isLoggedIn}>
+        
         {isLoggedIn === false ?     
         <LoginBase>
             <h3>Logg inn</h3>

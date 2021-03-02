@@ -61,7 +61,7 @@ function UserStatus({orders}) {
                 })
             })
         }  
-    }, []);
+    });
 
     useEffect(() => {
         if (changeOfState !== null) {

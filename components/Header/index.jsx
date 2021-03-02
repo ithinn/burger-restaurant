@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import Link from "next/link";
 import Image from "next/image";
-
+import utilStyles from '../../styles/utils.module.css'
 
 const HeaderBase = styled.header`
 display: flex;
@@ -10,33 +10,33 @@ height: 20vh;
 background: black;
 color: white;
 align-items: center;
+justify-content: space-around;
 `
 
-const Logo = styled.img`
-    width: 70px;
-    height: 70px;
-    margin-right: 1em;
-`
-
-function Header({heading}) {
+function Header({heading, isUser, isLoggedIn}) {
     return(
         <HeaderBase>
             <Link href="/burger">
-                <Logo/>
+                <Image
+                    src="/images/IMG_0039.jpg"
+                    width={50}
+                    height={50}
+                    alt={"logo"}
+                    className={utilStyles.roundImg}
+                />
             </Link>
             
             <h1>{heading}</h1>
 
-            <Image
-             src="/../../../images/Ida.jpg"
-             alt="user image"
-             width= {50}
-             height= {50}
-             border-radius="50%"
-            />
-                
-           
-
+            {isUser === true &&
+                  (<Image
+                  src={isLoggedIn ? "/images/Ida.jpg" : "/images/IMG_0119.jpg" }
+                  alt="user image"
+                  width= {40}
+                  height= {40}
+                  className={utilStyles.roundImg}
+                 />)
+            }
         </HeaderBase>
     )
 }

@@ -3,16 +3,17 @@ import styled from "styled-components";
 const UlBase = styled.ul`
     width: 30%;
     height: auto;
+    font-size: 2rem;
     
 `
 
 const Container = styled.div`
-    width: 40%;
+    width: 50%;
     height: auto;
     padding: 1em;
+   
 
 `
-
 
 function StatusList( {heading} ) {
     return(
