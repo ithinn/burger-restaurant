@@ -67,7 +67,6 @@ function User( {food, orders} ) {
         
         let fullOrder = {
             userId: userId,
-            orderNumber: orderNumber,
             state: 1,
             orderList: [{
                 bread: bread,
@@ -98,9 +97,6 @@ function User( {food, orders} ) {
             });
         }
 
-       // console.log(order.orderList);
-       // setOnlyOrder(order.orderList);
-
         resetState();
     }
 
@@ -112,11 +108,13 @@ function User( {food, orders} ) {
             const ref = firebaseInstance.database().ref("liveOrders");
             const newOrder = ref.push()
             await newOrder.set({
-                order: order
+                order: order,  
             })
-            
+
+            let orderRef = (await newOrder).key;
+
             const collection = firebaseInstance.firestore().collection("orders");
-            await collection.doc().set({
+            await collection.doc(orderRef).set({
                 order: order
             })
 
