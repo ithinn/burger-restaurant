@@ -1,13 +1,13 @@
-import Layout from "../../components/Layout";
-import readCollection from "../database/readCollection";
-import Select from "../../components/Select";
-import FlexContainer from "../../components/FlexContainer";
-import Button from "../../components/Button";
+import Layout from "../components/Layout";
+import readCollection from "./database/readCollection";
+import Select from "../components/Select";
+import FlexContainer from "../components/FlexContainer";
+import Button from "../components/Button";
 import {useEffect, useState} from "react"
-import RadioInput from "../../components/RadioInput";
+import RadioInput from "../components/RadioInput";
 import firebaseInstance from "firebase";
 import Link from "next/link";
-import utilStyles from '../../styles/utils.module.css'
+import utilStyles from '../styles/utils.module.css'
 
 function User( {food, orders} ) {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -19,18 +19,13 @@ function User( {food, orders} ) {
     const [sides, setSides] = useState(null);
     const [sidesSize, setSidesSize] = useState(null);
     const [userId, setUserId] = useState(null)
-    const [orderNumber, setOrderNumber] = useState();
+    //const [orderNumber, setOrderNumber] = useState();
     const [order, setOrder] = useState(null)
     const [orderList, setOrderList] = useState(orders.length)
     const [onlyOrder, setOnlyOrder] = useState(null);
 
 
-    //Orderlist: Lag en lytter - må oppdateres hver gang order list endres. Se også på hele 
-    //orderlist - ordernummer-koden - den settes både i useEffect og handleSubmit
-    //UU: 
 
-  
-    
     //Get userId from Auth
     useEffect(() => {
         firebaseInstance.auth().onAuthStateChanged((user) => {
@@ -46,7 +41,7 @@ function User( {food, orders} ) {
             }
         })
 
-        setOrderNumber(orderList + 1);
+        //setOrderNumber(orderList + 1);
     }, [order, resetState]);
     
 
@@ -117,11 +112,11 @@ function User( {food, orders} ) {
             await collection.doc(orderRef).set({
                 order: order
             })
-
+            /*
             const userInFirestore = firebaseInstance.firestore().collection("users").doc(userId);
             await userInFirestore.update({
                 usersOrders: onlyOrder
-            })
+            })*/
 
             
 
@@ -208,7 +203,7 @@ function User( {food, orders} ) {
         return(
             <>
             <h2>
-                <Link href="/burger/login"><a className={utilStyles.link}>Logg inn</a></Link> for å bestille mat</h2>
+                <Link href="/login"><a className={utilStyles.link}>Logg inn</a></Link> for å bestille mat</h2>
             
             <form>
             {menu}

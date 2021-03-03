@@ -1,7 +1,6 @@
-import Header from "../../components/Header";
-import Layout from "../../components/Layout";
-import StatusList from "../../components/StatusList";
-import FlexContainer from "../../components/FlexContainer";
+import Layout from "../components/Layout";
+import StatusList from "../components/StatusList";
+import FlexContainer from "../components/FlexContainer";
 
 
 function Restaurant() {

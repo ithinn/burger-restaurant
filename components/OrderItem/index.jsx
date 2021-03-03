@@ -5,16 +5,26 @@ import FlexContainer from "../FlexContainer";
 import ListItem from "../ListItem";
 
 
-function OrderItem( {data} ) {
+function OrderItem( {data, userData} ) {
     
+    console.log(userData);
 
     let buttonClr;
     let buttonInnerText;
+    let userName;
 
-    if (data.order.state === 1) {
+    userData.forEach(user => {
+        if (user.id === data.content.order.userId) {
+            console.log(user.name);
+            userName = user.name
+        }
+    })
+
+
+    if (data.content.state === 1) {
         buttonClr = "red";
         buttonInnerText = "Klar til henting"
-    } else if ( data.order.state === 2) {
+    } else if ( data.content.state === 2) {
         buttonClr = "yellow";
         buttonInnerText = "Hentet"
     } else {
@@ -22,65 +32,15 @@ function OrderItem( {data} ) {
         buttonInnerText = "Fullført"
     }
 
-    let list = data.order;
-    let tempList = []
-
-    for (let i = 0; i < list.length; i++) {
-       // console.log(list[i]);
-        tempList.push(list[i]);
-
-    }
-
-    //console.log(tempList);
-
-    //console.log(orderList);
-
-/*
-    return(
-        <>
-     
-        <FlexContainer flexWidth="100%" flexHeight="auto" direction="row" justify="space-between" align="center">
-            
-            
-            <ul>
-                { data.burger !== undefined ?
-
-                <ListItem>
-                    <Checkbox className="orderCheckbox" labelText={data.burgerType + ", " + data.burgerSize}/>
-                </ListItem> : null}
-
-                { data.bread !== undefined ?
-                <ListItem>
-                    <Checkbox className="orderCheckbox" labelText={data.bread + " brød"}/>
-                </ListItem> : null}
-                
-                { data.sideDish !== undefined ?
-                <ListItem>
-                    <Checkbox className="orderCheckbox" labelText={data.sideDish + ", " + data.sideDishSize}/>
-                </ListItem> : null}
-                
-                { data.drink !== undefined ?
-                <ListItem>
-                    <Checkbox className="orderCheckbox" labelText={data.drink + ", " + data.drinkSize}/>
-                </ListItem> : null}
-
-            </ul>
-
-            <Button id={data.orderNumber} btnColor={buttonClr} txtColor="black" type="submit" >
-                {buttonInnerText}
-            </Button>
-            
-        </FlexContainer>
-    
-        </>
-    )*/
+   
     return(<>
-    <h3>{"Bestilling" + " " + data.order.orderNumber}</h3>
+    <h3>{"Bestillingsreferanse:" + " " + data.orderId}</h3>
+    <p>{"Kunde:" + " " + userName }</p>
+    <p>{"Kundenummer:" + " " + data.content.order.userId }</p>
+
     <FlexContainer border="1px solid black" flexWidth="100%" flexHeight="auto" direction="row" justify="space-between" align="center">
             
-         
-    
-        {data.order.orderList.map((item, index) => {
+        {data.content.order.orderList.map((item, index) => {
             
             return(
                 <ul key={"key" + index}>

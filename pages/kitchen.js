@@ -1,13 +1,13 @@
-import Layout from "../../components/Layout";
-import OrderItem from "../../components/OrderItem"
+import Layout from "../components/Layout";
+import OrderItem from "../components/OrderItem"
 import { useState, useEffect } from "react";
-import readCollection from "../database/readCollection";
-import Button from "../../components/Button";
-import firebaseInstance from "../../config/firebase";
+import readCollection from "./database/readCollection";
+import Button from "../components/Button";
+import firebaseInstance from "../config/firebase";
 
-function Kitchen( {orderData} ) {
+function Kitchen( {userData} ) {
     //console.log(orderData);
-
+    console.log(userData);
 
   /*
     firebaseInstance.firestore().collection("orders").where("orderNumber", "==", "3")
@@ -23,23 +23,26 @@ function Kitchen( {orderData} ) {
    */
     const [allOrders, setAllOrders] = useState([]);
     const [testList, setTestList] = useState(null);
-    let index;
+    let buttonIndex;
 
     const ref = firebaseInstance.database().ref("liveOrders");
-
+  
     useEffect(() => {
+
         ref.on("value", (snapshot) => {
             const data = snapshot.val();
-            console.log(data);
 
-            let tempArray = []
+            let orderArray = [];
 
-            for (let key in data) {
-                tempArray.push(key);
+            for (let item in data) {
+                orderArray.push({
+                    orderId: item,
+                    content: data[item]
+                });
+     
             }
 
-            console.log(tempArray);
-            //setAllOrders([data]);
+            setAllOrders(orderArray);
         })
     }, [])
 
@@ -51,39 +54,57 @@ function Kitchen( {orderData} ) {
 
     sortOrders();*/
 
+    function removeFinished() {
+
+    }
 
 
     function handleSubmit(event) {
         event.preventDefault();
         console.log(event.target.id);
         const formNum = Number(event.target.id.replace(/\D/g,''))
-
-        allOrders.forEach(item => {
-            console.log(item.order.orderNumber);
+        let id;
+        allOrders.forEach((item, index) => {
+            //console.log(item.content.order.orderNumber);
+            console.log(index);
             console.log(formNum);
-            if (item.order.orderNumber === formNum) {
-                index = allOrders.indexOf(item);
+            console.log(item.content.order.state)
+     
+            if (index === formNum) {
+                buttonIndex = index;
+                id = item.orderId;
+
             }
 
         })
-        console.log(index);
+        
         let newArr = [...allOrders];
-        newArr[index].order.state = newArr[index].order.state === 1 ? 2 : 3
+        newArr[buttonIndex].content.order.state = newArr[buttonIndex].content.order.state === 1 ? 2 : 3
  
         setAllOrders(newArr);
+
+        console.log(id);
+        const orderRef = firebaseInstance.database().ref(`liveOrders/${id}/order/state`);
+        //cons  t theOrder = orderRef.child("order/state");
+        console.log(orderRef);
+        
+        orderRef.transaction(function(currentState) {
+            return currentState === 1 ? 2 : 3
+        });
+
     }
 
     let buttonClr;
     let buttonInnerText;
 
     console.log(allOrders);
-    /*
-    const orders = allOrders!== null ? allOrders.map(order => {
-
-        if (order.order.state === 1) {
+    
+    const orders = allOrders.map((order, index) => {
+      
+        if (order.content.order.state === 1) {
             buttonClr = "red";
             buttonInnerText = "Klar til henting"
-        } else if ( order.order.state === 2) {
+        } else if ( order.content.order.state === 2) {
             buttonClr = "yellow";
             buttonInnerText = "Hentet"
         } else {
@@ -93,24 +114,24 @@ function Kitchen( {orderData} ) {
 
         return(
             <form
-                key={order.id}
-                name={"form" + order.order.orderNumber}
-                id={"form" + order.order.orderNumber}
+                key={order.orderId}
+                name={"form" + order.content.order.orderNumber}
+                id={"form" + index}
                 action="/"
                 method="GET"
                 onSubmit={event => handleSubmit(event)}
                 >
 
-               <OrderItem data={order}></OrderItem>
-               <Button id={order.orderNumber} btnColor={buttonClr} txtColor="black" type="submit" >
+               <OrderItem data={order} userData={userData} ></OrderItem>
+               <Button id={"btn" + order.Id} btnColor={buttonClr} txtColor="black" type="submit" >
                 {buttonInnerText}
                 </Button>
             </form>
             
         )
-    }) : null
+    })
 
-*/
+
     return(
 
         <>
@@ -118,7 +139,7 @@ function Kitchen( {orderData} ) {
         
         <h2>Bestillinger</h2>
         
-       
+        {orders}
         
         </Layout>
         </>
@@ -129,8 +150,8 @@ export default Kitchen;
 
 Kitchen.getInitialProps = async () => {
     try {
-        const orderData = await readCollection("orders")
-        return { orderData }
+        const userData = await readCollection("users")
+        return { userData }
     }
     catch (error) {
         return {
