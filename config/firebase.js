@@ -10,8 +10,12 @@ const firebaseConfig = {
     appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
   };
 
+  
+
   try {
     firebase.initializeApp(firebaseConfig);
+    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION);
+
   } catch(error) {
     if (!/already exists/.test(error.message)) {
       console.error('Firebase error');
@@ -19,6 +23,7 @@ const firebaseConfig = {
   }
 
   const firebaseInstance = firebase;
+  
   export default firebaseInstance;
 
   

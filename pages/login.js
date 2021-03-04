@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components"
-import {LoginBase} from "../../components/Login";
-import Input from "../../components/Input"
-import Button from "../../components/Button"
+import {LoginBase} from "../components/Login";
+import Input from "../components/Input"
+import Button from "../components/Button"
 import Link from "next/link"
-import Layout from "../../components/Layout"
-import firebaseInstance from "../../config/firebase"
-import readCollection from "../database/readCollection";
+import Layout from "../components/Layout"
+import firebaseInstance from "../config/firebase"
+import readCollection from "./database/readCollection";
 import { useRouter } from "next/router";
-import Header from "../../components/Header";
+import Header from "../components/Header";
 
 function Login({ handleSubmit, users }) {
     
@@ -32,7 +32,7 @@ function Login({ handleSubmit, users }) {
       useEffect(() => {
         if (isLoggedIn === true) {
             if (!(user || loading)) {
-                router.push('/burger/user')
+                router.push('/user')
                 console.log("login");
             }
 

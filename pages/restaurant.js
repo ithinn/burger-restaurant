@@ -1,9 +1,19 @@
 import Layout from "../components/Layout";
 import StatusList from "../components/StatusList";
 import FlexContainer from "../components/FlexContainer";
-
+import {useAuth} from "../config/auth";
+import {useEffect} from "react"
 
 function Restaurant() {
+    const userContext = useAuth();
+
+    useEffect(() => {
+        console.log("context", userContext);
+        console.log(userContext.email);
+    }, [userContext])
+    
+  
+
     return(
         
         <Layout restaurant>

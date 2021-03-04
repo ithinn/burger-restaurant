@@ -9,6 +9,10 @@ import firebaseInstance from "firebase";
 import Link from "next/link";
 import utilStyles from '../styles/utils.module.css'
 
+
+
+
+
 function User( {food, orders} ) {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [burger, setBurger] = useState(null);
@@ -19,11 +23,11 @@ function User( {food, orders} ) {
     const [sides, setSides] = useState(null);
     const [sidesSize, setSidesSize] = useState(null);
     const [userId, setUserId] = useState(null)
-    //const [orderNumber, setOrderNumber] = useState();
     const [order, setOrder] = useState(null)
     const [orderList, setOrderList] = useState(orders.length)
     const [onlyOrder, setOnlyOrder] = useState(null);
 
+    
 
 
     //Get userId from Auth
@@ -92,6 +96,8 @@ function User( {food, orders} ) {
             });
         }
 
+        setOnlyOrder(newOrder);
+
         resetState();
     }
 
@@ -112,11 +118,12 @@ function User( {food, orders} ) {
             await collection.doc(orderRef).set({
                 order: order
             })
-            /*
+
+            
             const userInFirestore = firebaseInstance.firestore().collection("users").doc(userId);
             await userInFirestore.update({
                 usersOrders: onlyOrder
-            })*/
+            })
 
             
 

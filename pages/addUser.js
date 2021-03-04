@@ -20,7 +20,7 @@ function AddUser() {
     const [isRegistered, setIsRegistered] = useState(false);
     const today = new Date();
     const date = today.getDate() + "." + (today.getMonth()+1) + "." + today.getFullYear();
-    
+    const [error, setError] = useState(null)
 
  
     //Register user in auth and firestore  
@@ -52,6 +52,7 @@ function AddUser() {
         }
         catch(error) {
             console.log(error)
+            setError(error.message)
         }
         
     }
@@ -160,7 +161,7 @@ function AddUser() {
        
        
       
-        
+        {error && (<p>{error}</p>)}
      
        
         </Layout>
