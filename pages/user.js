@@ -10,9 +10,6 @@ import Link from "next/link";
 import utilStyles from '../styles/utils.module.css'
 
 
-
-
-
 function User( {food, orders} ) {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [burger, setBurger] = useState(null);
@@ -28,8 +25,6 @@ function User( {food, orders} ) {
     const [onlyOrder, setOnlyOrder] = useState(null);
 
     
-
-
     //Get userId from Auth
     useEffect(() => {
         firebaseInstance.auth().onAuthStateChanged((user) => {

@@ -9,7 +9,7 @@ function Restaurant() {
 
     useEffect(() => {
         console.log("context", userContext);
-        console.log(userContext.email);
+ 
     }, [userContext])
     
   
