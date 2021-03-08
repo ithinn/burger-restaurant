@@ -15,15 +15,18 @@ const Container = styled.div`
 
 `
 
-function StatusList( {heading} ) {
+function StatusList( {heading, array} ) {
+    console.log(array);
     return(
     <>
     <Container>
     <h2>{heading}</h2>
     <UlBase>
-        <li>302</li>
-        <li>303</li>
-        <li>304</li>
+    {array !== null && (array.map((item, index) => {
+            return <li>{item.orderNumber}</li>
+        }))}
+        
+        
     </UlBase>
     </Container>
     </>);

@@ -1,110 +1,146 @@
-import firebaseInstance from "../../config/firebase";
-import readCollection from "../database/readCollection";
+import firebaseInstance from "../config/firebase";
+import readCollection from "./database/readCollection";
 import { useState, useEffect } from "react";
-import OrderStatusCircle from "../../components/OrderStatusCircle";
-//import {useRouter} from "next/router";
-import Button from "../../components/Button";
+import OrderStatusCircle from "../components/OrderStatusCircle";
+import Button from "../components/Button";
+import FlexContainer from "../components/FlexContainer";
+import Layout from "../components/Layout";
+import { useRouter } from "next/router";
 
-function UserStatus({orders}) {
+function UserStatus({userData}) {
    
-    const [user, setUser] = useState(null);
-    const [allOrders, setAllOrders] = useState(orders);
+    const [userId, setUserId] = useState(null);
     const [usersOrders, setUsersOrders] = useState([])
-    const [stateArr, setStateArr] = useState(null);
-    const [changeOfState, setChangeOfState] = useState(null)
+    const [isLoggedIn, setIsLoggedIn] = useState(true);
+    let userName;
 
 
+    //Get userId
     useEffect(() => {
         firebaseInstance.auth().onAuthStateChanged((user) => {
             if (user) {
                 //User is signed in
                 let uid = user.uid
               
-                setUser(uid);
+                setUserId(uid);
             } else {
                 console.log(user + "is signed out")
             }
         })
     }, []);
 
-    
+
+    //Get userName from Firestore
+    userData.forEach(user => {
+        if (user.id === userId) {
+            userName = user.name
+        }
+    })
+
+
+    //Get all the users orders that hasn't been picked up yet
     useEffect(() => {
-        let tempArr = [];
+        let ref = firebaseInstance.firestore().collection("orders").where("userId", "==", userId)
+        ref.onSnapshot((snapshot) => {
 
-        allOrders.forEach(order => {
-            if (order.order.userId === user) {
-                tempArr.push({
-                    orderId: order.id,
-                    orderNumber: order.order.orderNumber,
-                    state: order.order.state
-                })
-            }
-        })
-
-        setUsersOrders(tempArr);
-    }, [user])
-
-
-   // const router = useRouter();
-
-    useEffect(() => {
-
-        if(usersOrders[0] !== undefined) {
-            
-            usersOrders.forEach((el, index) => {
-             
-                firebaseInstance.firestore().collection("orders").doc(usersOrders[index].orderId)
-                .onSnapshot((doc) => {
-                console.log("Index: ", index, "Current data: ", doc.data());
-                console.log(doc.data().order.state);
-                    setChangeOfState(el);
+            let data = [];
+            snapshot.forEach((doc) => {
+                data.push({
+                    id: doc.id,
+                    ...doc.data()
                 })
             })
-        }  
-    });
+            setUsersOrders(data);
+        
+        })
+    }, [userId]);
 
+
+    //Sign out 
+    function handleSignOutClick() {
+        firebaseInstance.auth().signOut().then(() => {
+           
+            console.log("is signed out")
+          }).catch((error) => {
+            console.log(error);
+          });
+          setIsLoggedIn(false);  
+    }
+
+    
+    //Redirect after signing out
+    const useUser = () => ({ user: null, loading: false })
+    const { user, loading } = useUser()
+    const router = useRouter()
+    
     useEffect(() => {
-        if (changeOfState !== null) {
-            console.log("effekt")
-            //router.reload();
-            //window.location.reload()
+        if (isLoggedIn === false) {
+            if (!(user || loading)) {
+                router.push('/order')
+                console.log("Logged out");
+            }
+
+            return <p>Redirecting...</p>
         }
-        
-    }, [changeOfState])
-    
-    //console.log(usersOrders[0].orderId);
-  /*
-    
-    firebaseInstance.firestore().collection("orders").doc(usersOrders[0].orderId)
-    .onSnapshot((doc) => {
-        console.log("Current data: ", doc.data());
-    })
-*/
+
+      }, [isLoggedIn, user, loading])
+
+
     return (
-        <article>
-         <h2>{"Hei, " + user + "! Din bestilling er sendt."}</h2>
-            {usersOrders.map(item => {
-                return(
-                    <article key={item.orderId}>
-                    <p>Bestillingsnummer: {item.orderNumber}</p>
-                    <OrderStatusCircle background={item.state === 1 ? "yellow" : "green"}>
-                        <p>{item.state === 1 ? "Maten blir forberedt på kjøkkenet" : "Du kan hente maten din"}</p>
-                    </OrderStatusCircle>
-                </article>
-                )
-            })}
-        
-        </article>
-        
+        <Layout user>
+            <FlexContainer
+                direction="column" 
+                flexWidth="60%" 
+                border="1px solid blue" 
+                >
+
+                <h2>{"Hei, " + userName + "! Takk for bestillingen"}</h2>
+                <FlexContainer 
+                    direction="row" 
+                    flexWidth="80%" 
+                    border="1px solid red" 
+                    justify="center"
+                    align="center">
+
+                    {usersOrders && (
+                        usersOrders.map((order, index) => {
+                            if (!order.isPickedUp) {
+                                return (
+                                    <article key={order.id + index}>
+                            
+                                        <OrderStatusCircle 
+                                            background={order.isOrdered ? "yellow" : "green"}>
+
+                                            <h3>{order.isOrdered ? "Du har bestilt" : "Bestillingen er klar!"}</h3>
+                                            <ul>
+                                                {order.orderList.map(item => {
+                                                    return (<li>{item}</li>)
+                                                })}
+                                            </ul>
+                                            <p>{order.isOrdered ? "Maten blir forberedt" : "Du kan hente maten i kassen"}</p>
+                                        </OrderStatusCircle>
+
+                                    </article>
+                                )
+                            } 
+                        })
+                    )}
+                </FlexContainer>
+
+                <Button btnColor="purple" txtColor="white" onClick onClick={handleSignOutClick}>Logg ut</Button>
+                </FlexContainer> 
+        </Layout>
+           
     )
 }
 
 export default UserStatus;
 
+
 UserStatus.getInitialProps = async () => {
     try {
-        const orders = await readCollection("orders")
-        return { orders }
+        const userData = await readCollection("users")
+        return { userData }
     }
     catch (error) {
         return {

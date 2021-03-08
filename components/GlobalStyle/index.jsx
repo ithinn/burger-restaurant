@@ -19,6 +19,10 @@ const GlobalStyle = createGlobalStyle`
         
     }
 
+    h2 {
+        text-align: center;
+    }
+
 `
 
 export default GlobalStyle;

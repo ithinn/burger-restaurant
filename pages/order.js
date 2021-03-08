@@ -3,7 +3,7 @@ import readCollection from "./database/readCollection";
 import Select from "../components/Select";
 import FlexContainer from "../components/FlexContainer";
 import Button from "../components/Button";
-import {useEffect, useState} from "react"
+import {useEffect, useState } from "react"
 import RadioInput from "../components/RadioInput";
 import firebaseInstance from "firebase";
 import Link from "next/link";
@@ -12,6 +12,8 @@ import {useAuth} from "../config/auth";
 import {useForm } from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup"
 import {string, object} from "yup"
+import { useRouter } from "next/router";
+import { render } from "react-dom";
 
 
 const schema = object().shape({
@@ -20,11 +22,13 @@ const schema = object().shape({
 
 
 
-function Order({userData}) {
+function Order({userData, orderData}) {
 
     const [userId, setUserId] = useState(null)
+    const [userHasOrdered, setUserHasOrdered] = useState(false)
     const [orderList, setOrderList] = useState(null)
     const [isLoggedIn, setIsLoggedIn] = useState(false)
+    const [orderNumber, setOrderNumber] = useState(null);
     const {register, handleSubmit, watch, errors} = useForm({
         mode: "onChange",
         defaultValues: {
@@ -38,16 +42,16 @@ function Order({userData}) {
         resolver: yupResolver(schema)
     })
     let userName;
+   
+    
     const today = new Date();
     const date = today.getDate() + "." + (today.getMonth()+1) + "." + today.getFullYear();
 
-
+    //console.log(orderData);
     useEffect(() => {
         firebaseInstance.auth().onAuthStateChanged((user) => {
-            //console.log(user);
 
             if (user) {
-
                 let uid = user.uid
                 setUserId(uid);
                 setIsLoggedIn(true);
@@ -60,17 +64,27 @@ function Order({userData}) {
 
     }, []);
 
-
-    /*
-    const userContext = useAuth();
-    
-
-    //Get userId
+    //Get number of existing orders
     useEffect(() => {
-        //console.log(userContext.uid);
-        //setUserId(userContext.uid);
-    }, [userContext])*/
+        let ref = firebaseInstance.firestore().collection("orders").where("isPickedUp", "==", false)
+        ref.onSnapshot((snapshot) => {
+            console.log(snapshot);
+            let data = [];
+            snapshot.forEach((doc) => {
+                data.push({
+                    id: doc.id,
+                    ...doc.data()
+                })
+            })
+            console.log(data);
+            setOrderNumber(data.length + 101)
+            
+        })
 
+    }, []);
+
+    console.log(orderNumber);
+   
     //Get userName
     userData.forEach(user => {
         if (user.id === userId) {
@@ -81,7 +95,6 @@ function Order({userData}) {
 
     const onSubmit = async (data) => {
         let orderList = [];
-        //const reg = /^\d+$/;
         console.log("Added to chart")
 
         for (let item in data) {
@@ -105,37 +118,49 @@ function Order({userData}) {
     }
 
     async function sendOrder(event) {
-        console.log("submitted");
-        //console.log(data);
-        console.log(orderList);
 
-        try {
-            const collection = firebaseInstance.firestore().collection("orders");
-            await collection.doc().set({
-                userId: userId,
-                isOrdered: true,
-                isPrepared: false,
-                isPickedUp: false,
-                orderList: orderList,
-                orderDate: date
-            })
-        }
-        catch(error) {
-            console.log(error);
-        }
 
+        if (isLoggedIn) {
+            console.log("submitted");
+     
+            try {
+                const collection = firebaseInstance.firestore().collection("orders");
+                await collection.doc().set({
+                    userId: userId,
+                    isOrdered: true,
+                    isPrepared: false,
+                    isPickedUp: false,
+                    orderList: orderList,
+                    orderDate: date,
+                    orderNumber: orderNumber
+                    
+                })
+                setUserHasOrdered(true);
+            }
+            catch(error) {
+                console.log(error);
+            }
+        }
+      
     }
 
+    function renderLoginFirst() {
+        return(
+            <>
+            <h2>
+                <Link href="/login"><a className={utilStyles.link}>Logg inn</a></Link> for å bestille mat</h2>
+            </>
+        )
+    }
 
-    
+    function renderPage() {
+        return(
+            <article>
+                <h1>Velkommen {userName}</h1>
+                <p>{userId}</p>
 
-    return(
-        <>
-        <h1>Velkommen {userName}  </h1>
-        <p>{userId}</p>
-
-        <h2>Velg produkter</h2>
-        <form
+                <h2>Velg produkter</h2>
+                <form
             onSubmit={handleSubmit(onSubmit)}>
 
             <ul>
@@ -173,6 +198,47 @@ function Order({userData}) {
             <button type="submit">Send</button>
 
         </form>
+            </article>
+        )
+        
+    }
+
+    function handleSignOutClick() {
+        firebaseInstance.auth().signOut().then(() => {
+           
+            console.log("is signed out")
+          }).catch((error) => {
+            console.log(error);
+          });
+          setIsLoggedIn(false);
+    }
+
+
+    //Redirect after sending the order
+    const useUser = () => ({ user: null, loading: false })
+    const { user, loading } = useUser()
+    const router = useRouter()
+    
+      useEffect(() => {
+        if (userHasOrdered === true) {
+            if (!(user || loading)) {
+                router.push('/userStatus')
+                console.log("ordered");
+            }
+
+            return <p>Redirecting...</p>
+        }
+
+      }, [userHasOrdered, user, loading])
+    
+      
+
+
+    return(
+        <Layout user>
+        {isLoggedIn ? renderPage() : renderLoginFirst()}
+        
+        
 
         
         {orderList &&(
@@ -193,7 +259,9 @@ function Order({userData}) {
         </>
         )}
 
-        </>
+        <button onClick={handleSignOutClick} >Logg ut</button>
+
+        </Layout>
     )
 }
 
@@ -202,7 +270,8 @@ export default Order;
 Order.getInitialProps = async () => {
     try {
         const userData = await readCollection("users")
-        return { userData }
+        const orderData = await readCollection("orders");
+        return { userData, orderData }
     }
     catch (error) {
         return {
@@ -211,6 +280,15 @@ Order.getInitialProps = async () => {
     } 
 }
 /*
+  
+    const userContext = useAuth();
+    
+
+    //Get userId
+    useEffect(() => {
+        //console.log(userContext.uid);
+        //setUserId(userContext.uid);
+    }, [userContext])
 
 
 

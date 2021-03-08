@@ -2,17 +2,52 @@ import Layout from "../components/Layout";
 import StatusList from "../components/StatusList";
 import FlexContainer from "../components/FlexContainer";
 import {useAuth} from "../config/auth";
-import {useEffect} from "react"
+import firebaseInstance from "../config/firebase";
+import {useEffect, useState} from "react"
 
 function Restaurant() {
-    const userContext = useAuth();
+
+    const [orderedOrders, setOrderedOrders] = useState(null);
+    const [preparedOrders, setPreparedOrders] = useState(null)
+    
+    useEffect(() => {
+        let ref = firebaseInstance.firestore().collection("orders").where("isOrdered", "==", true)
+        ref.onSnapshot((snapshot) => {
+            console.log(snapshot);
+            let data = [];
+            snapshot.forEach((doc) => {
+                data.push({
+                    id: doc.id,
+                    ...doc.data()
+                })
+            })
+            console.log(data);
+            setOrderedOrders(data);
+        })
+
+    }, []);
 
     useEffect(() => {
-        console.log("context", userContext);
- 
-    }, [userContext])
-    
-  
+        let ref = firebaseInstance.firestore().collection("orders").where("isPrepared", "==", true)
+        ref.onSnapshot((snapshot) => {
+            console.log(snapshot);
+            let data = [];
+            snapshot.forEach((doc) => {
+                data.push({
+                    id: doc.id,
+                    ...doc.data()
+                })
+            })
+            console.log(data);
+            setPreparedOrders(data);
+        })
+
+    }, []);
+
+    console.log(orderedOrders);
+    console.log(preparedOrders);
+
+
 
     return(
         
@@ -25,8 +60,8 @@ function Restaurant() {
                 justify="center"
                 align="center">
             
-            <StatusList heading="Vi jobber med:"/>
-            <StatusList heading="Du kan hente:"/>
+            <StatusList array={orderedOrders} heading="Vi jobber med:"/>
+            <StatusList array={preparedOrders} heading="Du kan hente:"/>
             
         </FlexContainer>
         
