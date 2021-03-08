@@ -28,6 +28,7 @@ function User( {food, orders} ) {
     //Get userId from Auth
     useEffect(() => {
         firebaseInstance.auth().onAuthStateChanged((user) => {
+            console.log(user);
             if (user) {
 
                 let uid = user.uid

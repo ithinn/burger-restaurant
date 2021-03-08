@@ -24,7 +24,7 @@ function Order({userData}) {
 
     const [userId, setUserId] = useState(null)
     const [orderList, setOrderList] = useState(null)
-    const [isLoggedIn, setIsLoggedIn] = useState(null)
+    const [isLoggedIn, setIsLoggedIn] = useState(false)
     const {register, handleSubmit, watch, errors} = useForm({
         mode: "onChange",
         defaultValues: {
@@ -37,42 +37,57 @@ function Order({userData}) {
         },
         resolver: yupResolver(schema)
     })
-
-    const userContext = useAuth();
     let userName;
+    const today = new Date();
+    const date = today.getDate() + "." + (today.getMonth()+1) + "." + today.getFullYear();
+
+
+    useEffect(() => {
+        firebaseInstance.auth().onAuthStateChanged((user) => {
+            //console.log(user);
+
+            if (user) {
+
+                let uid = user.uid
+                setUserId(uid);
+                setIsLoggedIn(true);
+
+            } else {
+                console.log(user + "is signed out")
+                setIsLoggedIn(false);
+            }
+        })
+
+    }, []);
+
+
+    /*
+    const userContext = useAuth();
+    
 
     //Get userId
     useEffect(() => {
         //console.log(userContext.uid);
         //setUserId(userContext.uid);
-    }, [userContext])
+    }, [userContext])*/
 
     //Get userName
     userData.forEach(user => {
         if (user.id === userId) {
-            console.log(user.name);
+            //console.log(user.name);
             userName = user.name
         }
     })
 
     const onSubmit = async (data) => {
-        console.log(data);
-        const {hamburger, cheeseburger} = data;
-        console.log(cheeseburger);
-
         let orderList = [];
-        var reg = /^\d+$/;
+        //const reg = /^\d+$/;
+        console.log("Added to chart")
 
-        let testObj;
-        let key;
-        let value;
-
-        const word = "Count"
         for (let item in data) {
             
-            //console.log(typeof data[item]);
+      
             if (data[item]) {
-
                 /*
                 if (reg.test(data[item]) && data[item] > 1) {
                     orderList.push(data[item])
@@ -82,26 +97,33 @@ function Order({userData}) {
                     orderList.push(item);
                 }
                 */
-
                 orderList.push(item);
-
-
             }
-
-            testObj = {
-                key: value
-            }
-
-           // console.log(testObj)
         }
 
         setOrderList(orderList);
-        console.log(orderList);
     }
 
-    const onSubmitOrder = async (data) => {
+    async function sendOrder(event) {
         console.log("submitted");
-        console.log(data);
+        //console.log(data);
+        console.log(orderList);
+
+        try {
+            const collection = firebaseInstance.firestore().collection("orders");
+            await collection.doc().set({
+                userId: userId,
+                isOrdered: true,
+                isPrepared: false,
+                isPickedUp: false,
+                orderList: orderList,
+                orderDate: date
+            })
+        }
+        catch(error) {
+            console.log(error);
+        }
+
     }
 
 
@@ -120,72 +142,43 @@ function Order({userData}) {
                 <li>
                     <input id="hamburger" type="checkbox" name="hamburger" ref={register} />
                     <label htmlFor="hamburger">Hamburger</label>
-
-                   
-                    
-                    <label htmlFor="hamburgerCount">Velg antall: </label>
-                    <input id="hamburgerCount" type="number" placeholder="velg antall" name="hamburgerCount" ref={register} />
                 </li>
 
                 <li>
                     <input id="cheeseburger" type="checkbox" name="cheeseburger" ref={register} />
                     <label htmlFor="cheeseburger" >Cheeseburger</label>
-
-                    <label htmlFor="cheeseburgerCount">Velg antall: </label>
-                    <input id="cheeseburgerCount" type="number" placeholder="velg antall" name="cheeseburgerCount" ref={register} />
                 </li>
 
                 <li>
                     <input id="pommesFrites" type="checkbox"  name="pommesFrites" ref={register} />
                     <label htmlFor="pommesFrites">Pommes Frites</label>
-                    
-                    <label htmlFor="chipsCount">Velg antall: </label>
-                    <input id="chipsCount" type="number" placeholder="velg antall" name="chipsCount" ref={register} />
                 </li>
 
                 <li>
                     <input id="sweetPotatoe" placeholder="Søtpotet" type="checkbox" name="Søtpotetchips" ref={register} />
-                    <label htmlFor="sweetPotatoe" >Søtpotetchips</label>
-                    
-                    <label htmlFor="sweetPotatoeCount">Velg antall: </label>
-                    <input id="sweetPotatoeCount" type="number" placeholder="velg antall" name="sweetPotatoeCount" ref={register} />
+                    <label htmlFor="sweetPotatoe" >Søtpotetchips</label>   
                 </li>
 
                 <li>
                     <input id="cola" type="checkbox" name="cocaCola" ref={register} />
                     <label htmlFor="cola" >Cola</label>
-                    
-                    <label htmlFor="colaCount">Velg antall: </label>
-                    <input id="colaCount" type="number" placeholder="velg antall" name="colaCount" ref={register} />
                 </li>
-
 
                 <li>
                     <input id="sprite" type="checkbox" name="sprite" ref={register} />
                     <label htmlFor="sprite" >Sprite</label>
-                    
-                    <label htmlFor="spriteCount">Velg antall: </label>
-                    <input id="spriteCount" type="number" placeholder="velg antall" name="spriteCount" ref={register} />
                 </li>
             </ul>    
             
-            
-            
-            
-            
-            
-
             <button type="submit">Send</button>
 
         </form>
 
         
-
         {orderList &&(
         <>    
-        <h2>Velg antall</h2>
-        <form onSubmit={handleSubmit(onSubmitOrder)}>
-            <ul>
+        <h2>Kvittering</h2>
+        <ul>
                 {orderList && (orderList.map((item, index) => {
                     return (
                     <li key={item, index}>
@@ -195,8 +188,8 @@ function Order({userData}) {
                 }))}
             </ul>
 
-            <button type="submit">Send inn</button>
-        </form>
+        <button onClick={event => sendOrder(event)} >Send inn</button>
+        
         </>
         )}
 
@@ -218,6 +211,27 @@ Order.getInitialProps = async () => {
     } 
 }
 /*
+
+
+
+<form onSubmit={handleSubmit(onSubmitOrder)}>
+            <ul>
+                {orderList && (orderList.map((item, index) => {
+                    return (
+                    <li key={item, index}>
+                        {item}
+                        
+                    </li>)
+                }))}
+            </ul>
+
+            <button type="submit">Send inn</button>
+        </form>
+
+                    <label htmlFor="hamburgerCount">Velg antall: </label>
+                    <input id="hamburgerCount" type="number" placeholder="velg antall" name="hamburgerCount" ref={register} />
+
+
                         <label htmlFor="small">Liten</label>
                         <input id="small" name={item + "size"} type="radio" value="stor" ref={register}/>
 

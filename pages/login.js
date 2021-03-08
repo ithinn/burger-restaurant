@@ -32,7 +32,7 @@ function Login({ handleSubmit, users }) {
       useEffect(() => {
         if (isLoggedIn === true) {
             if (!(user || loading)) {
-                router.push('/user')
+                router.push('/order')
                 console.log("login");
             }
 
@@ -44,13 +44,6 @@ function Login({ handleSubmit, users }) {
       }, [isLoggedIn, user, loading])
     
       
-    
-
-
-
-
-
-
         firebaseInstance.auth().onAuthStateChanged((user) => {
             if (user) {
                 //User is signed in
