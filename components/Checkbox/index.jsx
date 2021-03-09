@@ -23,14 +23,14 @@ export const Label = styled.label`
 function Checkbox( { labelText, name, ref } ) {
     return(
         <>
-        <InvisibleInput 
+        <input
             type="checkbox"
             defaultChecked={false}
             name={name}
             ref={ref}
         />
 
-        <Label htmlFor={name}>{ labelText }</Label>
+        <label htmlFor={name}>{ labelText }</label>
         </>
     )
 }

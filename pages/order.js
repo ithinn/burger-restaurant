@@ -102,6 +102,7 @@ function Order({userData, orderData, food}) {
     const onSubmit = async (data) => {
         let orderList = [];
         console.log("Added to chart")
+        console.log(data);
 
         let type;
         let countTest;
@@ -130,23 +131,12 @@ function Order({userData, orderData, food}) {
                         sizeTest = data.typeSize[size]
                     }   
                 }
-                console.log(type, sizeTest, countTest);
-                orderList = [...orderList, [type, sizeTest, countTest]]
-               // setOrderList(prev => [...prev, [type, sizeTest, countTest]]);
+                console.log(type, sizeTest);
+                orderList = [...orderList, [type, sizeTest, 1]] 
             }
-
-            
-            
         }
-
         console.log(orderList);
         setOrderList(orderList);
-
-        reset
-        
-        //console.log(hamburger)
-
-        
     }
 
 
@@ -160,26 +150,17 @@ function Order({userData, orderData, food}) {
                 {category.type.map(type => {
                     return(
                         
-                            <FlexContainer border="1px solid red" flexHeight="10em" align="center" width="20em"  key={type}>
+                            <FlexContainer flexHeight="5em" align="center" width="20em"  key={type}>
                          
                             <div>
-                                <CheckBox 
-                                    labelText={type}
-                                    name={`type[${type}]`}
-                                    ref={register}
-                                />
-
+                                <label htmlFor={`type[${type}]`}>{type}</label>
+                                <input type="checkbox" name={`type[${type}]`} ref={register}/>
                             </div>
-
+                            {/*
                             <div>
-                                <InputBlock
-                                    inputName={`typeCount[${type}]`}
-                                    />
-
-
                                 <label htmlFor="typeCount">Antall</label>
                                 <input type="number" name={`typeCount[${type}]`} ref={register}/>
-                            </div>
+                            </div>*/}
 
                             <div>
                                 <label htmlFor="typeSize">Velg størrelse</label>
@@ -202,9 +183,11 @@ function Order({userData, orderData, food}) {
             </>
         )
     })
+
+    
+
     //Send order to database
     async function sendOrder(event) {
-
 
         if (isLoggedIn) {
             console.log("submitted");
@@ -386,6 +369,33 @@ function Order({userData, orderData, food}) {
     
       */
 
+      function handleChange(event) {
+
+          let index = event.target.id.replace(/[^0-9.]/g, "");
+          let tempArray = orderList;
+          let value = Number(event.target.value);
+
+          tempArray[index].splice(2, 1, value);
+          let emptyArray = [];
+        
+
+          
+          tempArray = tempArray.forEach(item => {
+              emptyArray.push({
+                  type: item[0],
+                  size: item[1],
+                  count: item[2]
+              })
+              
+          })
+      
+          console.log(emptyArray);
+          
+         setOrderList(emptyArray);
+      }
+
+    console.log(orderList);
+
 
     return(
         <Layout user>
@@ -399,9 +409,9 @@ function Order({userData, orderData, food}) {
                 {orderList && (orderList.map((item, index) => {
                     return (
                     <li key={item, index}>
-                
-                        {item[0] + ", " + item[1] + " " + item[2] + " stk"}
-                        
+                        <p>{item[0]}</p>
+                        <p>{item[1]}</p>
+                        <input onChange={event => handleChange(event)} type="number" id={"count" + index} placeholder="velg antall" defaultValue={1}/>
                     </li>)
                 }))}
             </ul>
