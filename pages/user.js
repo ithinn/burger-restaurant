@@ -24,6 +24,11 @@ function User( {food, orders} ) {
     const [orderList, setOrderList] = useState(orders.length)
     const [onlyOrder, setOnlyOrder] = useState(null);
 
+
+
+    console.log(food);
+
+
     
     //Get userId from Auth
     useEffect(() => {
@@ -41,7 +46,7 @@ function User( {food, orders} ) {
             }
         })
 
-        //setOrderNumber(orderList + 1);
+      
     }, [order, resetState]);
     
 

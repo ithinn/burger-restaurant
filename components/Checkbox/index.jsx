@@ -1,22 +1,36 @@
 import styled from "styled-components";
 
-const Input = styled.input`
-    font-size: 1rem;
-    margin-right: 1em;
+const InvisibleInput = styled.input`
+    
+    width: .1px;
+    height: .1px;
+
+
+
 `
 export const Label = styled.label`
     font-size: 1rem;
     margin: 1em;
+    border: 1px solid black;
+    padding: 2em;
 
+    &&:hover {
+        background: purple;
+    }
 `
 
-function Checkbox( { labelText } ) {
+
+function Checkbox( { labelText, name, ref } ) {
     return(
         <>
-        <Input 
+        <InvisibleInput 
             type="checkbox"
-            defaultChecked={false}/>
-        <Label>{ labelText }</Label>
+            defaultChecked={false}
+            name={name}
+            ref={ref}
+        />
+
+        <Label htmlFor={name}>{ labelText }</Label>
         </>
     )
 }

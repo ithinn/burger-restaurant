@@ -4,10 +4,13 @@ import { useState, useEffect } from "react";
 import Button from "../components/Button";
 import firebaseInstance from "../config/firebase";
 
-function Kitchen( ) {
+function Kitchen( {userData} ) {
+
+    console.log(userData);
  
     const [orderedOrders, setOrderedOrders] = useState(null);
     
+    //Listen for realtime updates on the orders in the server
     useEffect(() => {
         let ref = firebaseInstance.firestore().collection("orders").where("isPickedUp", "==", false)
         ref.onSnapshot((snapshot) => {
@@ -24,13 +27,13 @@ function Kitchen( ) {
         })
 
     }, []);
-      
+    
+    //Change state of the order
     function handleClick(event) {
         console.log(event.target.parentNode.id)
 
         let id = event.target.id.substring(3);
-        console.log(id);
-        
+      
         const orderRef = firebaseInstance.firestore().collection("orders").doc(id);
 
         if(event.target.parentNode.id === "orders") {
@@ -57,10 +60,10 @@ function Kitchen( ) {
             .catch((error) => {
                 console.log(error);
             })
-
-        }
-        
+        } 
     }
+
+
 
     return(
 
@@ -75,8 +78,14 @@ function Kitchen( ) {
         
                     return(
                         <article id="orders">
-                            <p>Ordrenummer: {order.orderNumber}</p>  
-                            <p>{order.orderList}</p>
+
+                            <p>Ordrenummer: {order.orderNumber}</p> 
+                            <ul>
+                                {order.orderList.map(item => {
+                                    return <li>{item}</li>
+                                })}
+                            </ul>
+                            
                             <button id={"btn" + order.id} type="submit" onClick={event => handleClick(event)}>Ferdig</button>
                         </article>
                     )
@@ -94,9 +103,14 @@ function Kitchen( ) {
                     return(
                         <article id="prepared">
                             <p>Ordrenummer: {order.orderNumber}</p>  
-                            <p>{order.orderList}</p>
+                            <ul>
+                                {order.orderList.map(item => {
+                                    return <li>{item}</li>
+                                })}
+                            </ul>
                             <button id={"btn" + order.id} type="submit" onClick={event => handleClick(event)}>Ferdig</button>
-                        </article>
+                    </article>
+                      
                     )
                 }
                         
@@ -117,7 +131,24 @@ function Kitchen( ) {
 
 export default Kitchen;
 
+Kitchen.getInitialProps = async () => {
+    try {
+        const userData = await readCollection("users")
+        
+        return { userData }
+    }
+    catch (error) {
+        return {
+            error: error.message
+        }
+    } 
+}
 
+  /*<article id="prepared">
+                            <p>Ordrenummer: {order.orderNumber}</p>  
+                            <p>{order.orderList}</p>
+                            <button id={"btn" + order.id} type="submit" onClick={event => handleClick(event)}>Ferdig</button>
+                    </article>*/
 /*
 useEffect(() => {
 

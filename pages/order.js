@@ -3,7 +3,7 @@ import readCollection from "./database/readCollection";
 import Select from "../components/Select";
 import FlexContainer from "../components/FlexContainer";
 import Button from "../components/Button";
-import {useEffect, useState } from "react"
+import {useEffect, useState, useRef } from "react"
 import RadioInput from "../components/RadioInput";
 import firebaseInstance from "firebase";
 import Link from "next/link";
@@ -14,22 +14,25 @@ import {yupResolver} from "@hookform/resolvers/yup"
 import {string, object} from "yup"
 import { useRouter } from "next/router";
 import { render } from "react-dom";
-
-
+import CheckBox from "../components/Checkbox";
+import InputBlock from "../components/InputBlock";
 const schema = object().shape({
     
 })
 
 
 
-function Order({userData, orderData}) {
+function Order({userData, orderData, food}) {
 
     const [userId, setUserId] = useState(null)
-    const [userHasOrdered, setUserHasOrdered] = useState(false)
+    const [burgerInput, setBurgerInput] = useState(null);
+    const [userHasOrdered, setUserHasOrdered] = useState(null)
+    const [sidesInput, setSidesInput] = useState(null);
+    const [drinksInput, setDrinksInput] = useState(null);
     const [orderList, setOrderList] = useState(null)
     const [isLoggedIn, setIsLoggedIn] = useState(false)
     const [orderNumber, setOrderNumber] = useState(null);
-    const {register, handleSubmit, watch, errors} = useForm({
+    const {register, handleSubmit, reset, watch, errors} = useForm({
         mode: "onChange",
         defaultValues: {
             hamburgerCount: 1,
@@ -38,16 +41,20 @@ function Order({userData, orderData}) {
             sweetPotatoeCount: 1,
             colaCount: 1,
             spriteCount: 1,
+            typeSize: null
         },
         resolver: yupResolver(schema)
     })
     let userName;
-   
-    
     const today = new Date();
     const date = today.getDate() + "." + (today.getMonth()+1) + "." + today.getFullYear();
 
-    //console.log(orderData);
+
+    
+
+   
+
+    //Get userId
     useEffect(() => {
         firebaseInstance.auth().onAuthStateChanged((user) => {
 
@@ -76,47 +83,126 @@ function Order({userData, orderData}) {
                     ...doc.data()
                 })
             })
-            console.log(data);
             setOrderNumber(data.length + 101)
             
         })
 
     }, []);
 
-    console.log(orderNumber);
    
     //Get userName
     userData.forEach(user => {
         if (user.id === userId) {
-            //console.log(user.name);
             userName = user.name
         }
     })
 
+
+    //Add to order
     const onSubmit = async (data) => {
         let orderList = [];
         console.log("Added to chart")
 
-        for (let item in data) {
+        let type;
+        let countTest;
+        let sizeTest;
+       
+        for (let item in data.type) {
             
-      
-            if (data[item]) {
-                /*
-                if (reg.test(data[item]) && data[item] > 1) {
-                    orderList.push(data[item])
-                    //value = data[item]
-                } else {
-                    //key = item
-                    orderList.push(item);
+            if (data.type[item]) {
+                //console.log(item, "is true");
+               // orderList.push(item);
+                type = item;
+
+                for (let count in data.typeCount) {
+                    
+                    if (count === item) {
+                        //console.log(data.typeCount[count], item, count)
+                        countTest = data.typeCount[count]
+                    }
+                  
                 }
-                */
-                orderList.push(item);
+
+                for (let size in data.typeSize) {
+                    
+                    if (size === item) {
+                        //console.log(data.typeSize[size], item, count);
+                        sizeTest = data.typeSize[size]
+                    }   
+                }
+                console.log(type, sizeTest, countTest);
+                orderList = [...orderList, [type, sizeTest, countTest]]
+               // setOrderList(prev => [...prev, [type, sizeTest, countTest]]);
             }
+
+            
+            
         }
 
+        console.log(orderList);
         setOrderList(orderList);
+
+        reset
+        
+        //console.log(hamburger)
+
+        
     }
 
+
+
+    const menu = food.map(category => {
+        return(
+            <>
+            
+            <div>
+                <h2>{category.id}</h2>
+                {category.type.map(type => {
+                    return(
+                        
+                            <FlexContainer border="1px solid red" flexHeight="10em" align="center" width="20em"  key={type}>
+                         
+                            <div>
+                                <CheckBox 
+                                    labelText={type}
+                                    name={`type[${type}]`}
+                                    ref={register}
+                                />
+
+                            </div>
+
+                            <div>
+                                <InputBlock
+                                    inputName={`typeCount[${type}]`}
+                                    />
+
+
+                                <label htmlFor="typeCount">Antall</label>
+                                <input type="number" name={`typeCount[${type}]`} ref={register}/>
+                            </div>
+
+                            <div>
+                                <label htmlFor="typeSize">Velg størrelse</label>
+                                <select name={`typeSize[${type}]`} ref={register}>
+                                    <option value="0">-</option>
+                                    <option value="400g">400g</option>
+                                    <option value="600g">600g</option>
+                                    <option value="800g">800g</option>
+                                </select>
+                            </div>
+                        
+                           
+
+                        </FlexContainer>
+                       
+                        
+                    )
+                })}
+            </div>
+            </>
+        )
+    })
+    //Send order to database
     async function sendOrder(event) {
 
 
@@ -136,6 +222,7 @@ function Order({userData, orderData}) {
                     
                 })
                 setUserHasOrdered(true);
+                setOrderList(null);
             }
             catch(error) {
                 console.log(error);
@@ -153,6 +240,49 @@ function Order({userData, orderData}) {
         )
     }
 
+
+    function addInputField(event) {
+        console.log(event.target.value);
+
+        let array = [];
+     
+        for (let i = 0; i < event.target.value; i++) {
+            array.push(i);
+        }
+
+        const inputList = array.map((item, index) => {
+            return (
+               
+                    <select id={"hamburgerSize" + index+1} name="hamburger[hamburgerSize][]" ref={register}>
+                            <option value="200g">200g</option>
+                            <option value="400g">400g</option>
+                            <option value="800g">800g</option>
+                    </select>  
+            )
+        })
+
+        setBurgerInput(inputList);
+        //setSidesInput(inputList);
+        //setDrinksInput(inputList);
+       
+    }
+
+    /*
+    const burgerInputs = useRef()
+
+    <div ref={burgerInputs}>
+    <select id="hamburgerSelect" name="hamburger[hamburgerSelect][]" ref={register}>
+        <option value="200g">200g</option>
+        <option value="400g">400g</option>
+        <option value="800g">800g</option>
+    </select>
+</div>*/
+
+
+
+
+
+
     function renderPage() {
         return(
             <article>
@@ -161,13 +291,34 @@ function Order({userData, orderData}) {
 
                 <h2>Velg produkter</h2>
                 <form
-            onSubmit={handleSubmit(onSubmit)}>
+                onSubmit={handleSubmit(onSubmit)}>
+
+                    {menu}
+
+             {/*hamburger[hamburger][]
 
             <ul>
                 <li>
-                    <input id="hamburger" type="checkbox" name="hamburger" ref={register} />
+                    <input onChange={event => addInputField(event)} id="hamburger" type="checkbox" name="hamburger" ref={register} />
                     <label htmlFor="hamburger">Hamburger</label>
+                    
+                    <select id="hamburgerSelect" name="hamburger[hamburgerSelect][]" ref={register}>
+                        <option value="0">-</option>
+                        <option value="200g">200g</option>
+                        <option value="400g">400g</option>
+                        <option value="800g">800g</option>
+                    </select>
+
+{/*
+                    <label htmlFor="hamburgerCount">Velg antall: </label>
+                    <input id="hamburgerCount" type="number" placeholder="velg antall" name="hamburger[hamburgerCount][]" ref={register} onChange={event => addInputField(event)}/>
+
+               
+                    
                 </li>
+
+           
+              
 
                 <li>
                     <input id="cheeseburger" type="checkbox" name="cheeseburger" ref={register} />
@@ -195,8 +346,10 @@ function Order({userData, orderData}) {
                 </li>
             </ul>    
             
-            <button type="submit">Send</button>
 
+        */}
+            <button type="submit">Send</button>
+            
         </form>
             </article>
         )
@@ -213,7 +366,7 @@ function Order({userData, orderData}) {
           setIsLoggedIn(false);
     }
 
-
+/*
     //Redirect after sending the order
     const useUser = () => ({ user: null, loading: false })
     const { user, loading } = useUser()
@@ -231,16 +384,14 @@ function Order({userData, orderData}) {
 
       }, [userHasOrdered, user, loading])
     
-      
+      */
 
 
     return(
         <Layout user>
         {isLoggedIn ? renderPage() : renderLoginFirst()}
         
-        
-
-        
+   
         {orderList &&(
         <>    
         <h2>Kvittering</h2>
@@ -248,7 +399,8 @@ function Order({userData, orderData}) {
                 {orderList && (orderList.map((item, index) => {
                     return (
                     <li key={item, index}>
-                        {item}
+                
+                        {item[0] + ", " + item[1] + " " + item[2] + " stk"}
                         
                     </li>)
                 }))}
@@ -265,13 +417,16 @@ function Order({userData, orderData}) {
     )
 }
 
+
 export default Order;
+
 
 Order.getInitialProps = async () => {
     try {
         const userData = await readCollection("users")
         const orderData = await readCollection("orders");
-        return { userData, orderData }
+        const food = await readCollection("food");
+        return { userData, orderData, food }
     }
     catch (error) {
         return {
@@ -328,9 +483,50 @@ Order.getInitialProps = async () => {
                     </select>
 
 
+/*
+        switch (event.target.id) {
+            case hamburger:
+
+                inputList = array.map((item, index) => {
+                    return (
+                        <select id={"hamburgerSize" + index+1} name="hamburger[hamburgerSize][]" ref={register}>
+                                    <option value="200g">200g</option>
+                                    <option value="400g">400g</option>
+                                    <option value="800g">800g</option>
+                                </select>
+                    )
+                })
+                break;
+            case hamburger:
+
+                inputList = array.map((item, index) => {
+                    return (
+                        <select id={"hamburgerSize" + index+1} name="hamburger[hamburgerSize][]" ref={register}>
+                                    <option value="200g">200g</option>
+                                    <option value="400g">400g</option>
+                                    <option value="800g">800g</option>
+                                </select>
+                    )
+                })
+                break;
+            case hamburger:
+
+                inputList = array.map((item, index) => {
+                    return (
+                        <select id={"hamburgerSize" + index+1} name="hamburger[hamburgerSize][]" ref={register}>
+                                    <option value="200g">200g</option>
+                                    <option value="400g">400g</option>
+                                    <option value="800g">800g</option>
+                                </select>
+                    )
+                })
+                break;
+
+hamburger[hamburgerSize][]
+        }*/
 
 
-                        */
+                        
 
 /* <input name="size" type="radio" value="liten" ref={register({ required: true })}/>
                         <label htmlFor="liten">Liten</label>

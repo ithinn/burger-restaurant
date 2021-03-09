@@ -8,7 +8,7 @@ import ListItem from "../ListItem";
 function OrderItem( {data, userData} ) {
     
     console.log(userData);
-
+/*
     let buttonClr;
     let buttonInnerText;
     let userName;
@@ -32,8 +32,11 @@ function OrderItem( {data, userData} ) {
         buttonInnerText = "Fullført"
     }
 
-   
+   */
     return(<>
+    <h3>test</h3>
+
+    {/*
     <h3>{"Bestillingsreferanse:" + " " + data.orderId}</h3>
     <p>{"Kunde:" + " " + userName }</p>
     <p>{"Kundenummer:" + " " + data.content.order.userId }</p>
@@ -71,7 +74,7 @@ function OrderItem( {data, userData} ) {
     
     </FlexContainer>
     
-
+*/}
     
     </>)
 }
