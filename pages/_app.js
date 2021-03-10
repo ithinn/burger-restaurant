@@ -1,12 +1,16 @@
 import '../styles/globals.css'
 import {AuthProvider} from "../config/auth"
-
+import {Basket} from "../context/BasketContext";
 
 function MyApp({ Component, pageProps }) {
   return (
-  <AuthProvider>
+  
+  
+    <Basket>
     <Component {...pageProps} />
-  </AuthProvider>
+    </Basket>
+
+
   ) 
 }
 

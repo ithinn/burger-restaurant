@@ -1,11 +1,12 @@
 import styled from "styled-components";
 
-const InvisibleInput = styled.input`
-    
+export const InvisibleInput = styled.input`
     width: .1px;
     height: .1px;
 
-
+    &&:checked ~ label {
+        background: red;
+    }
 
 `
 export const Label = styled.label`
@@ -17,9 +18,22 @@ export const Label = styled.label`
     &&:hover {
         background: purple;
     }
+
+
 `
 
+export const LabelAsButton = styled.label`
+    font-size: 1rem;
+    background: darkcyan;
+    border: 2px solid black;
+    padding: 1em;
+    margin: 1em;
+    &&:hover {
+        background: purple;
+    }
+`
 
+/*
 function Checkbox( { labelText, name, ref } ) {
     return(
         <>
@@ -34,5 +48,4 @@ function Checkbox( { labelText, name, ref } ) {
         </>
     )
 }
-
-export default Checkbox
+*/

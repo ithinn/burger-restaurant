@@ -2,6 +2,7 @@ import styled from "styled-components";
 import Link from "next/link";
 import Image from "next/image";
 import utilStyles from '../../styles/utils.module.css'
+import {LabelAsButton, InvisibleInput} from "../Checkbox";
 
 const HeaderBase = styled.header`
 display: flex;
@@ -28,6 +29,7 @@ function Header({heading, isUser, isLoggedIn}) {
             
             <h1>{heading}</h1>
 
+            
             {isUser === true &&
                   (<Image
                   src={isLoggedIn ? "/images/Ida.jpg" : "/images/IMG_0119.jpg" }
@@ -37,6 +39,7 @@ function Header({heading, isUser, isLoggedIn}) {
                   className={utilStyles.roundImg}
                  />)
             }
+
         </HeaderBase>
     )
 }

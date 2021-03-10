@@ -7,13 +7,17 @@ const FlexBase = styled.article`
     justify-content: ${props => props.justify};
     align-items: ${props => props.align};
     display: flex;
-    border: ${props => props.border}
+    border: ${props => props.border};
+    background: ${props => props.backgroundClr};
+    margin: 1em;
+    flex-wrap: wrap;
     
 `
 
-function FlexContainer({border, flexWidth, flexHeight, direction, justify, align, children}) {
+function FlexContainer({border, flexWidth, flexHeight, direction, justify, align, children, backgroundClr}) {
     return(
         <FlexBase
+            backgroundClr={backgroundClr}
             flexWidth={flexWidth}
             flexHeight={flexHeight}
             direction={direction}

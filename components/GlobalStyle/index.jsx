@@ -10,6 +10,10 @@ const GlobalStyle = createGlobalStyle`
         height: 100%;
     }
 
+    body {
+        background-color: #f9f9f8;
+    }
+
     main {
         width: 96%;
         margin: 0 auto;
@@ -19,8 +23,26 @@ const GlobalStyle = createGlobalStyle`
         
     }
 
+    h1 {
+        font-family: "gastromond"
+    }
+
     h2 {
         text-align: center;
+        font-family: "gastromond";
+
+    }
+
+    h3 {
+        font-family: "expo-serif-pro";
+    }
+
+    p {
+        font-family: "expo-serif-pro"
+    }
+
+    label  {
+        font-family: "expo-serif-pro"
     }
 
 `

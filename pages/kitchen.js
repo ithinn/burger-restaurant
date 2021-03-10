@@ -16,17 +16,24 @@ function Kitchen( {userData} ) {
         ref.onSnapshot((snapshot) => {
             console.log(snapshot);
             let data = [];
+            let test = []
             snapshot.forEach((doc) => {
                 data.push({
                     id: doc.id,
                     ...doc.data()
                 })
+
+                test.push(doc.data());
             })
+
             console.log(data);
-            setOrderedOrders(data);
+            console.log(test);
+           setOrderedOrders(data);
         })
 
     }, []);
+
+    console.log(orderedOrders);
     
     //Change state of the order
     function handleClick(event) {
@@ -63,16 +70,8 @@ function Kitchen( {userData} ) {
         } 
     }
 
-
-
-    return(
-
-        <>
-        <Layout kitchen>
-        
-        <h2>Bestillinger</h2>
-        {orderedOrders !== null &&(
-            orderedOrders.map((order, index) => {
+/*
+    orderedOrders.map((order, index) => {
         
                 if(order.isOrdered) {
         
@@ -105,7 +104,7 @@ function Kitchen( {userData} ) {
                             <p>Ordrenummer: {order.orderNumber}</p>  
                             <ul>
                                 {order.orderList.map(item => {
-                                    return <li>{item}</li>
+                                    return <li>{item.title}</li>
                                 })}
                             </ul>
                             <button id={"btn" + order.id} type="submit" onClick={event => handleClick(event)}>Ferdig</button>
@@ -115,7 +114,60 @@ function Kitchen( {userData} ) {
                 }
                         
             })
+        )}*/
+
+    return(
+
+        <>
+        <Layout kitchen>
+        
+        <h2>Bestillinger</h2>
+
+        <h2>Må lages nå</h2>
+        {orderedOrders !== null &&(
+            
+            orderedOrders.map((order, index) => {
+                if (order.isOrdered === true) {
+                    return (
+                        <article id="orders">
+
+                            <p>Ordrenummer: {order.orderNumber}</p> 
+                            <ul>
+                                {order.orderList.map(item => {
+                                    return <li>{item.count + " stk " + item.title + " " + item.size  }</li>
+                                })}
+                            </ul>
+                            
+                            <button id={"btn" + order.id} type="submit" onClick={event => handleClick(event)}>Ferdig</button>
+                        </article>
+                    )
+                }
+            })
+
         )}
+
+
+        <h2>Klar til henting</h2>
+                {orderedOrders !== null &&(
+                    
+                    orderedOrders.map((order, index) => {
+                        if (order.isPrepared === true) {
+                            return (
+                                <article id="prepared">
+                                    <p>Ordrenummer: {order.orderNumber}</p>  
+                                    <ul>
+                                        {order.orderList.map(item => {
+                                            return <li>{item.count + " stk " + item.title + " " + item.size  }</li>
+                                        })}
+                                    </ul>
+                                    <button id={"btn" + order.id} type="submit" onClick={event => handleClick(event)}>Ferdig</button>
+                                </article>
+                            )
+                        }
+                    })
+
+                )}
+        
 
 
 

@@ -86,6 +86,7 @@ function UserStatus({userData}) {
       }, [isLoggedIn, user, loading])
 
 
+    console.log(usersOrders);
     return (
         <Layout user>
             <FlexContainer
@@ -106,7 +107,7 @@ function UserStatus({userData}) {
                         usersOrders.map((order, index) => {
                             if (!order.isPickedUp) {
                                 return (
-                                    <article key={order.id + index}>
+                                    <article key={"order" + index}>
                             
                                         <OrderStatusCircle 
                                             background={order.isOrdered ? "yellow" : "green"}>
@@ -114,7 +115,7 @@ function UserStatus({userData}) {
                                             <h3>{order.isOrdered ? "Du har bestilt" : "Bestillingen er klar!"}</h3>
                                             <ul>
                                                 {order.orderList.map(item => {
-                                                    return (<li>{item}</li>)
+                                                    return (<li key={"listItem" + item.title}>{item.count + " stk " + item.title + " " + item.size  }</li>)
                                                 })}
                                             </ul>
                                             <p>{order.isOrdered ? "Maten blir forberedt" : "Du kan hente maten i kassen"}</p>
