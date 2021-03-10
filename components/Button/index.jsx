@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 const ButtonBase = styled.button`
     font-size: 1rem;
-    border: 2px solid black;
+    border: ${props => props.btnBorder};
     color: ${props => props.txtColor};
     background: ${props => props.btnColor};
     padding: .7em;
@@ -14,7 +14,7 @@ const ButtonBase = styled.button`
     }
 `
 
-function Button( {type, btnColor, txtColor, children, id, onClick} ) {
+function Button( {type, btnColor, txtColor, btnBorder, children, id, onClick} ) {
  
     return(
         
@@ -23,6 +23,7 @@ function Button( {type, btnColor, txtColor, children, id, onClick} ) {
             onClick={onClick !== undefined ? () => onClick() : null}
             type={type}
             btnColor={btnColor} 
+            btnBorder={btnBorder}
             txtColor={txtColor}> {children} </ButtonBase> 
             
     )

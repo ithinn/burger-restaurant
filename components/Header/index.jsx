@@ -3,15 +3,17 @@ import Link from "next/link";
 import Image from "next/image";
 import utilStyles from '../../styles/utils.module.css'
 import {LabelAsButton, InvisibleInput} from "../Checkbox";
+import {PageHeading} from "../Headings";
 
 const HeaderBase = styled.header`
 display: flex;
 width: 100%;
 height: 20vh;
-background: black;
-color: white;
+background: white;
+color: #346f83;
 align-items: center;
 justify-content: space-around;
+
 `
 
 function Header({heading, isUser, isLoggedIn}) {
@@ -27,8 +29,7 @@ function Header({heading, isUser, isLoggedIn}) {
                 />
             </Link>
             
-            <h1>{heading}</h1>
-
+            
             
             {isUser === true &&
                   (<Image

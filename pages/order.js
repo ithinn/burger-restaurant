@@ -21,6 +21,9 @@ import InputBlock from "../components/InputBlock";
 import Cart from "../components/Cart";
 import MenuItem from "../components/MenuItem"
 import {BasketConsumer, useBasket} from "../context/BasketContext";
+import Banner from "../components/Banner";
+import { PageHeading } from "../components/Headings";
+
 
 const schema = object().shape({
     
@@ -112,13 +115,13 @@ function Order({userData, orderData, food}) {
         sizes=category.sizes
 
         return(
-            <FlexContainer width="80%">
+            <FlexContainer width="80%" direction="column">
                 <h2>{category.id}</h2>
 
                 {category.name.map((type, index) => {
                     return(
 
-                        <MenuItem handleAdd={onAdd} type={type} index={index} sizes={sizes} />
+                        <MenuItem isLoggedIn={isLoggedIn} handleAdd={onAdd} type={type} index={index} sizes={sizes} />
 
                     )
                 })}
@@ -167,18 +170,17 @@ function Order({userData, orderData, food}) {
     function renderPage() {
         return(
             
-            <article>
-                <h1>Velkommen {userName}</h1>
-                <p>{userId}</p>
-
-                <h2>Velg produkter</h2>
+            <section>
+                <h2>Velkommen {userName}</h2>
+                
+                <PageHeading>Meny</PageHeading>
             
                 {menu}
 
                     
             
                 
-            </article>
+            </section>
         )
         
     }
@@ -265,6 +267,7 @@ function Order({userData, orderData, food}) {
     return(
         <Layout user>
         <main>
+            <Banner isLoggedIn={isLoggedIn} userId={userId}/>
             
 
         {isLoggedIn ? renderPage() : renderLoginFirst()}

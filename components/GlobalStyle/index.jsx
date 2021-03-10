@@ -11,11 +11,11 @@ const GlobalStyle = createGlobalStyle`
     }
 
     body {
-        background-color: #f9f9f8;
+        background-color: #d1d1d1;
     }
 
     main {
-        width: 96%;
+        
         margin: 0 auto;
         display: flex;
         flex-direction: column;
@@ -24,12 +24,13 @@ const GlobalStyle = createGlobalStyle`
     }
 
     h1 {
-        font-family: "gastromond"
+        font-size: 3rem;
     }
 
     h2 {
         text-align: center;
         font-family: "gastromond";
+        
 
     }
 
