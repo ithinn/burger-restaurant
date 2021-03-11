@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const FlexBase = styled.article`
+const FlexContainer = styled.article`
     width: ${props => props.flexWidth};
     height: ${props => props.flexHeight};
     flex-direction: ${props => props.direction};
@@ -9,12 +9,23 @@ const FlexBase = styled.article`
     display: flex;
     border: ${props => props.border};
     background: ${props => props.backgroundClr};
-    margin: 1em;
+    margin: ${props => props.theme.space[2]};
     flex-wrap: wrap;
-    
 `
 
-function FlexContainer({border, flexWidth, flexHeight, direction, justify, align, children, backgroundClr}) {
+FlexContainer.defaultProps= {
+    border: "none", 
+    flexWidth: "100px", 
+    flexHeight: "auto", 
+    direction: "column", 
+    justify: "center", 
+    align: "center",  
+    backgroundClr: "none"
+}
+
+
+/*
+function FlexContainer({}) {
     return(
         <FlexBase
             backgroundClr={backgroundClr}
@@ -28,5 +39,5 @@ function FlexContainer({border, flexWidth, flexHeight, direction, justify, align
         </FlexBase>
     )
 }
-
+*/
 export default FlexContainer;

@@ -64,7 +64,7 @@ function MenuItem( {handleAdd, type, index, sizes, isLoggedIn} ) {
     return (
         
 
-        <FlexContainer backgroundClr="white" flexHeight="auto" justify="center" align="center" direction="column" width="20em"  key={type}>
+        <FlexContainer backgroundClr="white" flexHeight="auto" justify="center" align="center" direction="column" flexWidth="15em" key={type}>
                             
                             <Image
                                     src="/images/soyaburger.jpg"

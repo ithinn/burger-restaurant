@@ -23,6 +23,10 @@ const GlobalStyle = createGlobalStyle`
         
     }
 
+    section {
+        width: 96%;
+    }
+
     h1 {
         font-size: 3rem;
     }

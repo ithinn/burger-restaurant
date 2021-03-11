@@ -6,53 +6,47 @@ import Button from "../components/Button";
 import FlexContainer from "../components/FlexContainer";
 import Layout from "../components/Layout";
 import { useRouter } from "next/router";
+import {useAuth} from "../config/auth";
 
 function UserStatus({userData}) {
    
-    const [userId, setUserId] = useState(null);
+    //const [userId, setUserId] = useState(null);
     const [usersOrders, setUsersOrders] = useState([])
-    const [isLoggedIn, setIsLoggedIn] = useState(true);
+    //const [isLoggedIn, setIsLoggedIn] = useState(true);
     let userName;
-
-
-    //Get userId
-    useEffect(() => {
-        firebaseInstance.auth().onAuthStateChanged((user) => {
-            if (user) {
-                //User is signed in
-                let uid = user.uid
-              
-                setUserId(uid);
-            } else {
-                console.log(user + "is signed out")
-            }
-        })
-    }, []);
-
-
+    const router = useRouter()
+    const {user, loading, isAuthenticated} = useAuth();
+    const userId = user ? user.uid : false;
+    
     //Get userName from Firestore
     userData.forEach(user => {
-        if (user.id === userId) {
-            userName = user.name
+        if (userId) {
+            if (user.id === userId) {
+                userName = user.name
+            }
         }
+        
     })
 
 
     //Get all the users orders that hasn't been picked up yet
     useEffect(() => {
-        let ref = firebaseInstance.firestore().collection("orders").where("userId", "==", userId)
-        ref.onSnapshot((snapshot) => {
-
-            let data = [];
-            snapshot.forEach((doc) => {
-                data.push({
-                    id: doc.id,
-                    ...doc.data()
+        if (userId) {
+            let ref = firebaseInstance.firestore().collection("orders").where("userId", "==", userId)
+            ref.onSnapshot((snapshot) => {
+                console.log("snapshot setter inn")
+                let data = [];
+                snapshot.forEach((doc) => {
+                    data.push({
+                        id: doc.id,
+                        ...doc.data()
+                    })
                 })
+                setUsersOrders(data);
+            
             })
-            setUsersOrders(data);
-        
-        })
+        }
+       
     }, [userId]);
 
 
@@ -64,10 +58,10 @@ function UserStatus({userData}) {
           }).catch((error) => {
             console.log(error);
           });
-          setIsLoggedIn(false);  
+            
     }
 
-    
+    /*
     //Redirect after signing out
     const useUser = () => ({ user: null, loading: false })
     const { user, loading } = useUser()
@@ -84,6 +78,21 @@ function UserStatus({userData}) {
         }
 
       }, [isLoggedIn, user, loading])
+
+    
+     */
+    
+      if (loading) {
+        return <p>loading loading</p>
+    }
+
+    if (!isAuthenticated) {
+        router.push('/order');
+        return <p>Ikke logget inn</p>
+    }
+
+
+
 
 
     console.log(usersOrders);

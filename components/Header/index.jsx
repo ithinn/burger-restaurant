@@ -4,6 +4,7 @@ import Image from "next/image";
 import utilStyles from '../../styles/utils.module.css'
 import {LabelAsButton, InvisibleInput} from "../Checkbox";
 import {PageHeading} from "../Headings";
+import {useBasket} from "../../context/BasketContext";
 
 const HeaderBase = styled.header`
 display: flex;
@@ -17,6 +18,14 @@ justify-content: space-around;
 `
 
 function Header({heading, isUser, isLoggedIn}) {
+
+    const basket = useBasket();
+
+    const extraFunction = (event) => {
+        console.log(event.target);
+        basket.checkCart(event);
+    }
+
     return(
         <HeaderBase>
             <Link href="/burger">
@@ -28,7 +37,8 @@ function Header({heading, isUser, isLoggedIn}) {
                     className={utilStyles.roundImg}
                 />
             </Link>
-            
+
+            <button id="cartBtn" onClick={event => basket.checkCart(event)}>Handlekurv2</button>
             
             
             {isUser === true &&

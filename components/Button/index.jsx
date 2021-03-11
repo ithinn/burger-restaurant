@@ -14,6 +14,13 @@ const ButtonBase = styled.button`
     }
 `
 
+
+
+
+Button.defaultProps = {
+
+}
+
 function Button( {type, btnColor, txtColor, btnBorder, children, id, onClick} ) {
  
     return(

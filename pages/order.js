@@ -30,45 +30,19 @@ const schema = object().shape({
 })
 
 
-function Order({userData, orderData, food}) {
+function Order({userData, food}) {
 
-    const [userId, setUserId] = useState(null)
-    const [burgerInput, setBurgerInput] = useState(null);
-    const [userHasOrdered, setUserHasOrdered] = useState(null)
-    const [sidesInput, setSidesInput] = useState(null);
-    const [drinksInput, setDrinksInput] = useState(null);
-    //const [basket.productLine, basket.addProductLine] = useState([])
-    const [isLoggedIn, setIsLoggedIn] = useState(false)
+    
     const [orderNumber, setOrderNumber] = useState(null);
     const basket = useBasket();
-    //const basket.productLine = basket.productLines
-    //const basket.addProductLine = basket.addProductLine;
-
-
-
     let userName;
     const today = new Date();
     const date = today.getDate() + "." + (today.getMonth()+1) + "." + today.getFullYear();
+    const {user, loading, isAuthenticated} = useAuth();
+    const userId = user ? user.uid : false;
+    const router = useRouter();
     
-
-    //Get userId
-    useEffect(() => {
-        firebaseInstance.auth().onAuthStateChanged((user) => {
-
-            if (user) {
-                let uid = user.uid
-                setUserId(uid);
-                setIsLoggedIn(true);
-
-            } else {
-                console.log(user + "is signed out")
-                setIsLoggedIn(false);
-            }
-        })
-
-    }, []);
-
-
+  
     //Get number of existing orders
     useEffect(() => {
         let ref = firebaseInstance.firestore().collection("orders").where("isPickedUp", "==", false)
@@ -98,16 +72,12 @@ function Order({userData, orderData, food}) {
 
     //Add to order
     const onAdd = async (data) => {
-        console.log(data);
-        console.log(basket.productLines);
 
         basket.addProductLine([...basket.productLines, data])
-
-        //basket.addProductLine({data: data})
-        
+  
     }
 
-
+    console.log("cart: ", basket.isCartChecked);
     //Create menu
     let sizes;
     const menu = food.map(category => {
@@ -115,18 +85,21 @@ function Order({userData, orderData, food}) {
         sizes=category.sizes
 
         return(
-            <FlexContainer width="80%" direction="column">
-                <h2>{category.id}</h2>
+            <>
+            <h2>{category.id}</h2>
+            <FlexContainer flexWidth="90%" border="1px solid pink" direction="row" justify="center">
+                
 
                 {category.name.map((type, index) => {
                     return(
 
-                        <MenuItem isLoggedIn={isLoggedIn} handleAdd={onAdd} type={type} index={index} sizes={sizes} />
+                        <MenuItem isLoggedIn={isAuthenticated} handleAdd={onAdd} type={type} index={index} sizes={sizes} />
 
                     )
                 })}
 
             </FlexContainer>
+            </>
         )
     })
 
@@ -174,7 +147,7 @@ function Order({userData, orderData, food}) {
                 <h2>Velkommen {userName}</h2>
                 
                 <PageHeading>Meny</PageHeading>
-            
+
                 {menu}
 
                     
@@ -186,7 +159,7 @@ function Order({userData, orderData, food}) {
     }
 
 
-
+/*
     //Redirect after sending the order
     const useUser = () => ({ user: null, loading: false })
     const { user, loading } = useUser()
@@ -204,7 +177,7 @@ function Order({userData, orderData, food}) {
 
       }, [userHasOrdered, user, loading])
     
-      
+      */
     function handleRemove(event) {
 
         let index = event.target.id.replace(/[^0-9.]/g, "");
@@ -261,47 +234,25 @@ function Order({userData, orderData, food}) {
     }*/
 
 
-    console.log(basket.productLine);
+    console.log(basket.productLines);
+    if (loading) {
+        return <p>loading loading</p>
+    }
 
+    if (!isAuthenticated) {
+        //router.push('/login');
+        return <p>Ikke logget inn</p>
+    }
 
     return(
         <Layout user>
-        <main>
-            <Banner isLoggedIn={isLoggedIn} userId={userId}/>
+       
+        <Banner isLoggedIn={isAuthenticated} userId={userId}/>
             
-
-        {isLoggedIn ? renderPage() : renderLoginFirst()}
+        {isAuthenticated ? renderPage() : renderLoginFirst()}
         
-   
-        {basket.productLines &&(
-        <>    
-        <h2>Handlekurv</h2>
-
-        {basket.productLines.length < 1 &&(<p>Du har ikke handlet noe enda</p>)}
-        <ul>
-                {basket.productLines && (basket.productLines.map((item, index) => {
-                    return (
-                    <li key={item, index}>
-                        <p>{item.title + ", " + item.size}  </p>
-                        
-                        <label htmlFor={item + "inp"}>Velg antall: </label>
-                        <input onChange={event => handleChange(event)} id={item + "inp"} type="number" id={"count" + index} placeholder="velg antall" defaultValue={item.count}/>
-                        <button onClick={event => handleRemove(event)} id={"removeBtn" + index}>Fjern</button>
-                    </li>)
-                }))}
-            </ul>
-
-        <button onClick={event => sendOrder(event)} >Send inn</button>
+        {basket.isCartChecked && (<Cart sendOrder={event => sendOrder(event)} handleRemove={event => handleRemove(event)} handleChange={event => handleChange(event)}/>)}
         
-        </>
-        )}
-
-        <button onClick={() => basket.addProductLine(basket.productLine)}>Basket</button>
-        {basket.productLines.map(item => {
-            return <p>{item.name}</p>
-        })}
-
-        </main>
         
 
         </Layout>
@@ -399,6 +350,28 @@ Order.getInitialProps = async () => {
                 console.log(type, sizeTest);
                 tempArray = [...tempArray, [type, sizeTest, 1]] 
             }
+
+
+
+                /*
+    //Get userId
+    useEffect(() => {
+        firebaseInstance.auth().onAuthStateChanged((user) => {
+
+            if (user) {
+                let uid = user.uid
+                setUserId(uid);
+                setIsLoggedIn(true);
+
+            } else {
+                console.log(user + "is signed out")
+                setIsLoggedIn(false);
+            }
+        })
+
+    }, []);
+
+
         }*/
 
 
