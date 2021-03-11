@@ -3,7 +3,7 @@ import {useBasket} from "../../context/BasketContext";
 import FlexContainer from "../FlexContainer"
 import styled from "styled-components";
 import {Box, Flex} from "reflexbox";
-import {SelectLabel} from "../MenuItem";
+import { Label } from "../StyledComponents/Labels";
 import Button from "../Button";
 
 
@@ -88,7 +88,7 @@ function Cart({handleChange, handleRemove, sendOrder}) {
                             <div>
                                 <CartP>{item.title + ", " + item.size}  </CartP>
                 
-                                <SelectLabel htmlFor={item + "inp"}>Velg antall: </SelectLabel>
+                                <Label htmlFor={item + "inp"}>Velg antall: </Label>
                                 <CartInp onChange={event => handleChange(event)} id={item + "inp"} type="number" id={"count" + index} placeholder="velg antall" defaultValue={item.count}/>
                             </div>
                         

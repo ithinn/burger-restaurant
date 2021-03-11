@@ -13,7 +13,7 @@ const FlexContainer = styled.article`
     flex-wrap: wrap;
 `
 
-FlexContainer.defaultProps= {
+FlexContainer.defaultProps = {
     border: "none", 
     flexWidth: "100px", 
     flexHeight: "auto", 

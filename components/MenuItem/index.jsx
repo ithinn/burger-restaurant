@@ -1,6 +1,6 @@
 
 import FlexContainer from "../FlexContainer";
-import Button from "../Button";
+import Button from "../StyledComponents/Button";
 import {StyledH3} from "../Headings"
 import {useForm, useFieldArray, Controller } from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup"
@@ -8,6 +8,8 @@ import {string, object} from "yup"
 import Image from "next/image"
 import utilStyles from "../../styles/utils.module.css"
 import styled from "styled-components";
+import { Select } from "../StyledComponents/Inputs";
+import { Label } from "../StyledComponents/Labels";
 
 const schema = object().shape({
     
@@ -18,18 +20,8 @@ const ImgBase = styled.div`
     width: 100%;
 `
 
-export const SelectBase = styled.select`
-    font-size: 1rem;
-    border: 2px solid #346f83;
-    color: #346f83;
-    font-family: "oswald";
-`
-export const SelectLabel = styled.label`
-    font-size: 1rem;
-    color: #346f83;
-    font-family: "oswald";
-    margin-right: 1em;
-`
+
+
 
 
 
@@ -82,12 +74,12 @@ export function MenuItem( {handleAdd, type, index, sizes, isLoggedIn} ) {
                                 <div>
                                     <input ref={register} type="hidden" name="title" value={type}/>
                                     <input ref={register} type="hidden" name="count" value="1"/>
-                                    <SelectLabel htmlFor="typeSize">Velg størrelse</SelectLabel>
-                                    <SelectBase name="size" ref={register}>
+                                    <Label htmlFor="typeSize">Velg størrelse</Label>
+                                    <Select name="size" ref={register}>
                                         {sizes.map(size => {
                                             return <option value={size}>{size}</option>
                                         })}
-                                    </SelectBase>
+                                    </Select>
                                 </div>
                                 
                                 {isLoggedIn && (<Button btnBorder="none" txtColor="white" btnColor="#346f83" id={"btn" + type + index}>Legg til</Button>)}

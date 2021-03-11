@@ -40,7 +40,7 @@ function ThemeTest() {
         <Box width="100vw">
             <Box bg="blue" height="300px" width={[1, 1/2, 1/4]}>
                 Boxbox
-                <ButtonNew>Button</ButtonNew>
+                
             </Box>
 
             <Box bg="red" height="100px" width={[1/4, 1/2, 1]}>Card

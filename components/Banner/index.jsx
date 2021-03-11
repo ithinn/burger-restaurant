@@ -5,7 +5,7 @@ import Link from "next/link";
 const BannerBase = styled.section`
     width: 100%;
     height: 80vh;
-    background-image: url("/images/beefBurger.jpg");
+    background-image: url("/images/dinerFurniture.jpg");
     background-size: cover;
     display: flex;
     flex-direction: column;
@@ -33,7 +33,7 @@ function Banner({isLoggedIn}) {
     return(
 
         <BannerBase>
-            <PageHeading>Catchy slagord</PageHeading>
+            <PageHeading>Beste burgeren på Østlandet</PageHeading>
             <Link href="/login">
             <Sign>{isLoggedIn ? "Bestill nå" : "Logg inn"}</Sign>
             </Link>

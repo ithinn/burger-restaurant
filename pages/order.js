@@ -2,7 +2,7 @@ import Layout from "../components/Layout";
 import readCollection from "./database/readCollection";
 import Select from "../components/Select";
 import FlexContainer from "../components/FlexContainer";
-import Button from "../components/Button";
+import Button from "../components/StyledComponents/Button";
 import {useEffect, useState, useRef } from "react"
 import RadioInput from "../components/RadioInput";
 import firebaseInstance from "firebase";
@@ -23,6 +23,7 @@ import {MenuItem} from "../components/MenuItem"
 import {BasketConsumer, useBasket} from "../context/BasketContext";
 import Banner from "../components/Banner";
 import { PageHeading } from "../components/Headings";
+import ButtonTest from "../components/StyledComponents/Button";
 
 
 const schema = object().shape({
@@ -197,42 +198,9 @@ function Order({userData, food}) {
 
         tempArray[index] = {...tempArray[index], count: value}
 
-
-        console.log(tempArray);
         basket.addProductLine(tempArray);
-
         
-        //tempArray[index].splice(2, 1, value);
-        let emptyArray = [];
-        
-/* 
-        tempArray = tempArray.forEach(item => {
-            emptyArray.push({
-                type: item[0],
-                size: item[1],
-                count: item[2]
-            })
-              
-        })
-      
-        console.log(emptyArray);*/
-        //basket.addProductLine(tempArray);
-    }
-
-/*
-    function renderCart(event) {
-        return(
-            <Cart/>
-            <InvisibleInput type="checkbox" id="cart"/>
-            <LabelAsButton htmlFor="cart">Handlekurv</LabelAsButton>
-            <button onClick={renderCart}>Handlekurv</button>
-        )
-
-        
-
-
-
-    }*/
+    }    
 
 
     console.log(basket.productLines);
@@ -248,7 +216,7 @@ function Order({userData, food}) {
         <Layout user>
        
         <Banner isLoggedIn={isAuthenticated} userId={userId}/>
-            
+        <ButtonTest >Test</ButtonTest>
         {isAuthenticated ? renderPage() : renderLoginFirst()}
         
         {basket.isCartChecked && (<Cart sendOrder={event => sendOrder(event)} handleRemove={event => handleRemove(event)} handleChange={event => handleChange(event)}/>)}
