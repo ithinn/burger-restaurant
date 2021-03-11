@@ -19,7 +19,7 @@ import Image from "next/image";
 import {LabelAsButton, InvisibleInput} from "../components/Checkbox";
 import InputBlock from "../components/InputBlock";
 import Cart from "../components/Cart";
-import MenuItem from "../components/MenuItem"
+import {MenuItem} from "../components/MenuItem"
 import {BasketConsumer, useBasket} from "../context/BasketContext";
 import Banner from "../components/Banner";
 import { PageHeading } from "../components/Headings";
@@ -38,8 +38,10 @@ function Order({userData, food}) {
     let userName;
     const today = new Date();
     const date = today.getDate() + "." + (today.getMonth()+1) + "." + today.getFullYear();
+    
     const {user, loading, isAuthenticated} = useAuth();
     const userId = user ? user.uid : false;
+
     const router = useRouter();
     
   
@@ -77,7 +79,6 @@ function Order({userData, food}) {
   
     }
 
-    console.log("cart: ", basket.isCartChecked);
     //Create menu
     let sizes;
     const menu = food.map(category => {
@@ -89,7 +90,6 @@ function Order({userData, food}) {
             <h2>{category.id}</h2>
             <FlexContainer flexWidth="90%" border="1px solid pink" direction="row" justify="center">
                 
-
                 {category.name.map((type, index) => {
                     return(
 
@@ -177,7 +177,8 @@ function Order({userData, food}) {
 
       }, [userHasOrdered, user, loading])
     
-      */
+*/
+
     function handleRemove(event) {
 
         let index = event.target.id.replace(/[^0-9.]/g, "");
@@ -235,14 +236,13 @@ function Order({userData, food}) {
 
 
     console.log(basket.productLines);
+    
+    
     if (loading) {
         return <p>loading loading</p>
     }
 
-    if (!isAuthenticated) {
-        //router.push('/login');
-        return <p>Ikke logget inn</p>
-    }
+    
 
     return(
         <Layout user>
@@ -253,8 +253,6 @@ function Order({userData, food}) {
         
         {basket.isCartChecked && (<Cart sendOrder={event => sendOrder(event)} handleRemove={event => handleRemove(event)} handleChange={event => handleChange(event)}/>)}
         
-        
-
         </Layout>
     )
 }

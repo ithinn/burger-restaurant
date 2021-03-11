@@ -87,7 +87,7 @@ function UserStatus({userData}) {
     }
 
     if (!isAuthenticated) {
-        router.push('/order');
+        router.push('/login');
         return <p>Ikke logget inn</p>
     }
 

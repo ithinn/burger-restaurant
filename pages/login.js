@@ -7,8 +7,10 @@ import Link from "next/link"
 import Layout from "../components/Layout"
 import firebaseInstance from "../config/firebase"
 import readCollection from "./database/readCollection";
-import { useRouter } from "next/router";
+import { Router, useRouter } from "next/router";
 import Header from "../components/Header";
+import {useAuth} from "../config/auth";
+import { route } from "next/dist/next-server/server/router";
 
 function Login({ handleSubmit, users }) {
     
@@ -20,44 +22,14 @@ function Login({ handleSubmit, users }) {
     const [city, setCity] = useState(null);
     const [phone, setPhone] = useState(null);
     const [password, setPassword] = useState(null);
-    const [userId, setUserId] = useState(null);
+    //const [userId, setUserId] = useState(null);
     const [added, setAdded] = useState(false);
-
-    
-    // Here you would fetch and return the user
-    const useUser = () => ({ user: null, loading: false })
-    const { user, loading } = useUser()
-    const router = useRouter()
-    
-      useEffect(() => {
-        if (isLoggedIn === true) {
-            if (!(user || loading)) {
-                router.push('/order')
-                console.log("login");
-            }
-
-            return <p>Redirecting...</p>
-        }
-
-
         
-      }, [isLoggedIn, user, loading])
+    const {user, loading, isAuthenticated} = useAuth();
+    const userId = user ? user.uid : false;
+    const router = useRouter();
     
-      
-        firebaseInstance.auth().onAuthStateChanged((user) => {
-            if (user) {
-                //User is signed in
-                let uid = user.uid
-               // console.log(uid);
-                setUserId(uid);
-                setIsLoggedIn(true);
-            } else {
-                console.log(user + "is signed out")
-            }
-        })
 
-        
-   // }, []);
 
     function handleSubmit(event) {
         event.preventDefault();
@@ -68,7 +40,9 @@ function Login({ handleSubmit, users }) {
                 let user = userCredential.user;
                 console.log(user);
                 console.log("signed in")
-                isLoggedIn(true);
+
+                router.push("/order");
+
             })
             .catch((error) => {
                 const errorCode = error.code;
@@ -79,30 +53,10 @@ function Login({ handleSubmit, users }) {
     }
     
     function handleChange(event) {
-        switch (event.target.id) {
-            case "nameInp":
-                setName(event.target.value);
-                generateUserNumber();
-                break;
-            case "mailInp":
-                setEmail(event.target.value);
-                break;
-            case "adressInp":
-                setAdress(event.target.value);
-                break;
-            case "zipInp":
-                setZip(event.target.value);
-                break;
-            case "phoneInp":
-                setPhone(event.target.value);
-                break;
-            case "cityInp":
-                setCity(event.target.value);
-                break;
-            case "passwordInp":
-                setPassword(event.target.value);
-                break;
-        }
+
+        event.target.id === "mailInp" ? 
+        setEmail(event.target.value) : setPassword(event.target.value);
+
     }
 
     function handleSignOutClick() {
@@ -113,16 +67,18 @@ function Login({ handleSubmit, users }) {
             console.log(error);
         });
 
-        setIsLoggedIn(false);
-      
     }
 
-   
+    if (loading) {
+        return <p>loading loading</p>
+    }
+
+ 
 
     return(
-        <Layout login isLoggedIn={isLoggedIn}>
+        <Layout login isLoggedIn={isAuthenticated}>
         
-        {isLoggedIn === false ?     
+        {isAuthenticated === false ?     
         <LoginBase>
             <h3>Logg inn</h3>
             <form
@@ -132,25 +88,20 @@ function Login({ handleSubmit, users }) {
                 method="POST"
                 id="loginUser">
                 
-                <Input inputType="email" inputId="mailInp" labelText="Epost (brukernavn): " inputChangeHandler={event => handleChange(event)} ></Input>
-           
-                <Input inputType="password" inputId="passwordInp" labelText="Passord: " inputChangeHandler={event => handleChange(event)}></Input>
+                <label htmlFor="mailInp">Epost</label>
+                <input id="mailInp" type="email" onChange={event => handleChange(event)} />
+
+                <label htmlFor="passwordInp">Passord</label>
+                <input id="passwordInp" type="password" onChange={event => handleChange(event)}/>
            
            <Button type="submit" btnColor="blue" txtColor="white">Logg inn</Button>
-            </form>
+        </form>
             
         </LoginBase> 
         :
 
         <LoginBase>
-            <h3>{ userId + ", du er logget inn"}</h3>
-        
-            <Button
-                id="signOutBtn"
-                onClick={() => handleSignOutClick()}
-                btnColor="purple"
-                txtColor="white"
-            >Logg ut</Button>
+            <p>Du sendes til siden</p>
         </LoginBase> }
         </Layout>
     )

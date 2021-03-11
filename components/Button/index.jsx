@@ -8,6 +8,7 @@ const ButtonBase = styled.button`
     padding: .7em;
     text-transform: uppercase;
     margin: 2em;
+
     &:hover {
         background: rgba(0, 0, 0, .5);
         color: white;
@@ -17,9 +18,6 @@ const ButtonBase = styled.button`
 
 
 
-Button.defaultProps = {
-
-}
 
 function Button( {type, btnColor, txtColor, btnBorder, children, id, onClick} ) {
  

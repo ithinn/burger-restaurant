@@ -18,13 +18,13 @@ const ImgBase = styled.div`
     width: 100%;
 `
 
-const SelectBase = styled.select`
+export const SelectBase = styled.select`
     font-size: 1rem;
     border: 2px solid #346f83;
     color: #346f83;
     font-family: "oswald";
 `
-const SelectLabel = styled.label`
+export const SelectLabel = styled.label`
     font-size: 1rem;
     color: #346f83;
     font-family: "oswald";
@@ -40,7 +40,7 @@ const SelectLabel = styled.label`
 
 
 
-function MenuItem( {handleAdd, type, index, sizes, isLoggedIn} ) {
+export function MenuItem( {handleAdd, type, index, sizes, isLoggedIn} ) {
 
     const {
         register, 
@@ -96,4 +96,3 @@ function MenuItem( {handleAdd, type, index, sizes, isLoggedIn} ) {
     )
 }
 
-export default MenuItem;

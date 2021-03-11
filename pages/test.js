@@ -9,6 +9,9 @@ import firebaseInstance from "../config/firebase"
 import {useForm } from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup"
 import {string, object} from "yup"
+import {firebaseAdmin} from "../config/firebaseAdmin";
+
+import nookies from "nookies";
 
 
 const schema = object().shape({
@@ -16,10 +19,10 @@ const schema = object().shape({
     password: string().required("Dette feltet er påkrevd"),
   });
 
-function Test({  users }) {
+function Test({  uid, email }) {
     
     const [isLoggedIn, setIsLoggedIn] = useState(false)
-    const [email, setEmail] = useState(null);
+    //const [email, setEmail] = useState(null);
     const [name, setName] = useState(null);
     const [adress, setAdress] = useState(null);
     const [zip, setZip] = useState(null);
@@ -35,6 +38,7 @@ function Test({  users }) {
         resolver: yupResolver(schema)
     });
 
+    console.log(uid);
     
     const [firebaseError, setFirebaseError] = useState(null);
 
@@ -70,5 +74,42 @@ function Test({  users }) {
         </>
     )
 }   
+/*
+export const getServerSideProps = async (context) => {
+    try {
+        const cookies = nookies.get(context)
+      
+        const token = await firebaseAdmin.auth().verifyIdToken(cookies.token)
 
+        const {uid, email} = token;
+
+        //Du kan få tilgang til databasen også, men da sjekker den ikke om det fins regler for hva brukeren skal ha tilgang til - den bare logger
+
+        const db = firebaseAdmin.firestore()
+        const snapshot = await db.collection("users").get()
+        
+        
+        const users = [];
+        snapshot.forEach((doc) => {
+            console.log(doc.data());
+
+        })
+
+        return {
+            props: {email, uid}
+        }
+    }
+    catch(error) {
+        console.log("Something went wrong")
+
+        return {
+            redirect: {
+                permanent: false,
+                destination: "/login"
+            }
+        }
+    }
+}
+*/
 export default Test;
+
