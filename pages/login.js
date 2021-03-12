@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import styled from "styled-components"
 import {LoginBase} from "../components/Login";
 import Input from "../components/Input"
-import Button from "../components/StyledComponents/Button"
+import { Button } from "../components/StyledComponents/Button"
 import Link from "next/link"
 import Layout from "../components/Layout"
 import firebaseInstance from "../config/firebase"

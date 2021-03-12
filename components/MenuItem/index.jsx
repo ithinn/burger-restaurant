@@ -1,7 +1,7 @@
 
 import FlexContainer from "../FlexContainer";
-import Button from "../StyledComponents/Button";
-import { BlueH3 } from "../StyledComponents/Headings"
+import { Button } from "../StyledComponents/Button";
+import { BlueH2, BlueH3, Paragraph } from "../StyledComponents/Headings"
 import {useForm, useFieldArray, Controller } from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup"
 import {string, object} from "yup"
@@ -45,6 +45,8 @@ export function MenuItem( {handleAdd, itemData, type, index, sizes, isLoggedIn} 
 
     return (
         <Flex margin="1em" bg="white" height="auto" justifyContent="center" alignItems="space-between" flexDirection="column" width="17em">
+            
+            
             <Image
                 src={itemData.image}
                 height={200}
@@ -54,12 +56,12 @@ export function MenuItem( {handleAdd, itemData, type, index, sizes, isLoggedIn} 
             />
 
             <div>
-                <BlueH3>{itemData.name}</BlueH3>
+                <BlueH2>{itemData.name}</BlueH2>
                 <p>{itemData.description}</p>
-                <p>{itemData.prices[0] + "/" + itemData.prices[1] + "/" + itemData.prices[2]}</p>
+                <BlueH3 clr="#a62d2d">{itemData.prices[0] + "/" + itemData.prices[1] + "/" + itemData.prices[2]},-</BlueH3>
             </div>
          
-            <Flex justifyContent="center" padding="1em" flexWrap="wrap">
+            <Flex width="100%" justifyContent="center" padding="1em" flexWrap="wrap">
                 <form onSubmit={handleSubmit(onSubmit)}>
                            
                            <div>
@@ -72,10 +74,10 @@ export function MenuItem( {handleAdd, itemData, type, index, sizes, isLoggedIn} 
                                    })}
                                </Select>
                            
-                               <p>Legg til (+15,-):</p>
+                               <BlueH3 textAlign="left">Legg til (+15,-):</BlueH3>
                            {itemData.addOns !== undefined && (
                            
-                           <Flex flexWrap="wrap" height="auto" alignItems="center">
+                           <Flex width="96%" flexWrap="wrap" height="8em" alignItems="flex-start">
                                
                                {itemData.addOns.map((addOn, index) => {
                                    return (

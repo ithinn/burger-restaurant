@@ -23,3 +23,8 @@ main {
 section {
   width: 96%;
 }
+
+.react-icons {
+  vertical-align: middle;
+
+}

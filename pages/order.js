@@ -2,7 +2,7 @@ import Layout from "../components/Layout";
 import readCollection from "./database/readCollection";
 import Select from "../components/Select";
 import FlexContainer from "../components/FlexContainer";
-import Button from "../components/StyledComponents/Button";
+import { Button } from "../components/StyledComponents/Button";
 import {useEffect, useState, useRef } from "react"
 import RadioInput from "../components/RadioInput";
 import firebaseInstance from "firebase";
@@ -23,7 +23,6 @@ import {MenuItem} from "../components/MenuItem"
 import {BasketConsumer, useBasket} from "../context/BasketContext";
 import Banner from "../components/Banner";
 import { BlueH1, BlackH2 } from "../components/StyledComponents/Headings";
-import ButtonTest from "../components/StyledComponents/Button";
 import { Flex, Box } from "reflexbox";
 
 const schema = object().shape({
@@ -256,7 +255,7 @@ const menu2 = food.map((category) => {
         <Layout user>
        
         <Banner isLoggedIn={isAuthenticated} userId={userId}/>
-        <ButtonTest >Test</ButtonTest>
+       
         {isAuthenticated ? renderPage() : renderLoginFirst()}
         
         {basket.isCartChecked && (<Cart sendOrder={event => sendOrder(event)} handleRemove={event => handleRemove(event)} handleChange={event => handleChange(event)}/>)}

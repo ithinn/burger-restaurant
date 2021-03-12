@@ -4,7 +4,7 @@ import FlexContainer from "../FlexContainer"
 import styled from "styled-components";
 import {Box, Flex} from "reflexbox";
 import { Label } from "../StyledComponents/Labels";
-import Button from "../StyledComponents/Button";
+import { Button } from "../StyledComponents/Button";
 
 const CartBase = styled.article`
     width: 100%;

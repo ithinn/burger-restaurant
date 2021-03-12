@@ -8,9 +8,10 @@ export const Label = styled.label`
 `
 
 export const LabelAsButton = styled(Label)`
-    border: ${props => props.theme.borders.element};
-    padding: ${props => props.theme.space[2]};
-    margin: 1em;
+    color: ${props => props.theme.colors.red};
+    border: ${props => props.theme.borders.subElement};
+    padding: ${props => props.theme.space[1]};
+    
     
     
    &:hover {

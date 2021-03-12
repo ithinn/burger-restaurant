@@ -23,7 +23,5 @@ export const InvisibleCheckbox = styled.input`
         color: white;
     } 
 
-    &:active {
-        background-color: white;
-    }
+ 
 `

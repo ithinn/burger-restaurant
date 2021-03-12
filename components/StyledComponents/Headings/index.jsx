@@ -14,11 +14,36 @@ export const BlackH2 = styled.h2`
     font-size: ${props => props.theme.fontSizes.md};
     color: ${props => props.theme.colors.black};
     text-align: center;
+
+`
+export const BlueH2 = styled(BlackH2)`
+    
+    font-family: ${props => props.theme.fonts.mainFont};
+    color: ${props => props.theme.colors.main};
 `
 
 export const BlueH3 = styled.h3`
         font-family: ${props => props.theme.fonts.mainFont};
-        font-size: ${props => props.theme.fontSizes.md};
-        color: ${props => props.theme.colors.main};
-        text-align: center;
+        font-size: ${props => props.theme.fontSizes.sm};
+        color: ${props => props.clr};
+        text-align: ${props => props.textAlign};
 `
+
+BlueH3.defaultProps = {
+    textAlign: "center",
+    clr: "#346f83"
+}
+
+export const Paragraph = styled.p`
+    font-family: ${props => props.theme.fonts.text};
+    font-size: ${props => props.theme.fontSizes.txt};
+    color: ${props => props.clr};
+    text-align: ${props => props.textAlign};
+    font-style: ${props => props.style};
+`
+Paragraph.defaultProps = {
+    textAlign: "center",
+    clr: "#346f83",
+    style: "normal" 
+
+}

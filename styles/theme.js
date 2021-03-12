@@ -8,6 +8,7 @@ const theme = {
         lg: '3rem',
         md: '1.8rem',
         sm: '1.3rem',
+        txt: "1rem"
         
     },
     fonts: {
@@ -33,6 +34,7 @@ const theme = {
     ],
     borders: {
         element: "2px solid #346f83",
+        subElement: "2px solid #a62d2d",
         article: "4px solid #346f83",
     },
     radii: {
@@ -48,6 +50,11 @@ const theme = {
     breakpoints: [
         '40em', '52em', '64em',
     ],
+    sizes: {
+        width: {
+            menuItem: "20em"
+        }
+    },
 
     
       

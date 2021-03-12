@@ -1,7 +1,7 @@
 import Layout from "../components/Layout";
 //import OrderItem from "../components/OrderItem"
 import { useState, useEffect } from "react";
-import Button from "../components/StyledComponents/Button";
+import { Button } from "../components/StyledComponents/Button";
 import firebaseInstance from "../config/firebase";
 
 function Kitchen( {userData} ) {
