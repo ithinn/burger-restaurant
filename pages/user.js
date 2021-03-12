@@ -3,275 +3,128 @@ import readCollection from "./database/readCollection";
 import Select from "../components/Select";
 import FlexContainer from "../components/FlexContainer";
 import Button from "../components/StyledComponents/Button";
-import {useEffect, useState} from "react"
+import {useEffect, useState, useRef } from "react"
 import RadioInput from "../components/RadioInput";
 import firebaseInstance from "firebase";
 import Link from "next/link";
 import utilStyles from '../styles/utils.module.css'
+import {useAuth} from "../config/auth";
+import {useForm, useFieldArray, Controller } from "react-hook-form";
+import {yupResolver} from "@hookform/resolvers/yup"
+import {string, object} from "yup"
+import Router, { useRouter } from "next/router";
+import { render } from "react-dom";
+import Image from "next/image";
+//import {utilStyles} from "../styles/utils.module.css"
+import {LabelAsButton, InvisibleInput} from "../components/Checkbox";
+import InputBlock from "../components/InputBlock";
+import Cart from "../components/Cart";
+import {MenuItem} from "../components/MenuItem"
+import {BasketConsumer, useBasket} from "../context/BasketContext";
+import Banner from "../components/Banner";
+import { BlueH1, BlackH2 } from "../components/StyledComponents/Headings";
+import ButtonTest from "../components/StyledComponents/Button";
 
 
-function User( {food, orders} ) {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [burger, setBurger] = useState(null);
-    const [burgerSize, setBurgerSize] = useState(null);
-    const [drink, setDrink] = useState(null);
-    const [drinkSize, setDrinkSize] = useState(null);
-    const [bread, setBread] = useState(null);
-    const [sides, setSides] = useState(null);
-    const [sidesSize, setSidesSize] = useState(null);
-    const [userId, setUserId] = useState(null)
-    const [order, setOrder] = useState(null)
-    const [orderList, setOrderList] = useState(orders.length)
-    const [onlyOrder, setOnlyOrder] = useState(null);
-
-
-
-    console.log(food);
-
-
+function TestMenu({food}) {
+    const [orderNumber, setOrderNumber] = useState(null);
+    const basket = useBasket();
+    let userName;
+    const today = new Date();
+    const date = today.getDate() + "." + (today.getMonth()+1) + "." + today.getFullYear();
     
-    //Get userId from Auth
-    useEffect(() => {
-        firebaseInstance.auth().onAuthStateChanged((user) => {
-            console.log(user);
-            if (user) {
+    const {user, loading, isAuthenticated} = useAuth();
+    const userId = user ? user.uid : false;
 
-                let uid = user.uid
-                setUserId(uid);
-                setIsLoggedIn(true);
+    const router = useRouter();
+    
 
-            } else {
-                console.log(user + "is signed out")
-                setIsLoggedIn(false);
-            }
+    const onAdd = async (data) => {
+
+        basket.addProductLine([...basket.productLines, data])
+  
+    }
+
+    console.log(food)
+
+    function createMenu() {
+
+        const menu = food.map((category) => {
+ 
+            return(
+                <div>
+                <BlackH2>{category.id}</BlackH2>
+                <Flex width="90%" justifyContent="center">
+                    {category.details.map((item, index) => {
+                            
+                        return <MenuItem 
+                            isLoggedIn={isAuthenticated} 
+                            handleAdd={onAdd} 
+                            index={index} 
+                            itemData={item} 
+                            key={item.name} />
+                       
+                    })}  
+                </Flex>
+                
+                </div>
+            )
+            
+
+       
+            
         })
 
-      
-    }, [order, resetState]);
+        /*
+
+        const burgers = food[0].burger;
+        const drinks = food[1]
     
+        console.log(drinks)
 
-    function resetState() {
-        setBread(null);
-        setDrink(null);
-        setBurgerSize(null);
-        setSides(null);
-        setSidesSize(null);
-        setDrinkSize(null);
-        setBurger(null);
-    }
-    
-
-    //Add to the order
-    function handleAdd() {
-        console.log("added to order");
-        
-        let fullOrder = {
-            userId: userId,
-            state: 1,
-            orderList: [{
-                bread: bread,
-                burgerType: burger,
-                burgerSize: burgerSize,
-                sideDish: sides,
-                sideDishSize: sidesSize,
-                drink: drink,
-                drinkSize: drinkSize,
-            }]
-        }
-
-        let newOrder = {
-            bread: bread,
-            burgerType: burger,
-            burgerSize: burgerSize,
-            sideDish: sides,
-            sideDishSize: sidesSize,
-            drink: drink,
-            drinkSize: drinkSize,
-        }
-
-        if (order === null) {
-            setOrder(fullOrder);
-        } else {
-            setOrder({
-                ...order, orderList: [...order.orderList, newOrder]
-            });
-        }
-
-        setOnlyOrder(newOrder);
-
-        resetState();
-    }
-
-    //Submit the order
-    async function handleSubmit(event) {
-        event.preventDefault();
-
-        try {
-            const ref = firebaseInstance.database().ref("liveOrders");
-            const newOrder = ref.push()
-            await newOrder.set({
-                order: order,  
-            })
-
-            let orderRef = (await newOrder).key;
-
-            const collection = firebaseInstance.firestore().collection("orders");
-            await collection.doc(orderRef).set({
-                order: order
-            })
-
-            
-            const userInFirestore = firebaseInstance.firestore().collection("users").doc(userId);
-            await userInFirestore.update({
-                usersOrders: onlyOrder
-            })
-
-            
-
-            resetState();
-            setOrder(null);
-            setOrderList(orderList + 1);
-        }
-        catch(error) {
-            console.log(error);
-        }
-
-    }
-
-    let menu = food.map(category => {
-      
-        return(
-            <>
-            <h3>{category.id}</h3>
-            <FlexContainer>
-                {category.type.map((type, index) => {
-                    return(<RadioInput handleChange={event => handleChange(event)} radioName={category.id} radioId={type} labelText={type}/>)
-                })}
-
-                {category.sizes !== undefined ?
-                <Select requiredCondition={category.type} handleChange={event => handleChange(event)} key={category.id + "size"} inputId={category.id + "size"} labelText="Velg størrelse">
+        const burgerMenu = burgers.map((item, index) => {
  
-                {category.sizes.map((el, index) => {
-                return(
-                
-                index === 1 ? <option selected value={el}>{el}</option> : <option value={el}>{el}</option> )
-                })}
+            return(
+                <MenuItem handleAdd={onAdd} index={index} itemData={item} key={item.id} />
+            )
+        })
+        */
+        /*
+        const drinkMenu = drinks.name.map((item, index) => {
 
-                </Select> : null}
+            return(
+                <MenuItem handleAdd={onAdd} index={index} itemData={drinks} key={item.id} />
+            )
+        })*/
 
-            </FlexContainer>
-            </>
-        )
-    })
+        
 
+       
 
-    function handleSignOutClick() {
-        firebaseInstance.auth().signOut().then(() => {
-           
-            console.log("is signed out")
-          }).catch((error) => {
-            console.log(error);
-          });
-          setIsLoggedIn(false);
-       // setUserHasOrdered(false);  
-    }
-
-
-
-    function handleChange(event) {
-        switch( event.target.name) {
-            case "burgers":
-                setBurger(event.target.id);
-                break;
-            case "drinks":
-                setDrink(event.target.id);
-                break;
-            case "sides":
-                setSides(event.target.id);
-                break;
-            case "bread":
-                setBread(event.target.id);
-                break;
-        }
-
-        switch(event.target.id) {
-            case "burgerssize":
-                setBurgerSize(event.target.value);
-                break;
-            case "drinkssize":
-                setDrinkSize(event.target.value);
-                break;
-            case "sidessize":
-                setSidesSize(event.target.value);
-                break;
-        }
-    }
-
-    function renderLoginFirst() {
         return(
             <>
-            <h2>
-                <Link href="/login"><a className={utilStyles.link}>Logg inn</a></Link> for å bestille mat</h2>
-            
-            <form>
+            <p>Meny</p>
             {menu}
-            </form>
-            
-            </>
-        )
-    }
-    function renderPlaceYourOrder() {
-        return(
-            <>
-                <h2>{"Velkommen " + userId}</h2>
-            
-            <form onSubmit={event => handleSubmit(event)}>
-            {menu}
-
-            <Button
-                type="submit"
-                btnColor="green"
-                txtColor="white"> Send bestilling </Button>
-            </form>
-
-            <Button
-                onClick={() => handleAdd()}
-                btnColor="blue"
-                txtColor="white">
-                    Legg til i bestilling
-            </Button>
-            <Button
-                id="signOutBtn"
-                onClick={() => handleSignOutClick()}
-                btnColor="purple"
-                txtColor="white"
-            >Logg ut</Button>
             </>
         )
     }
 
     return(
         <>
-        <Layout user isLoggedIn={isLoggedIn}>
-    
-        {isLoggedIn ? renderPlaceYourOrder() : renderLoginFirst() }   
-
-            
-    
-        </Layout>
+        {createMenu()}
         </>
     )
+
 }
 
-export default User;
+export default TestMenu;
 
 
-
-User.getInitialProps = async () => {
+TestMenu.getInitialProps = async () => {
     try {
-        const food = await readCollection("food")
-        const orders = await readCollection("orders")
-        return { food, orders }
+       
+        const food = await readCollection("newfood");
+        return { food }
     }
     catch (error) {
         return {

@@ -1,4 +1,4 @@
-import {PageHeading} from "../Headings";
+import {BlueH1} from "../StyledComponents/Headings";
 import styled from "styled-components";
 import Link from "next/link";
 
@@ -33,7 +33,7 @@ function Banner({isLoggedIn}) {
     return(
 
         <BannerBase>
-            <PageHeading>Beste burgeren på Østlandet</PageHeading>
+            <BlueH1>Beste burgeren på Østlandet</BlueH1>
             <Link href="/login">
             <Sign>{isLoggedIn ? "Bestill nå" : "Logg inn"}</Sign>
             </Link>

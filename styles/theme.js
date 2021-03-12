@@ -22,7 +22,7 @@ const theme = {
         main: '#346f83',
         gray: '#d1d1d1',
         red: '#a62d2d',
-        black: '#3e3b14',
+        black: '#333',
         brown: '#683928'
     },
     letterSpacings: [

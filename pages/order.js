@@ -9,7 +9,7 @@ import firebaseInstance from "firebase";
 import Link from "next/link";
 import utilStyles from '../styles/utils.module.css'
 import {useAuth} from "../config/auth";
-import {useForm, useFieldArray, Controller } from "react-hook-form";
+import {useForm, useFieldArray, Controller, FormProvider } from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup"
 import {string, object} from "yup"
 import Router, { useRouter } from "next/router";
@@ -22,9 +22,9 @@ import Cart from "../components/Cart";
 import {MenuItem} from "../components/MenuItem"
 import {BasketConsumer, useBasket} from "../context/BasketContext";
 import Banner from "../components/Banner";
-import { PageHeading } from "../components/Headings";
+import { BlueH1, BlackH2 } from "../components/StyledComponents/Headings";
 import ButtonTest from "../components/StyledComponents/Button";
-
+import { Flex, Box } from "reflexbox";
 
 const schema = object().shape({
     
@@ -72,13 +72,42 @@ function Order({userData, food}) {
         }
     })
 
-
+  
     //Add to order
     const onAdd = async (data) => {
-
+        console.log(data);
         basket.addProductLine([...basket.productLines, data])
   
     }
+
+    
+const menu2 = food.map((category) => {
+ 
+    return(
+        <div>
+        <BlackH2>{category.id}</BlackH2>
+        <Flex width="90%" justifyContent="center">
+            {category.details.map((item, index) => {
+                    
+                return <MenuItem 
+                    isLoggedIn={isAuthenticated} 
+                    handleAdd={onAdd} 
+                    index={index} 
+                    itemData={item} 
+                    key={item.name} />
+               
+            })}  
+        </Flex>
+        
+        </div>
+    )
+    
+
+
+    
+})
+
+/*
 
     //Create menu
     let sizes;
@@ -88,7 +117,7 @@ function Order({userData, food}) {
 
         return(
             <>
-            <h2>{category.id}</h2>
+            <BlackH2>{category.id}</BlackH2>
             <FlexContainer flexWidth="90%" border="1px solid pink" direction="row" justify="center">
                 
                 {category.name.map((type, index) => {
@@ -104,7 +133,7 @@ function Order({userData, food}) {
         )
     })
 
-    
+ */ 
     //Send order to database
     async function sendOrder(event) {
       
@@ -135,8 +164,8 @@ function Order({userData, food}) {
     function renderLoginFirst() {
         return(
             <>
-            <h2>
-                <Link href="/login"><a className={utilStyles.link}>Logg inn</a></Link> for å bestille mat</h2>
+            <BlackH2>
+                <Link href="/login"><a className={utilStyles.link}>Logg inn</a></Link> for å bestille mat</BlackH2>
             </>
         )
     }
@@ -145,11 +174,11 @@ function Order({userData, food}) {
         return(
             
             <section>
-                <h2>Velkommen {userName}</h2>
+                <BlackH2>Velkommen {userName}</BlackH2>
                 
-                <PageHeading>Meny</PageHeading>
+                <BlueH1>Meny</BlueH1>
 
-                {menu}
+                {menu2}
 
                     
             
@@ -210,7 +239,7 @@ function Order({userData, food}) {
         return <p>loading loading</p>
     }
 
-    
+    console.log("cart", basket.isCartChecked);
 
     return(
         <Layout user>
@@ -233,7 +262,7 @@ Order.getInitialProps = async () => {
     try {
         const userData = await readCollection("users")
         const orderData = await readCollection("orders");
-        const food = await readCollection("food");
+        const food = await readCollection("newfood");
         return { userData, orderData, food }
     }
     catch (error) {

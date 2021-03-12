@@ -8,10 +8,11 @@ function Layout( {isLoggedIn, children, home, login, register, restaurant, user}
     return(
         <>  
             <Head>
+            
                 <link rel="stylesheet" href="https://use.typekit.net/gsa0dnm.css"></link>
             </Head>
         
-            <GlobalStyle/>
+           
             
             {home ? 
                 <Header heading="Billy's burger" isUser={false}/>
