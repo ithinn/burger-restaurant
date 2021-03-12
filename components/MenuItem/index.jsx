@@ -9,9 +9,9 @@ import Image from "next/image"
 import utilStyles from "../../styles/utils.module.css"
 import styled from "styled-components";
 import { Select } from "../StyledComponents/Inputs";
-import { Label } from "../StyledComponents/Labels";
+import { Label, LabelAsButton } from "../StyledComponents/Labels";
 import {Flex, Box} from "reflexbox"
-
+import {Input, InvisibleCheckbox} from "../StyledComponents/Inputs";
 
 const schema = object().shape({
     
@@ -44,50 +44,60 @@ export function MenuItem( {handleAdd, itemData, type, index, sizes, isLoggedIn} 
     }
 
     return (
-        <Flex height="auto" justifyContent="center" alignItems="center" flexDirection="column" width="15em">
+        <Flex margin="1em" bg="white" height="auto" justifyContent="center" alignItems="space-between" flexDirection="column" width="17em">
             <Image
                 src={itemData.image}
                 height={200}
                 width={300}
                 className={utilStyles.courseImg}
+                
             />
 
-            <BlueH3>{itemData.name}</BlueH3>
-            <p>{itemData.description}</p>
-            <p>{itemData.prices[0] + "/" + itemData.prices[1] + "/" + itemData.prices[2]}</p>
-
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <div>
+                <BlueH3>{itemData.name}</BlueH3>
+                <p>{itemData.description}</p>
+                <p>{itemData.prices[0] + "/" + itemData.prices[1] + "/" + itemData.prices[2]}</p>
+            </div>
+         
+            <Flex justifyContent="center" padding="1em" flexWrap="wrap">
+                <form onSubmit={handleSubmit(onSubmit)}>
                            
-                <div>
-                    <input ref={register} type="hidden" name="title" value={itemData.name}/>
-                    <input ref={register} type="hidden" name="count" value="1"/>
-                    <Label htmlFor="typeSize">Velg størrelse</Label>
-                    <Select name="size" ref={register}>
-                        {itemData.sizes.map(size => {
-                            return <option value={size}>{size}</option>
-                        })}
-                    </Select>
-                
-                
-                {itemData.addOns !== undefined && (
-                <Flex flexWrap={true}>
-                    {itemData.addOns.map((addOn, index) => {
-                        return (
-                            <div key={addOn + index}>
-                            <label htmlFor={addOn}>{addOn}</label>
-                            <input ref={register} type="checkbox" name={addOn} defaultChecked={false} id={addOn}/>
-                            </div>
-                        )
-                    })}
-                </Flex>
+                           <div>
+                               <input ref={register} type="hidden" name="title" value={itemData.name}/>
+                               <input ref={register} type="hidden" name="count" value="1"/>
+                               <Label htmlFor="typeSize">Velg størrelse</Label>
+                               <Select name="size" ref={register}>
+                                   {itemData.sizes.map(size => {
+                                       return <option value={size}>{size}</option>
+                                   })}
+                               </Select>
+                           
+                               <p>Legg til (+15,-):</p>
+                           {itemData.addOns !== undefined && (
+                           
+                           <Flex flexWrap="wrap" height="auto" alignItems="center">
+                               
+                               {itemData.addOns.map((addOn, index) => {
+                                   return (
+                                       <Box marginTop="1em" key={addOn + index}>
+    
+                                            <InvisibleCheckbox ref={register} type="checkbox" name={`addOns[${addOn}]`} defaultChecked={false} id={addOn}/>
+                                            <LabelAsButton htmlFor={addOn}>{addOn}</LabelAsButton>
+                                       </Box>
+                                   )
+                               })}
+                           </Flex>
+           
+           
+                           )}
+           
+           </div>   
+                                           
+                           {isLoggedIn && (<Button id={"btn" + itemData.name + index}>Legg til</Button>)}
+                       </form>
 
-
-                )}
-
-</div>   
-                                
-                {isLoggedIn && (<Button btnBorder="none" txtColor="white" btnColor="#346f83" id={"btn" + itemData.name + index}>Legg til</Button>)}
-            </form>
+            </Flex>
+            
 
         </Flex>
         

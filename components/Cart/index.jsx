@@ -4,8 +4,7 @@ import FlexContainer from "../FlexContainer"
 import styled from "styled-components";
 import {Box, Flex} from "reflexbox";
 import { Label } from "../StyledComponents/Labels";
-import Button from "../Button";
-
+import Button from "../StyledComponents/Button";
 
 const CartBase = styled.article`
     width: 100%;
@@ -59,10 +58,12 @@ const CartInp = styled.input`
     width: 3em;
 `
 
-
+let addOnTest = [];
 function Cart({handleChange, handleRemove, sendOrder}) {
 
     const basket = useBasket();
+
+    console.log(basket.productLines);
 
     return(
         <CartBase>
@@ -79,6 +80,18 @@ function Cart({handleChange, handleRemove, sendOrder}) {
 
             <ul>
                 {basket.productLines && (basket.productLines.map((item, index) => {
+
+                    addOnTest = [];
+
+                    for (let add in item.addOns) {
+                        if (item.addOns[add] === true) {
+                            addOnTest.push(add)
+                        }
+    
+                    }
+
+                    console.log(addOnTest);
+
                     return (
                         
                     <CartLi key={item, index}>
@@ -87,7 +100,12 @@ function Cart({handleChange, handleRemove, sendOrder}) {
                         
                             <div>
                                 <CartP>{item.title + ", " + item.size}  </CartP>
-                
+                                <ul>
+                                {addOnTest.map(addon => {
+                                    return <li key={addon}>{addon}</li>
+                                })}
+                                </ul>
+                                
                                 <Label htmlFor={item + "inp"}>Velg antall: </Label>
                                 <CartInp onChange={event => handleChange(event)} id={item + "inp"} type="number" id={"count" + index} placeholder="velg antall" defaultValue={item.count}/>
                             </div>
@@ -100,7 +118,7 @@ function Cart({handleChange, handleRemove, sendOrder}) {
                 }))}
             </ul>
 
-            <Button onClick={event => sendOrder(event)} >Send inn</Button>
+            <Button handleClick={event => sendOrder(event)} >Send inn</Button>
         
         </CartBase>
        

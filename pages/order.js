@@ -33,7 +33,7 @@ const schema = object().shape({
 
 function Order({userData, food}) {
 
-    
+    const [userHasOrdered, setUserHasOrdered] = useState(false)
     const [orderNumber, setOrderNumber] = useState(null);
     const basket = useBasket();
     let userName;
@@ -80,13 +80,24 @@ function Order({userData, food}) {
   
     }
 
+    /*
+      <Image
+            width={2000}
+            height={150}
+            src={category.categoryImage}
+            alt={category.id}
+         
+        />
+    */
     
 const menu2 = food.map((category) => {
  
     return(
         <div>
         <BlackH2>{category.id}</BlackH2>
-        <Flex width="90%" justifyContent="center">
+      
+
+        <Flex width="90%" justifyContent="center" flexWrap="wrap">
             {category.details.map((item, index) => {
                     
                 return <MenuItem 
@@ -137,7 +148,7 @@ const menu2 = food.map((category) => {
     //Send order to database
     async function sendOrder(event) {
       
-        if (isLoggedIn) {
+        if (isAuthenticated) {
             console.log("submitted");
      
             try {

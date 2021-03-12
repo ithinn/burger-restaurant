@@ -2,17 +2,18 @@ import { useState, useEffect } from "react";
 import styled from "styled-components"
 import {LoginBase} from "../components/Login";
 import Input from "../components/Input"
-import Button from "../components/Button"
+import Button from "../components/StyledComponents/Button"
 import Link from "next/link"
 import Layout from "../components/Layout"
 import firebaseInstance from "../config/firebase"
 import readCollection from "./database/readCollection";
-import { Router, useRouter } from "next/router";
+import { useRouter } from "next/router";
 import Header from "../components/Header";
 import {useAuth} from "../config/auth";
 import { route } from "next/dist/next-server/server/router";
 
-function Login({ handleSubmit, users }) {
+
+function Login({ handleSubmit }) {
     
     const [isLoggedIn, setIsLoggedIn] = useState(false)
     const [email, setEmail] = useState(null);
@@ -29,8 +30,6 @@ function Login({ handleSubmit, users }) {
     const userId = user ? user.uid : false;
     const router = useRouter();
     
-
-
     function handleSubmit(event) {
         event.preventDefault();
 
