@@ -15,3 +15,16 @@
     object-fit: cover;
     object-position: bottom;
 }
+
+.logo {
+    margin: 0 auto;
+    border: 1px solid red;
+    position: relative;
+    left: -45%;
+
+  
+}
+
+.logo:hover {
+    opacity: .5;
+}

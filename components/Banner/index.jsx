@@ -1,6 +1,7 @@
 import {BlueH1} from "../StyledComponents/Headings";
 import styled from "styled-components";
 import Link from "next/link";
+import {Button} from "../StyledComponents/Button";
 
 const BannerBase = styled.section`
     width: 100%;
@@ -9,6 +10,7 @@ const BannerBase = styled.section`
     background-size: cover;
     display: flex;
     flex-direction: column;
+    justify-content: center;
 `
 
 const Sign = styled.button` 
@@ -35,7 +37,7 @@ function Banner({isLoggedIn}) {
         <BannerBase>
             <BlueH1>Beste burgeren på Østlandet</BlueH1>
             <Link href="/login">
-            <Sign>{isLoggedIn ? "Bestill nå" : "Logg inn"}</Sign>
+            <Button bgClr="black">{isLoggedIn ? "Bestill nå" : "Logg inn"}</Button>
             </Link>
             
         </BannerBase>

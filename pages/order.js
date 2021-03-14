@@ -1,10 +1,10 @@
 import Layout from "../components/Layout";
 import readCollection from "./database/readCollection";
-import Select from "../components/Select";
+//import Select from "../components/Select";
 import FlexContainer from "../components/FlexContainer";
 import { Button } from "../components/StyledComponents/Button";
 import {useEffect, useState, useRef } from "react"
-import RadioInput from "../components/RadioInput";
+//import RadioInput from "../components/RadioInput";
 import firebaseInstance from "firebase";
 import Link from "next/link";
 import utilStyles from '../styles/utils.module.css'
@@ -16,8 +16,8 @@ import Router, { useRouter } from "next/router";
 import { render } from "react-dom";
 import Image from "next/image";
 //import {utilStyles} from "../styles/utils.module.css"
-import {LabelAsButton, InvisibleInput} from "../components/Checkbox";
-import InputBlock from "../components/InputBlock";
+//import {LabelAsButton, InvisibleInput} from "../components/Checkbox";
+//import InputBlock from "../components/InputBlock";
 import Cart from "../components/Cart";
 import {MenuItem} from "../components/MenuItem"
 import {BasketConsumer, useBasket} from "../context/BasketContext";
@@ -104,7 +104,8 @@ const menu2 = food.map((category) => {
                     handleAdd={onAdd} 
                     index={index} 
                     itemData={item} 
-                    key={item.name} />
+                    key={item.name}
+                    foodData={food} />
                
             })}  
         </Flex>
@@ -258,7 +259,7 @@ const menu2 = food.map((category) => {
        
         {isAuthenticated ? renderPage() : renderLoginFirst()}
         
-        {basket.isCartChecked && (<Cart sendOrder={event => sendOrder(event)} handleRemove={event => handleRemove(event)} handleChange={event => handleChange(event)}/>)}
+        {basket.isCartChecked && (<Cart foodData={food} sendOrder={event => sendOrder(event)} handleRemove={event => handleRemove(event)} handleChange={event => handleChange(event)}/>)}
         
         </Layout>
     )

@@ -4,7 +4,9 @@ import FlexContainer from "../FlexContainer"
 import styled from "styled-components";
 import {Box, Flex} from "reflexbox";
 import { Label } from "../StyledComponents/Labels";
-import { Button } from "../StyledComponents/Button";
+import { Button, RoundButton } from "../StyledComponents/Button";
+import { BlueH2, BlueH3, BlackH2 } from "../StyledComponents/Headings";
+import { Li } from "../StyledComponents/Lists";
 
 const CartBase = styled.article`
     width: 100%;
@@ -26,10 +28,7 @@ const CloseCartBtn = styled.button`
     border: 2px solid ${props => props.theme.colors.blue};
     position: relative;
     
-    &&:hover {
-        background-color: ${props => props.theme.colors.blue};
-        color: white;
-    }
+   
 
 `
 
@@ -39,9 +38,6 @@ const RemoveBtn = styled(CloseCartBtn)`
 
 `
 
-const CartLi = styled.li`
-    list-style: none;
-`
 
 const CartP = styled.p`
     font-size: 1rem;
@@ -59,20 +55,57 @@ const CartInp = styled.input`
 `
 
 let addOnTest = [];
-function Cart({handleChange, handleRemove, sendOrder}) {
+let sizeIndex;
+let sizeText;
+
+function Cart({handleChange, handleRemove, sendOrder, foodData}) {
 
     const basket = useBasket();
+    
+ 
+    function listAddOns(item) {
+        let addOns = [];
+        for (let add in item) {
+            if (item[add] === true) {
+                addOns.push(add)
+            }
+        }
 
-    console.log(basket.productLines);
+        return addOns;
+    }
 
+
+    function findPrice(index, course) {
+        
+        let price;
+        let addOns = listAddOns(course.addOns);
+        let addOnsPrice = (15 * addOns.length);
+
+        //Uses index to get the right price for this course from the database
+        foodData.forEach(item => {
+    
+            item.details.forEach(el => {
+                if (el.name === course.name) {
+                    price = el.prices[index] 
+                }
+            })
+        })
+
+        price = (Number(price) + addOnsPrice) * course.count;
+
+        basket.addSum(course.name, price);
+   
+        return(<BlueH3>{price},- </BlueH3>)
+    }
+
+  
     return(
         <CartBase>
-            <Flex width="300px" alignItems="center" justifyContent="space-around">
-                
-            
-            <h2>Handlekurv</h2>
+            <Flex width="300px" alignItems="center" justifyContent="space-around"> 
 
-            <CloseCartBtn id="closeCartBtn" onClick={event => basket.checkCart(event)} >X</CloseCartBtn>
+                <BlackH2>Handlekurv</BlackH2>
+                <RoundButton btnWidth="40px" btnHeight="40px" id="closeCartBtn" onClick={event => basket.checkCart(event)} >X</RoundButton>
+
             </Flex>
 
 
@@ -81,42 +114,41 @@ function Cart({handleChange, handleRemove, sendOrder}) {
             <ul>
                 {basket.productLines && (basket.productLines.map((item, index) => {
 
-                    addOnTest = [];
+                    let addOns = listAddOns(item.addOns);
+                    let size = item.size;
+                    sizeIndex = item.size.charAt(0);
+                    sizeText = size.split(",").pop();
 
-                    for (let add in item.addOns) {
-                        if (item.addOns[add] === true) {
-                            addOnTest.push(add)
-                        }
-    
-                    }
-
-                    console.log(addOnTest);
-
-                    return (
+                return (
                         
-                    <CartLi key={item, index}>
-
+                    <Li key={item, index}>
                         <Flex width="300px" alignItems="center" justifyContent="space-around" marginBottom="2em">
                         
                             <div>
-                                <CartP>{item.title + ", " + item.size}  </CartP>
+                                <BlueH3>{item.name + ", " + sizeText}  </BlueH3>
                                 <ul>
-                                {addOnTest.map(addon => {
-                                    return <li key={addon}>{addon}</li>
+                                {addOns.map(addon => {
+                                    return <Li key={addon}>{addon}</Li>
                                 })}
                                 </ul>
                                 
                                 <Label htmlFor={item + "inp"}>Velg antall: </Label>
                                 <CartInp onChange={event => handleChange(event)} id={item + "inp"} type="number" id={"count" + index} placeholder="velg antall" defaultValue={item.count}/>
                             </div>
+
+                            {findPrice(sizeIndex, item)}
                         
                         <RemoveBtn onClick={event => handleRemove(event)} id={"removeBtn" + index}>X</RemoveBtn>
-                    
+                                
                         </Flex>
+
+                        
                     
-                    </CartLi>)
+                    </Li>)
                 }))}
             </ul>
+
+            
 
             <Button handleClick={event => sendOrder(event)} >Send inn</Button>
         

@@ -21,10 +21,12 @@ const theme = {
     ],
     colors: {
         main: '#346f83',
+        bg: "f9f9f8",
         gray: '#d1d1d1',
         red: '#a62d2d',
         black: '#333',
-        brown: '#683928'
+        brown: '#683928',
+        
     },
     letterSpacings: [
         0 , 1, 2, 3

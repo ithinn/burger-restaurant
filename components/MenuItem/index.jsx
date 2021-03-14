@@ -23,8 +23,43 @@ const ImgBase = styled.div`
 `
 
 
-export function MenuItem( {handleAdd, itemData, type, index, sizes, isLoggedIn} ) {
+export function MenuItem( {foodData, handleAdd, itemData, type, index, sizes, isLoggedIn} ) {
+    /*
+    let priceIndex;
+    let price;
+   
+    function findPrice(priceIndex) {
+        console.log(priceIndex);
 
+
+
+       /* console.log("COURSE", course)
+        let price;
+
+        console.log(index)
+
+        foodData.forEach(item => {
+            //console.log(item);
+            item.details.forEach(el => {
+
+                //console.log("ELEMENT", el.prices);
+                if (el.name === course.name) {
+                    console.log("NAME", course.name)
+                    console.log("PRICES", el.prices)
+                    price = el.prices[index]
+                    console.log(price);
+                    
+                    
+                }
+            })
+        })
+
+        
+        return price
+    }*/
+
+
+    
     const {
         register, 
         handleSubmit, 
@@ -65,15 +100,18 @@ export function MenuItem( {handleAdd, itemData, type, index, sizes, isLoggedIn} 
                 <form onSubmit={handleSubmit(onSubmit)}>
                            
                            <div>
-                               <input ref={register} type="hidden" name="title" value={itemData.name}/>
+                               <input ref={register} type="hidden" name="name" value={itemData.name}/>
                                <input ref={register} type="hidden" name="count" value="1"/>
+                               
                                <Label htmlFor="typeSize">Velg størrelse</Label>
                                <Select name="size" ref={register}>
-                                   {itemData.sizes.map(size => {
-                                       return <option value={size}>{size}</option>
+                                   {itemData.sizes.map((size, i) => {
+                         
+                                       return <option value={[i, size]}>{size}</option>
                                    })}
                                </Select>
-                           
+                               <input ref={register} type="hidden" name="price" value={0}/>
+ 
                                <BlueH3 textAlign="left">Legg til (+15,-):</BlueH3>
                            {itemData.addOns !== undefined && (
                            

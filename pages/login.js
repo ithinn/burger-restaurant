@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components"
-import {LoginBase} from "../components/Login";
-import Input from "../components/Input"
+import { LoginBase, FormWrap } from "../components/LoginBase";
+import { Input } from "../components/StyledComponents/Inputs"
+import { Label } from "../components/StyledComponents/Labels"
 import { Button } from "../components/StyledComponents/Button"
 import Link from "next/link"
 import Layout from "../components/Layout"
@@ -79,7 +80,13 @@ function Login({ handleSubmit }) {
         
         {isAuthenticated === false ?     
         <LoginBase>
+            
             <h3>Logg inn</h3>
+            
+            <FormWrap>
+
+            
+
             <form
                 onSubmit={event => handleSubmit(event)}
                 name="login"
@@ -87,14 +94,15 @@ function Login({ handleSubmit }) {
                 method="POST"
                 id="loginUser">
                 
-                <label htmlFor="mailInp">Epost</label>
-                <input id="mailInp" type="email" onChange={event => handleChange(event)} />
+                <Label htmlFor="mailInp">Epost</Label>
+                <Input id="mailInp" type="email" onChange={event => handleChange(event)} />
 
-                <label htmlFor="passwordInp">Passord</label>
-                <input id="passwordInp" type="password" onChange={event => handleChange(event)}/>
+                <Label htmlFor="passwordInp">Passord</Label>
+                <Input id="passwordInp" type="password" onChange={event => handleChange(event)}/>
            
            <Button type="submit" btnColor="blue" txtColor="white">Logg inn</Button>
         </form>
+        </FormWrap>
             
         </LoginBase> 
         :

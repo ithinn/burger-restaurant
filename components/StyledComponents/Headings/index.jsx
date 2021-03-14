@@ -17,7 +17,6 @@ export const BlackH2 = styled.h2`
 
 `
 export const BlueH2 = styled(BlackH2)`
-    
     font-family: ${props => props.theme.fonts.mainFont};
     color: ${props => props.theme.colors.main};
 `

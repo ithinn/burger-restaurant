@@ -5,7 +5,11 @@ export const Label = styled.label`
     color: ${props => props.theme.colors.main};
     font-family: ${props => props.theme.fonts.mainFont};
     margin-right: ${props => props.theme.space[3]};
+    display: ${props => props.display}
 `
+Label.defaultProps = {
+ 
+}
 
 export const LabelAsButton = styled(Label)`
     color: ${props => props.theme.colors.red};

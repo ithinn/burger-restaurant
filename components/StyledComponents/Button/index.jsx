@@ -1,10 +1,10 @@
-import styled from "styled-components"
+import styled, { withTheme } from "styled-components"
 import theme from "../../../styles/theme"
 
 
 const ButtonBase = styled.button`
-    color: white;
-    background-color: ${props => props.theme.colors.main};
+    color: ${props => props.clr};
+    background-color: ${props => props.bgClr};
     border: ${props => props.theme.borders.element};
     font-size: ${props => props.theme.fontSizes.sm};
     margin: ${props => props.theme.space[3]};
@@ -13,9 +13,17 @@ const ButtonBase = styled.button`
     text-transform: uppercase;
 `
 
-export function Button({ handleClick, children }) {
+ButtonBase.defaultProps = {
+    clr: "white",
+    bgClr: "#346f83",
+}
+
+export function Button({ handleClick, children, bgClr, clr }) {
     return (
-        <ButtonBase onClick={handleClick}>{ children }</ButtonBase>
+        <ButtonBase 
+        bgClr={bgClr}
+        clr={clr}
+        onClick={handleClick}>{ children }</ButtonBase>
     )
 
 }
@@ -23,25 +31,44 @@ export function Button({ handleClick, children }) {
 const RoundButtonBase = styled.button`
     border: ${props => props.theme.borders.element};
     color: ${props => props.theme.colors.main};
-    width: 40px;
-    height: 40px;
+    width: ${props => props.btnWidth};
+    height: ${props => props.btnHeight};
     border-radius: ${props => props.theme.radii.round};
-    position: fixed;
+    position: ${props => props.position};
     top: ${props => props.top};
     left: ${props => props.left};
     z-index: ${props => props.theme.zIndices[3]}; 
+    &:hover {
+        color: white;
+        background: ${props => props.theme.colors.main};
+
+    }
     
+    display: flex;
+    justify-content: center;
+    align-items: center;
 `
 
 RoundButtonBase.defaultProps = {
-    top: "none",
-    position: "fixed" ,
-    left: "10%" 
+    top: "8vh",
+    position: "none" ,
+    left: "10%",
+    right:"none", 
+    btnWidth: "60px",
+    btnHeight: "60px",
 }
 
-export function RoundButton({ handleClick, children }) {
+export function RoundButton({ handleClick, children, top, position, left, right, btnWidth, btnHeight }) {
     return (
-        <RoundButtonBase onClick={handleClick}>{ children }</RoundButtonBase>
+        <RoundButtonBase 
+        onClick={handleClick}
+        top={top}
+        left={left}
+        position={position}
+        right={right}
+        btnWidth={btnWidth}
+        btnHeight={btnHeight}
+        >{ children }</RoundButtonBase>
     )
 
 }
