@@ -102,7 +102,7 @@ export function MenuItem( {foodData, handleAdd, itemData, type, index, sizes, is
                            <div>
                                <input ref={register} type="hidden" name="name" value={itemData.name}/>
                                <input ref={register} type="hidden" name="count" value="1"/>
-                               
+                               <input ref={register} type="hidden" name="id"/>
                                <Label htmlFor="typeSize">Velg størrelse</Label>
                                <Select name="size" ref={register}>
                                    {itemData.sizes.map((size, i) => {

@@ -1,10 +1,8 @@
 import Layout from "../components/Layout";
 import readCollection from "./database/readCollection";
-//import Select from "../components/Select";
 import FlexContainer from "../components/FlexContainer";
 import { Button } from "../components/StyledComponents/Button";
 import {useEffect, useState, useRef } from "react"
-//import RadioInput from "../components/RadioInput";
 import firebaseInstance from "firebase";
 import Link from "next/link";
 import utilStyles from '../styles/utils.module.css'
@@ -15,9 +13,6 @@ import {string, object} from "yup"
 import Router, { useRouter } from "next/router";
 import { render } from "react-dom";
 import Image from "next/image";
-//import {utilStyles} from "../styles/utils.module.css"
-//import {LabelAsButton, InvisibleInput} from "../components/Checkbox";
-//import InputBlock from "../components/InputBlock";
 import Cart from "../components/Cart";
 import {MenuItem} from "../components/MenuItem"
 import {BasketConsumer, useBasket} from "../context/BasketContext";
@@ -71,25 +66,52 @@ function Order({userData, food}) {
         }
     })
 
+
+    function listAddOns(item) {
+        let addOns = [];
+        for (let add in item) {
+            if (item[add] === true) {
+                addOns.push(add)
+            }
+        }
+
+        
+
+        return addOns;
+    }
   
     //Add to order
     const onAdd = async (data) => {
-        console.log(data);
-        basket.addProductLine([...basket.productLines, data])
+        console.log("DATA", data);
+
+        let price;
+        let addOns = listAddOns(data.addOns)
+        let addOnsPrice = 15 * addOns.length;
+        let sizeIndex = data.size.charAt(0);
+
+        food.forEach(item => {
+    
+            item.details.forEach(el => {
+                if (el.name === data.name) {
+                    price = el.prices[sizeIndex] 
+                }
+            })
+        })
+
+        price = (Number(price) + addOnsPrice) * data.count;
+
+        console.log("NEW PRICE", price);
+
+        let newData = data;
+
+        newData = {...newData, price: price, basePrice: price}
+        
+        basket.addProductLine(newData)
   
     }
 
-    /*
-      <Image
-            width={2000}
-            height={150}
-            src={category.categoryImage}
-            alt={category.id}
-         
-        />
-    */
     
-const menu2 = food.map((category) => {
+    const menu2 = food.map((category) => {
  
     return(
         <div>
@@ -112,39 +134,10 @@ const menu2 = food.map((category) => {
         
         </div>
     )
-    
 
-
-    
-})
-
-/*
-
-    //Create menu
-    let sizes;
-    const menu = food.map(category => {
-
-        sizes=category.sizes
-
-        return(
-            <>
-            <BlackH2>{category.id}</BlackH2>
-            <FlexContainer flexWidth="90%" border="1px solid pink" direction="row" justify="center">
-                
-                {category.name.map((type, index) => {
-                    return(
-
-                        <MenuItem isLoggedIn={isAuthenticated} handleAdd={onAdd} type={type} index={index} sizes={sizes} />
-
-                    )
-                })}
-
-            </FlexContainer>
-            </>
-        )
     })
 
- */ 
+
     //Send order to database
     async function sendOrder(event) {
       
@@ -172,6 +165,25 @@ const menu2 = food.map((category) => {
         }
     }
 
+    function handleRemove(event) {
+        //console.log("REMOVE", event.target);
+        let index = event.target.id.replace(/[^0-9.]/g, "");
+        basket.removeItem(index);
+
+    }
+
+
+    function handleChange(event) {
+        let index = event.target.id.replace(/[^0-9.]/g, "");
+        let value = Number(event.target.value);
+        basket.updateProductLines(index, value);   
+    }    
+
+
+    console.log("PRODUCTLINES IN ORDER", basket.productLines);
+    
+    //RENDER------------------------------------------------------------------
+    
     function renderLoginFirst() {
         return(
             <>
@@ -189,62 +201,11 @@ const menu2 = food.map((category) => {
                 
                 <BlueH1>Meny</BlueH1>
 
-                {menu2}
-
-                    
-            
-                
+                {menu2}   
             </section>
         )
         
     }
-
-
-/*
-    //Redirect after sending the order
-    const useUser = () => ({ user: null, loading: false })
-    const { user, loading } = useUser()
-    const router = useRouter()
-    
-      useEffect(() => {
-        if (userHasOrdered === true) {
-            if (!(user || loading)) {
-                router.push('/userStatus')
-                console.log("ordered");
-            }
-
-            return <p>Redirecting...</p>
-        }
-
-      }, [userHasOrdered, user, loading])
-    
-*/
-
-    function handleRemove(event) {
-
-        let index = event.target.id.replace(/[^0-9.]/g, "");
-        let tempArray = [...basket.productLines];
-        tempArray.splice(index, 1);
-        basket.addProductLine(tempArray);
-
-    }
-
-
-    function handleChange(event) {
-
-        let index = event.target.id.replace(/[^0-9.]/g, "");
-        let tempArray = [...basket.productLines];
-        let value = Number(event.target.value);
-
-        tempArray[index] = {...tempArray[index], count: value}
-
-        basket.addProductLine(tempArray);
-        
-    }    
-
-
-    console.log(basket.productLines);
-    
     
     if (loading) {
         return <p>loading loading</p>

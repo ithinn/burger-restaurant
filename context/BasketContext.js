@@ -6,7 +6,8 @@ const BasketContext = createContext({
     isCartChecked: false,
     checkCart: () => {},
     total: 0,
-    addSum: () => {}
+    removeItem: () => {},
+    updateProductLines: () => {}
     
 })
 
@@ -16,43 +17,35 @@ export const Basket = ( {children} ) => {
     const [productLines, setProductLines] = useState([]);
     const [isCartChecked, setIsCartChecked] = useState(false);
     const [total, setTotal] = useState(0)
-    const [sumArray, setSumArray] = useState([])
+   
 
     const addProductLine = (product) => {
-        setProductLines(product);
-    }
-
-    const addSum = (name, sum) => {
-        //console.log(sum);
-       // console.log(name);
-        let test;
         
-        /*
-        test = {
-            ...productLines, price: sum
-        }*/
-
-        console.log("PRODLINES", productLines);
-        
-        productLines.forEach((el, index) => {
-
-            if (el.name === name) {
-               test= {
-                    ...productLines[index], price: sum
-                }
-            }
-
-            //setProductLines([...productLines, test]);
+        setProductLines([...productLines, product]);
     
-        })
-
-        console.log(test);
-        
     }
 
     
-    //console.log(total);
-    /*
+    function updateProductLines(index, value) {
+
+        let tempArray = [...productLines];
+
+        let basePrice = tempArray[index].basePrice;
+
+        tempArray[index] = {...tempArray[index], count: value,  price: basePrice * value}
+
+        setProductLines(tempArray);
+    }
+
+    function removeItem(index) {
+
+        let tempArray = [...productLines];
+        
+        tempArray.splice(index, 1);
+
+        setProductLines(tempArray);
+    }
+
     useEffect(() => {
         const total = productLines.reduce((prev, cur) => {
             return prev + cur.price
@@ -60,17 +53,18 @@ export const Basket = ( {children} ) => {
 
         setTotal(total);
 
-
     }, [productLines])
-*/
-    const checkCart = (event) => {
-  
+
+
+
+
+    const checkCart = () => {
         isCartChecked ? setIsCartChecked(false) : setIsCartChecked(true);
         window.scrollTo(0, 0);
     }
 
     return(
-        <BasketContext.Provider value={{productLines, addProductLine, isCartChecked, checkCart, total, addSum}}>{children}</BasketContext.Provider>
+        <BasketContext.Provider value={{removeItem, productLines, updateProductLines, addProductLine, isCartChecked, checkCart, total}}>{children}</BasketContext.Provider>
     )
 }
 

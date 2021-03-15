@@ -38,7 +38,7 @@ function Header({heading, isUser, isLoggedIn}) {
 
                 
                 <Flex width="100px" flexDirection="column">   
-                    <RoundButton position="fixed" id="cartBtn" handleClick={event => basket.checkCart(event)}>
+                    <RoundButton position="fixed" id="cartBtn" handleClick={() => basket.checkCart()}>
                         <IconContext.Provider value={{ size: "2rem", className: "react-icons" }}>
                             <FiShoppingCart/>
                             {basket.productLines.length > 0 && (

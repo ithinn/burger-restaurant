@@ -58,12 +58,14 @@ let addOnTest = [];
 let sizeIndex;
 let sizeText;
 
-function Cart({handleChange, handleRemove, sendOrder, foodData}) {
+function Cart({ handleChange, handleRemove, sendOrder, foodData}) {
 
     const basket = useBasket();
     
  
     function listAddOns(item) {
+
+        //console.log("IN LISTADDONS; ITEM", item)
         let addOns = [];
         for (let add in item) {
             if (item[add] === true) {
@@ -75,8 +77,10 @@ function Cart({handleChange, handleRemove, sendOrder, foodData}) {
     }
 
 
-    function findPrice(index, course) {
-        
+
+/*
+    function findPrice(sizeIndex, itemIndex, course) {
+        console.log(itemIndex);
         let price;
         let addOns = listAddOns(course.addOns);
         let addOnsPrice = (15 * addOns.length);
@@ -86,17 +90,19 @@ function Cart({handleChange, handleRemove, sendOrder, foodData}) {
     
             item.details.forEach(el => {
                 if (el.name === course.name) {
-                    price = el.prices[index] 
+                    price = el.prices[sizeIndex] 
                 }
             })
         })
 
         price = (Number(price) + addOnsPrice) * course.count;
-
-        basket.addSum(course.name, price);
+        //debugger;
+        basket.addSum(course.name, itemIndex, price);
    
         return(<BlueH3>{price},- </BlueH3>)
     }
+
+*/
 
   
     return(
@@ -104,7 +110,7 @@ function Cart({handleChange, handleRemove, sendOrder, foodData}) {
             <Flex width="300px" alignItems="center" justifyContent="space-around"> 
 
                 <BlackH2>Handlekurv</BlackH2>
-                <RoundButton btnWidth="40px" btnHeight="40px" id="closeCartBtn" onClick={event => basket.checkCart(event)} >X</RoundButton>
+                <RoundButton btnWidth="40px" btnHeight="40px" id="closeCartBtn" handleClick={() => basket.checkCart()} >X</RoundButton>
 
             </Flex>
 
@@ -113,11 +119,13 @@ function Cart({handleChange, handleRemove, sendOrder, foodData}) {
 
             <ul>
                 {basket.productLines && (basket.productLines.map((item, index) => {
-
+                    console.log(item);
                     let addOns = listAddOns(item.addOns);
                     let size = item.size;
-                    sizeIndex = item.size.charAt(0);
-                    sizeText = size.split(",").pop();
+
+         
+                    //sizeIndex = item.size.charAt(0);
+                    //sizeText = size.split(",").pop();
 
                 return (
                         
@@ -135,9 +143,9 @@ function Cart({handleChange, handleRemove, sendOrder, foodData}) {
                                 <Label htmlFor={item + "inp"}>Velg antall: </Label>
                                 <CartInp onChange={event => handleChange(event)} id={item + "inp"} type="number" id={"count" + index} placeholder="velg antall" defaultValue={item.count}/>
                             </div>
-
-                            {findPrice(sizeIndex, item)}
                         
+                        <p>Pris: {item.price}</p>
+                           
                         <RemoveBtn onClick={event => handleRemove(event)} id={"removeBtn" + index}>X</RemoveBtn>
                                 
                         </Flex>
@@ -147,6 +155,8 @@ function Cart({handleChange, handleRemove, sendOrder, foodData}) {
                     </Li>)
                 }))}
             </ul>
+
+            <BlueH3>Total: {basket.total}</BlueH3>
 
             
 
@@ -159,3 +169,6 @@ function Cart({handleChange, handleRemove, sendOrder, foodData}) {
 }
 
 export default Cart;
+
+// {findPrice(sizeIndex, index, item)}
+                        
