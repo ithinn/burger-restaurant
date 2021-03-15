@@ -3,7 +3,8 @@ import styled from "styled-components"
 export const Input = styled.input`
     font-family: ${props => props.theme.fonts.mainFont};
     font-size: ${props => props.theme.fontSizes.sm};
-    border: ${props => props.theme.borders.element};
+    border: ${props => props.error ? props.theme.borders.error : props.theme.borders.element};
+    margin-bottom: 1em;
 `
 export const Select = styled.select`
     color: ${props => props.theme.colors.main};

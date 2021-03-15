@@ -10,30 +10,45 @@ import {Input} from "../components/StyledComponents/Inputs";
 import {Label} from "../components/StyledComponents/Labels";
 import {useForm, useFieldArray, Controller } from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup"
-import {string, object} from "yup"
+import {string, number, date, object} from "yup"
+import { ItalicP } from "../components/StyledComponents/Headings"
+import {BlackH2, BlueH1, WhiteH1} from "../components/StyledComponents/Headings";
+
 
 const schema = object().shape({
     
+    email: string().email().required("Eposten må ha dette formatet: brukernavn@domene.landkode"),
+    password: string()
+    .matches(/(^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$)/, 
+    "Passordet må bestå av minst 8 tegn. Minst ett av dem må være et tall, ett må være en bokstav, og ett må være et spesialtegn som @,%,&." ).required(),
+
+    firstName: string().required("Du må skrive fornavnet ditt."),
+
+    famName: string().required("Du må skrive etternavnet ditt."),
+    
+    adress: string().required("Du må skrive adressen din"),
+    
+    zip: 
+        string()
+        .matches(/(\d{4})/, "Postnummeret må bestå av 4 sifre")
+        .required(),
+    city: string(),
+    phone: string().matches(/(\d{8})/, "Telefonnummeret må bestå av 8 sifre").required(),
+  
 })
+
+
 
 function AddUser() {
 
-    const [email, setEmail] = useState(null);
-    const [name, setName] = useState(null);
-    const [adress, setAdress] = useState(null);
-    const [zip, setZip] = useState(null);
-    const [city, setCity] = useState(null);
-    const [phone, setPhone] = useState(null);
-    const [password, setPassword] = useState(null);
-    const [isRegistered, setIsRegistered] = useState(false);
     const today = new Date();
     const date = today.getDate() + "." + (today.getMonth()+1) + "." + today.getFullYear();
     const [error, setError] = useState(null)
+    const [formError, setFormError] = useState(null);
     const router = useRouter()
     const {
         register, 
         handleSubmit, 
-        reset, 
         watch, 
         formState: {isSubmitSuccessful}, 
         errors} = useForm({
@@ -44,9 +59,14 @@ function AddUser() {
         resolver: yupResolver(schema)
     })
 
-
+    
     const onSubmit = async (data) => {
         console.log(data);
+
+        if (errors) {
+            setFormError(errors)
+        }
+
         try{
             
             const userCredential = await firebaseInstance.auth().createUserWithEmailAndPassword(data.email, data.password)
@@ -76,12 +96,21 @@ function AddUser() {
         }
     }
 
+    useEffect(() => {
+        console.log("errors", errors)
+
+        //setFormError(errors); 
+    }, [errors])
+
+    console.log(formError);
 
     return(
         <Layout>
             <LoginBase register>
-            <h3>Registrer deg</h3>
+            <BlueH1>Registrer deg</BlueH1>   
             <FormWrap>
+
+             
             <form 
                 onSubmit={handleSubmit(onSubmit)}
                 name="add-user"
@@ -89,13 +118,18 @@ function AddUser() {
                 method="post"
                 id="addUser"
                             >
+
+
                 <Label htmlFor="mailInp">Email (brukernavn)</Label>
                 <Input 
                     type="email"
                     name="email"
                     ref={register} 
-                    id="mailInp" 
+                    id="mailInp"
+                    error={errors.email} 
                 />
+
+                {errors.email && (<p>{errors.email?.message}</p>)}
                    
                 <Label htmlFor="passwordInp">Passord</Label>
                 <Input 
@@ -103,7 +137,10 @@ function AddUser() {
                     name="password"
                     ref={register} 
                     id="passwordInp" 
+                    error={errors.password}
                 />
+
+                {errors.password && <p>{errors.password?.message}</p>}
                 
                 <Label htmlFor="firstNameInp">Fornavn</Label>
                 <Input 
@@ -111,31 +148,42 @@ function AddUser() {
                     name="firstName"
                     ref={register} 
                     id="firstNameInp" 
+                    error={errors.firstName}
                 />
+
+                {errors.firstName &&(<p>{errors.firstName?.message}</p>)}
                 
                 <Label htmlFor="famNameInp">Etternavn</Label>
                 <Input 
                     type="text"
                     name="famName"
                     ref={register} 
-                    id="famNameInp" 
+                    id="famNameInp"
+                    error={errors.famName} 
                 />
-                
+                {errors.famName && (<p>{errors.famName?.message}</p>)}
+
                 <Label htmlFor="adressInp">Adresse</Label>
                 <Input 
                     type="text"
                     name="adress"
                     ref={register} 
-                    id="adressInp" 
+                    id="adressInp"
+                    error={errors.adress} 
                 />
+
+                {errors.adress && (<p>{errors.adress?.message}</p>)}
                 
                 <Label htmlFor="zipInp">Postnummer</Label>
                 <Input 
-                    type="number"
+                    type="text"
                     name="zip"
                     ref={register} 
-                    id="zipInp" 
+                    id="zipInp"
+                    error={errors.zip} 
                 />
+
+                {errors.zip && (<p>{errors.zip?.message}</p>)}
                 
                 <Label htmlFor="cityInp">Sted</Label>
                 <Input 
@@ -147,11 +195,14 @@ function AddUser() {
                 
                 <Label htmlFor="phoneInp">Telefonnummer</Label>
                 <Input 
-                    type="number"
+                    type="text"
                     name="phone"
                     ref={register} 
-                    id="phoneInp" 
+                    id="phoneInp"
+                    error={errors.phone} 
                 />
+
+                {errors.phone && (<p>{errors.phone?.message}</p>)}
 
                 <Button type="submit">Registrer deg</Button>
             </form>

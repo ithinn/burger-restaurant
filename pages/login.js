@@ -26,6 +26,7 @@ function Login({ handleSubmit }) {
     const [password, setPassword] = useState(null);
     //const [userId, setUserId] = useState(null);
     const [added, setAdded] = useState(false);
+    const [error, setError] = useState(null);
         
     const {user, loading, isAuthenticated} = useAuth();
     const userId = user ? user.uid : false;
@@ -45,9 +46,11 @@ function Login({ handleSubmit }) {
 
             })
             .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                console.log(errorMessage);
+                //const errorCode = error.code;
+               // const errorMessage = error.message;
+
+                setError(error.message);
+                //console.log(errorMessage);
             });
 
     }
@@ -67,6 +70,13 @@ function Login({ handleSubmit }) {
             console.log(error);
         });
 
+    }
+
+    function logError() {
+        if (error) {
+            return<p>{error}</p>
+        }
+        
     }
 
     if (loading) {
@@ -95,13 +105,19 @@ function Login({ handleSubmit }) {
                 id="loginUser">
                 
                 <Label htmlFor="mailInp">Epost</Label>
-                <Input id="mailInp" type="email" onChange={event => handleChange(event)} />
-
+                <Input id="mailInp" type="email" onChange={event => handleChange(event)} error={error}/>
+                
                 <Label htmlFor="passwordInp">Passord</Label>
-                <Input id="passwordInp" type="password" onChange={event => handleChange(event)}/>
+                <Input id="passwordInp" type="password" onChange={event => handleChange(event)} error={error}/>
+
+                {logError()}
            
            <Button type="submit" btnColor="blue" txtColor="white">Logg inn</Button>
         </form>
+
+        <Link href="/addUser">
+            <a>...eller registrer deg som ny bruker</a>
+        </Link>
         </FormWrap>
             
         </LoginBase> 

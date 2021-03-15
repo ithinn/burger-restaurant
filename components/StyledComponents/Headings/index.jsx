@@ -8,6 +8,11 @@ export const BlueH1 = styled.h1`
     color: ${props => props.theme.colors.main};
     text-align: center;
 `
+export const WhiteH1 = styled(BlueH1)`
+    text-shadow: ${props => props.theme.shadows.whiteHeading};
+    color: white;
+`
+
 
 export const BlackH2 = styled.h2`
     font-family: ${props => props.theme.fonts.sectionHeading};
@@ -46,3 +51,7 @@ Paragraph.defaultProps = {
     style: "normal" 
 
 }
+
+export const ItalicP = styled(Paragraph)`
+    font-style: italic;
+`

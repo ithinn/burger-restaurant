@@ -35,9 +35,7 @@ const RoundButtonBase = styled.button`
     height: ${props => props.btnHeight};
     border-radius: ${props => props.theme.radii.round};
     position: ${props => props.position};
-    top: ${props => props.top};
-    left: ${props => props.left};
-    z-index: ${props => props.theme.zIndices[3]}; 
+ 
     &:hover {
         color: white;
         background: ${props => props.theme.colors.main};
@@ -50,14 +48,22 @@ const RoundButtonBase = styled.button`
 `
 
 RoundButtonBase.defaultProps = {
-    top: "8vh",
-    position: "none" ,
-    left: "10%",
-    right:"none", 
+    position: "none",
     btnWidth: "60px",
     btnHeight: "60px",
 }
+/*
+top: "8vh",
+    position: "none" ,
+    left: "10%",
+    right:"none",
 
+
+    position: ${props => props.position};
+    top: ${props => props.top};
+    left: ${props => props.left};
+       z-index: ${props => props.theme.zIndices[3]}; 
+*/
 export function RoundButton({ handleClick, children, top, position, left, right, btnWidth, btnHeight }) {
     return (
         <RoundButtonBase 

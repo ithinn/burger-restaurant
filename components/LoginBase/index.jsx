@@ -7,6 +7,7 @@ width: 100%;
 height: 150;
 margin: 0 auto;
 display: flex;
+flex-direction: column;
 `
 export const FormWrap = styled.article`
     width: 20em;

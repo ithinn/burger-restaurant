@@ -13,30 +13,65 @@ import {Flex, Box} from "reflexbox"
 import {Count} from "../StyledComponents";
 
 
-const HeaderBase = styled.header`
-width: 100%;
-height: 20vh;
-background: #f9f9f8;
-color: #346f83;
+const NavBase = styled.nav`
+    width: 96%;
+    height: 20vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
 
 `
-
-
 
 function Header({heading, isUser, isLoggedIn}) {
 
     const basket = useBasket();
 
     return(
+        <header>
+            <NavBase>
+                <div className={utilStyles.buttonWrapper}>
+                    <RoundButton position="fixed" id="cartBtn" handleClick={() => basket.checkCart()}>
+                        <IconContext.Provider value={{ size: "2rem", className: "react-icons" }}>
+                            <FiShoppingCart/>
+                            {basket.productLines.length > 0 && (
+                                <Count>{basket.productLines.length}</Count>
+                            )} 
+                        </IconContext.Provider>
+                    </RoundButton>
+                </div>
+
+                <Link href="/">
+                    <Image
+                        src="/images/logo-01.png"
+                        width={155}
+                        height={180}
+                        alt={"logo"}
+                        className={utilStyles.logo}
+                    />
+                </Link>
+                
+                <div className={utilStyles.buttonWrapper}>
+                    <RoundButton handleClick={event => basket.checkCart(event)}>
+                        {<IconContext.Provider value={{ size: "2rem", className: "react-icons" }}>
+                            <ImUser/> 
+                        </IconContext.Provider>}
+                    </RoundButton>
+                </div>
+
+
+            </NavBase>
+        </header>
+    )
+
+
+
+/*
+    return(
         <HeaderBase>
             
             {!basket.isCartChecked && (
 
-            
-
-
-
-                
+                        
                 <Flex width="100px" flexDirection="column">   
                     <RoundButton position="fixed" id="cartBtn" handleClick={() => basket.checkCart()}>
                         <IconContext.Provider value={{ size: "2rem", className: "react-icons" }}>
@@ -61,6 +96,7 @@ function Header({heading, isUser, isLoggedIn}) {
                             height={180}
                             alt={"logo"}
                             className={utilStyles.logo}
+             
                         />
                     </Link>
 
@@ -78,7 +114,7 @@ function Header({heading, isUser, isLoggedIn}) {
             
                 
         </HeaderBase>
-    )
+    )*/
 }
 
 export default Header;

@@ -38,6 +38,7 @@ const theme = {
         element: "2px solid #346f83",
         subElement: "2px solid #a62d2d",
         article: "4px solid #346f83",
+        error: "2px solid red"
     },
     radii: {
         round: "50%"

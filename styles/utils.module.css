@@ -17,12 +17,13 @@
 }
 
 .logo {
-    margin: 0 auto;
-    border: 1px solid red;
-    position: relative;
-    left: -45%;
+    margin-top: 1em;
+}
 
-  
+.buttonWrapper {
+    width: 60px;
+    height: 60px;
+    align-self: center;
 }
 
 .logo:hover {
