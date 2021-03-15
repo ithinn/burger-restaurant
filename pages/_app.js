@@ -1,6 +1,7 @@
 import '../styles/globals.css'
 import {AuthProvider} from "../config/auth"
 import {Basket} from "../context/BasketContext";
+import { User } from "../context/UserContext";
 import {ThemeProvider} from "styled-components";
 import theme from "../styles/theme";
 
@@ -13,7 +14,9 @@ function MyApp({ Component, pageProps }) {
     <ThemeProvider theme={theme}>
     <AuthProvider>
       <Basket>
+        <User>
         <Component {...pageProps} />
+        </User>
       </Basket>
     </AuthProvider>
       

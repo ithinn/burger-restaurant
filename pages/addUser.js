@@ -12,7 +12,7 @@ import {useForm, useFieldArray, Controller } from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup"
 import {string, number, date, object} from "yup"
 import { ItalicP } from "../components/StyledComponents/Headings"
-import {BlackH2, BlueH1, WhiteH1} from "../components/StyledComponents/Headings";
+import {BlackH2, BlueH1, WhiteH1, Paragraph} from "../components/StyledComponents/Headings";
 
 
 const schema = object().shape({
@@ -140,7 +140,7 @@ function AddUser() {
                     error={errors.password}
                 />
 
-                {errors.password && <p>{errors.password?.message}</p>}
+                {errors.password && (<p>{errors.password?.message}</p>)}
                 
                 <Label htmlFor="firstNameInp">Fornavn</Label>
                 <Input 

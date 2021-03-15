@@ -137,7 +137,7 @@ function UserStatus({userData}) {
                     )}
                 </FlexContainer>
 
-                <Button btnColor="purple" txtColor="white" onClick onClick={handleSignOutClick}>Logg ut</Button>
+                <Button btnColor="purple" txtColor="white" handleClick={handleSignOutClick}>Logg ut</Button>
                 </FlexContainer> 
         </Layout>
            

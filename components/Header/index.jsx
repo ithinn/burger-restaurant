@@ -2,34 +2,35 @@ import styled from "styled-components";
 import Link from "next/link";
 import Image from "next/image";
 import utilStyles from '../../styles/utils.module.css'
-//import {LabelAsButton, InvisibleInput} from "../Checkbox";
-//import {PageHeading} from "../Headings";
 import {useBasket} from "../../context/BasketContext";
 import { RoundButton } from "../StyledComponents/Button"
 import { FiShoppingCart } from "react-icons/fi";
 import { IconContext } from "react-icons"
 import { ImUser } from "react-icons/im";
-import {Flex, Box} from "reflexbox"
-import {Count} from "../StyledComponents";
+import { Count } from "../StyledComponents";
+import { NavBase } from "../StyledComponents/Bases";
+import {useRouter} from "next/router"
+import {useAuth} from "../../config/auth";
+import { SmallP } from "../StyledComponents/Headings";
+import { useUser } from "../../context/UserContext";
+import UserNav from "../UserNav";
+import { useContext } from "react";
 
-
-const NavBase = styled.nav`
-    width: 96%;
-    height: 20vh;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-
-`
-
-function Header({heading, isUser, isLoggedIn}) {
-
+function Header({userData, heading, isUser, isLoggedIn}) {
+    const {user, loading, isAuthenticated} = useAuth();
+    const userId = user ? user.uid : false;
+    const router = useRouter();
     const basket = useBasket();
+    const userContext = useUser();
+    const userName = userContext.userName;
+
+
 
     return(
         <header>
             <NavBase>
                 <div className={utilStyles.buttonWrapper}>
+                {!basket.isCartChecked && (
                     <RoundButton position="fixed" id="cartBtn" handleClick={() => basket.checkCart()}>
                         <IconContext.Provider value={{ size: "2rem", className: "react-icons" }}>
                             <FiShoppingCart/>
@@ -38,6 +39,7 @@ function Header({heading, isUser, isLoggedIn}) {
                             )} 
                         </IconContext.Provider>
                     </RoundButton>
+                )}
                 </div>
 
                 <Link href="/">
@@ -50,83 +52,45 @@ function Header({heading, isUser, isLoggedIn}) {
                     />
                 </Link>
                 
+                {!userContext.isUserIconChecked && (
                 <div className={utilStyles.buttonWrapper}>
-                    <RoundButton handleClick={event => basket.checkCart(event)}>
+                    <RoundButton handleClick={event => userContext.checkUserInfo(event)}>
                         {<IconContext.Provider value={{ size: "2rem", className: "react-icons" }}>
                             <ImUser/> 
                         </IconContext.Provider>}
                     </RoundButton>
-                </div>
+                    {userName !== undefined && (
+                        <SmallP >{userName}</SmallP>
+                    )}
 
+                    
+                </div>)}
 
+                
+                    {userContext.isUserIconChecked && (
+                    <UserNav></UserNav>
+                    )}
+                    
+                    
+                
+
+                
             </NavBase>
         </header>
     )
-
-
-
-/*
-    return(
-        <HeaderBase>
-            
-            {!basket.isCartChecked && (
-
-                        
-                <Flex width="100px" flexDirection="column">   
-                    <RoundButton position="fixed" id="cartBtn" handleClick={() => basket.checkCart()}>
-                        <IconContext.Provider value={{ size: "2rem", className: "react-icons" }}>
-                            <FiShoppingCart/>
-                            {basket.productLines.length > 0 && (
-                                <Count>{basket.productLines.length}</Count>
-                            )} 
-                        </IconContext.Provider>
-                    </RoundButton>
-
-                    
-                </Flex>
-                
-                )}
-            
-                <Flex width="100%" justifyContent="center" marginTop="1em">
-                    
-                    <Link href="/">
-                        <Image
-                            src="/images/logo-01.png"
-                            width={155}
-                            height={180}
-                            alt={"logo"}
-                            className={utilStyles.logo}
-             
-                        />
-                    </Link>
-
-                    <RoundButton position="relative" top="5vh" right="40vw" left="none" id="cartBtn" handleClick={event => basket.checkCart(event)}>
-                    {<IconContext.Provider value={{ size: "2rem", className: "react-icons" }}>
-                        <ImUser/> 
-                    </IconContext.Provider>}
-                    </RoundButton>
-                    
-                </Flex>
-                
-  
-
-            
-            
-                
-        </HeaderBase>
-    )*/
-}
+};
 
 export default Header;
 
-/*
-{isUser === true &&
-    (<Image
-    src={isLoggedIn ? "/images/Ida.jpg" : "/images/IMG_0119.jpg" }
-    alt="user image"
-    width= {40}
-    height= {40}
-    className={utilStyles.roundImg}
-   />)
+Header.getInitialProps = async () => {
+    try {
+        const userData = await readCollection("users")
+       
+        return { userData }
+    }
+    catch (error) {
+        return {
+            error: error.message
+        }
+    } 
 }
-*/

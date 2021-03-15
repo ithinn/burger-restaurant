@@ -52,6 +52,11 @@ Paragraph.defaultProps = {
 
 }
 
-export const ItalicP = styled(Paragraph)`
-    font-style: italic;
+
+export const SmallP = styled.p`
+    font-family: ${props => props.theme.fonts.text};
+    font-size: ${props => props.theme.fontSizes.txt};
+    color: ${props => props.theme.colors.main};
+    text-align: center;
+    margin: 0;
 `

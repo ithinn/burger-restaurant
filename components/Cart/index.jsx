@@ -13,6 +13,7 @@ const CartBase = styled.article`
     height: auto;
     background: white;
     position: absolute;
+    top: 0;
     padding: 1em;
     display: flex;
     flex-direction: column;

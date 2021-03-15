@@ -19,7 +19,7 @@ import {BasketConsumer, useBasket} from "../context/BasketContext";
 import Banner from "../components/Banner";
 import { BlueH1, BlackH2 } from "../components/StyledComponents/Headings";
 import { Flex, Box } from "reflexbox";
-
+import { useUser } from "../context/UserContext";
 const schema = object().shape({
     
 })
@@ -30,6 +30,8 @@ function Order({userData, food}) {
     const [userHasOrdered, setUserHasOrdered] = useState(false)
     const [orderNumber, setOrderNumber] = useState(null);
     const basket = useBasket();
+    const userContext = useUser();
+
     let userName;
     const today = new Date();
     const date = today.getDate() + "." + (today.getMonth()+1) + "." + today.getFullYear();
@@ -62,8 +64,12 @@ function Order({userData, food}) {
     //Get userName
     userData.forEach(user => {
         if (user.id === userId) {
-            userName = user.name
+            userName = user.firstName
+            console.log(userName);
+            userContext.getUserName(userName);
         }
+
+        
     })
 
 

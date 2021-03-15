@@ -7,7 +7,8 @@ const BasketContext = createContext({
     checkCart: () => {},
     total: 0,
     removeItem: () => {},
-    updateProductLines: () => {}
+    updateProductLines: () => {},
+    
     
 })
 
@@ -17,7 +18,7 @@ export const Basket = ( {children} ) => {
     const [productLines, setProductLines] = useState([]);
     const [isCartChecked, setIsCartChecked] = useState(false);
     const [total, setTotal] = useState(0)
-   
+    const [userName, setUserName] = useState(null)
 
     const addProductLine = (product) => {
         
@@ -25,7 +26,7 @@ export const Basket = ( {children} ) => {
     
     }
 
-    
+
     function updateProductLines(index, value) {
 
         let tempArray = [...productLines];
@@ -54,8 +55,6 @@ export const Basket = ( {children} ) => {
         setTotal(total);
 
     }, [productLines])
-
-
 
 
     const checkCart = () => {
