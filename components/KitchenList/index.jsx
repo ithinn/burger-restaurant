@@ -10,14 +10,14 @@ function KitchenList( {orders, id, side, handleClick, onSubmit, focus, btnText }
         <>
 
        
-        <Flex as="article" minHeight="110vh" minWidth="30em" width="50%" flexDirection="column" p={0} variant={focus && side==="L" ? "fgBoxL" : focus && side === "R" ? "fgBoxR" : "bgBox"}>
+        <Flex as="article" height="auto" minWidth="30em" width="50%" flexDirection="column" p={0} variant={focus && side==="L" ? "fgBoxL" : focus && side === "R" ? "fgBoxR" : "bgBox"}>
            
            
             <Button bg={!focus ? "#333" : "#333"} margin={0} handleClick={handleClick} id={"btn" + id} >
                 {btnText}
             </Button>
 
-        {orders !== null && (
+        {orders !== null && focus &&(
 
             <>
             <Box opacity={!focus ? ".1" : "1"} boxShadow={focus && id === "todo" ? "fgBoxL" : focus && id === "prepared" ? "fgBoxR" : null }as="article">

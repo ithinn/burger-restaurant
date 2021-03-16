@@ -26,11 +26,13 @@ function Header({userData, heading, isUser, isLoggedIn}) {
 
 
 
+
     return(
         <header>
             <NavBase>
+
                 <div className={utilStyles.buttonWrapper}>
-                {!basket.isCartChecked && (
+                {!basket.isCartChecked && isUser && (
                     <RoundButton position="fixed" id="cartBtn" handleClick={() => basket.checkCart()}>
                         <IconContext.Provider value={{ size: "2rem", className: "react-icons" }}>
                             <FiShoppingCart/>
@@ -41,6 +43,7 @@ function Header({userData, heading, isUser, isLoggedIn}) {
                     </RoundButton>
                 )}
                 </div>
+                
 
                 <Link href="/">
                     <Image
@@ -52,6 +55,9 @@ function Header({userData, heading, isUser, isLoggedIn}) {
                     />
                 </Link>
                 
+                
+                {isUser && (
+                <>
                 {!userContext.isUserIconChecked && (
                 <div className={utilStyles.buttonWrapper}>
                     <RoundButton handleClick={event => userContext.checkUserInfo(event)}>
@@ -66,13 +72,17 @@ function Header({userData, heading, isUser, isLoggedIn}) {
                     
                 </div>)}
 
+
+
+
+
                 
                     {userContext.isUserIconChecked && (
                     <UserNav></UserNav>
                     )}
                     
-                    
-                
+                </>    
+                )}
 
                 
             </NavBase>

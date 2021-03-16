@@ -26,6 +26,10 @@ export const Basket = ( {children} ) => {
     
     }
 
+    const emptyProductLine = () => {
+        setProductLines([]);
+    }
+
 
     function updateProductLines(index, value) {
 
@@ -63,7 +67,7 @@ export const Basket = ( {children} ) => {
     }
 
     return(
-        <BasketContext.Provider value={{removeItem, productLines, updateProductLines, addProductLine, isCartChecked, checkCart, total}}>{children}</BasketContext.Provider>
+        <BasketContext.Provider value={{emptyProductLine, removeItem, productLines, updateProductLines, addProductLine, isCartChecked, checkCart, total}}>{children}</BasketContext.Provider>
     )
 }
 

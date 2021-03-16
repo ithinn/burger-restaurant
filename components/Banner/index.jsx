@@ -1,4 +1,4 @@
-import {BlueH1} from "../StyledComponents/Headings";
+import {BlueH1, WhiteH1, H1} from "../StyledComponents/Headings";
 import styled from "styled-components";
 import Link from "next/link";
 import {Button} from "../StyledComponents/Button";

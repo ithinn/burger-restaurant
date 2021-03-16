@@ -15,22 +15,6 @@ import { useEffect } from "react";
 import { InlineLi, Ul, Li } from "../StyledComponents/Lists";
 
 
-const schema = object().shape({
-    /*
-    beefBurger: bool().required("Må være checked"),
-    chickenBurger: bool().required("Må være checked"),
-    soyBurger: bool().required("Må være checked"),
-    fishBurger: bool().required("Må være checked"),
-    sprite: bool().required("Må være checked"),
-    fanta: bool().required("Må være checked"),
-    cocaCola: bool().required("Må være checked"),
-    sweetPotatoe: bool().required("Må være checked"),
-    salad: bool().required("Må være checked"),
-    pommesFrites: bool().required("Må være checked"),
-   */
-})
-
-
 function OrderItem( {listId, orderData} ) {
     const {
         register, 
@@ -42,8 +26,7 @@ function OrderItem( {listId, orderData} ) {
         mode: "onChange",
         defaultValues: {
            
-        },
-        resolver: yupResolver(schema)
+        }
     })
 
     
@@ -52,15 +35,22 @@ function OrderItem( {listId, orderData} ) {
     }, [errors])
 
     
+    function listAddOns(item) {
+        let addOns = [];
+        for (let add in item) {
+            if (item[add] === true) {
+                addOns.push(add)
+            }
+        }
+        return addOns;
+    }
+    
 
     const onSubmit =async (data, event) =>  {
-        console.log("DATA", data);
-
-        console.log(event.target.id);
+     
         let id = event.target.id
         id = id.substring(0, id.length-4);
-        console.log(errors);
-      
+
         const orderRef = firebaseInstance.firestore().collection("orders").doc(id);
 
             return orderRef.update({
@@ -76,15 +66,6 @@ function OrderItem( {listId, orderData} ) {
 
     }
 
-    function listAddOns(item) {
-        let addOns = [];
-        for (let add in item) {
-            if (item[add] === true) {
-                addOns.push(add)
-            }
-        }
-        return addOns;
-    }
 
     function onDelivery(event) {
         console.log("ONDELIVERY", event.target.id);
@@ -154,7 +135,7 @@ function OrderItem( {listId, orderData} ) {
 
                     })}
                     
-                    <Button type="submit">Submit</Button>
+                    <Button type="submit">Ferdig</Button>
                 </form>
             )}
 
@@ -194,7 +175,7 @@ function OrderItem( {listId, orderData} ) {
 
                 })}
 
-                <Button width="93%" id={orderData.id+"Btn"} handleClick={event => onDelivery(event)}>Utlever</Button>
+                <Button width="93%" id={orderData.id+"Btn"} handleClick={event => onDelivery(event)}>Utlevert</Button>
           
                       
                 

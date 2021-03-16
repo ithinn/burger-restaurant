@@ -8,6 +8,8 @@ export const BlueH1 = styled.h1`
     color: ${props => props.theme.colors.main};
     text-align: center;
 `
+
+
 export const WhiteH1 = styled(BlueH1)`
     text-shadow: ${props => props.theme.shadows.whiteHeading};
     color: white;

@@ -8,20 +8,18 @@ function Layout( {isLoggedIn, children, home, login, register, restaurant, user}
             <Head>
                 <link rel="stylesheet" href="https://use.typekit.net/gsa0dnm.css"></link>
             </Head>
-        
-           
-            
+    
             {home ? 
-                <Header heading="Billy's burger" isUser={false}/>
+                <Header isUser={false}/>
             : login ? 
-                <Header heading="Billy's burger" isUser={true} isLoggedIn={isLoggedIn}/>        
+                <Header isUser={true} isLoggedIn={isLoggedIn}/>        
             : register ? 
-                <Header heading="Billy's burger" isUser={false}/>        
+                <Header  isUser={false}/>        
             : restaurant ? 
-                <Header heading="Billy's burger" isUser={false}/>
+                <Header isUser={false}/>
             : user ? 
                 <Header heading="Billy's burger" isUser={true} isLoggedIn={isLoggedIn}/>
-            : <Header heading="Billy's burger" isUser={false}/> }
+            : <Header isUser={false}/> }
             
             <main>{children}</main>
         </>
