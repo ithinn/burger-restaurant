@@ -18,6 +18,7 @@ const CartBase = styled.article`
     display: flex;
     flex-direction: column;
     align-items: center;
+    z-index: 5
 `
 
 const CloseCartBtn = styled.button`

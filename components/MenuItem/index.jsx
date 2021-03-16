@@ -24,42 +24,7 @@ const ImgBase = styled.div`
 
 
 export function MenuItem( {foodData, handleAdd, itemData, type, index, sizes, isLoggedIn} ) {
-    /*
-    let priceIndex;
-    let price;
-   
-    function findPrice(priceIndex) {
-        console.log(priceIndex);
-
-
-
-       /* console.log("COURSE", course)
-        let price;
-
-        console.log(index)
-
-        foodData.forEach(item => {
-            //console.log(item);
-            item.details.forEach(el => {
-
-                //console.log("ELEMENT", el.prices);
-                if (el.name === course.name) {
-                    console.log("NAME", course.name)
-                    console.log("PRICES", el.prices)
-                    price = el.prices[index]
-                    console.log(price);
-                    
-                    
-                }
-            })
-        })
-
-        
-        return price
-    }*/
-
-
-    
+ 
     const {
         register, 
         handleSubmit, 
@@ -79,7 +44,7 @@ export function MenuItem( {foodData, handleAdd, itemData, type, index, sizes, is
     }
 
     return (
-        <Flex margin="1em" bg="white" height="auto" justifyContent="center" alignItems="space-between" flexDirection="column" width="17em">
+        <Flex margin="1em" bg="white" height="auto" justifyContent="center" alignItems="space-between" flexDirection="column" as="article" width="17em">
             
             
             <Image
@@ -102,7 +67,7 @@ export function MenuItem( {foodData, handleAdd, itemData, type, index, sizes, is
                            <div>
                                <input ref={register} type="hidden" name="name" value={itemData.name}/>
                                <input ref={register} type="hidden" name="count" value="1"/>
-                               <input ref={register} type="hidden" name="id"/>
+                               <input ref={register} type="hidden" name="type" value={itemData.type}/>
                                <Label htmlFor="typeSize">Velg størrelse</Label>
                                <Select name="size" ref={register}>
                                    {itemData.sizes.map((size, i) => {

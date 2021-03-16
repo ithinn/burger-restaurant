@@ -3,12 +3,21 @@ import Layout from "../components/Layout";
 import { useState, useEffect } from "react";
 import { Button } from "../components/StyledComponents/Button";
 import firebaseInstance from "../config/firebase";
+import { SectionBase } from "../components/StyledComponents/Bases"
+import { Flex, Box } from "reflexbox";
+import KitchenList from "../components/KitchenList"
+import { BlueH1 } from "../components/StyledComponents/Headings"
 
 function Kitchen( {userData} ) {
 
+
+    
     console.log(userData);
  
     const [orderedOrders, setOrderedOrders] = useState(null);
+    const [prepFocus, setPrepFocus] = useState(false);
+    const [toDoFocus, setToDoFocus] = useState(true);
+    const [inFocus, setInFocus] = useState(null)
     
     //Listen for realtime updates on the orders in the server
     useEffect(() => {
@@ -26,17 +35,14 @@ function Kitchen( {userData} ) {
                 test.push(doc.data());
             })
 
-            console.log(data);
-            console.log(test);
            setOrderedOrders(data);
         })
 
     }, []);
 
-    console.log(orderedOrders);
-    
+
     //Change state of the order
-    function handleClick(event) {
+    function onSubmit(event) {
         console.log(event.target.parentNode.id)
 
         let id = event.target.id.substring(3);
@@ -70,52 +76,36 @@ function Kitchen( {userData} ) {
         } 
     }
 
+    function toggleLists(event) {
+        console.log(event.target);
+
+        
+        if (event.target.id === "btntodo") {
+            setToDoFocus(true);
+            setPrepFocus(false);
+        } else {
+            setToDoFocus(false);
+            setPrepFocus(true);
+        }
+    }
+
+    console.log("todo", toDoFocus);
+    console.log("preparet", prepFocus);
+
+    return(
+        <Layout>
+            <SectionBase sectionWidth="100%" sectionHeight="40vh" bgImg='url("images/dinerChairs.jpg")'>
+                <BlueH1>Bestillinger</BlueH1>
+            </SectionBase>
+
+            <SectionBase align="flex-start" margin="5vh">
+                <KitchenList orders={orderedOrders} onSubmit={event => onSubmit(event)} btnText="Bestilt" id="todo" handleClick={event => toggleLists(event)} focus={toDoFocus}></KitchenList>
+                <KitchenList orders={orderedOrders} onSubmit={event => onSubmit(event)} btnText="Klar til henting" id="prepared" handleClick={event => toggleLists(event)} focus={prepFocus}></KitchenList>
+            </SectionBase>
+        </Layout>
+    )
+
 /*
-    orderedOrders.map((order, index) => {
-        
-                if(order.isOrdered) {
-        
-                    return(
-                        <article id="orders">
-
-                            <p>Ordrenummer: {order.orderNumber}</p> 
-                            <ul>
-                                {order.orderList.map(item => {
-                                    return <li>{item}</li>
-                                })}
-                            </ul>
-                            
-                            <button id={"btn" + order.id} type="submit" onClick={event => handleClick(event)}>Ferdig</button>
-                        </article>
-                    )
-                }
-                
-            })
-        )}
-        <h2>Klar til henting</h2>
-
-        {orderedOrders !== null &&(
-            orderedOrders.map((order, index) => {
-                
-                if(order.isPrepared) {
-                
-                    return(
-                        <article id="prepared">
-                            <p>Ordrenummer: {order.orderNumber}</p>  
-                            <ul>
-                                {order.orderList.map(item => {
-                                    return <li>{item.title}</li>
-                                })}
-                            </ul>
-                            <button id={"btn" + order.id} type="submit" onClick={event => handleClick(event)}>Ferdig</button>
-                    </article>
-                      
-                    )
-                }
-                        
-            })
-        )}*/
-
     return(
 
         <>
@@ -179,8 +169,8 @@ function Kitchen( {userData} ) {
         </Layout>
         </>
     )
+}*/
 }
-
 export default Kitchen;
 
 Kitchen.getInitialProps = async () => {

@@ -1,29 +1,39 @@
 import styled, { withTheme } from "styled-components"
 import theme from "../../../styles/theme"
+import { Box} from "reflexbox/styled-components"
 
-
-const ButtonBase = styled.button`
-    color: ${props => props.clr};
-    background-color: ${props => props.bgClr};
+const ButtonBase = styled(Box)`
     border: ${props => props.theme.borders.element};
-    font-size: ${props => props.theme.fontSizes.sm};
-    margin: ${props => props.theme.space[3]};
-    padding: ${props => props.theme.space[1, 2]};
-    font-family: ${props => props.theme.fonts.mainFont};
     text-transform: uppercase;
+
+    &:hover {
+        color: ${props => props.hoverClr};
+        background-color: ${props => props.hoverBg};
+    }
 `
 
 ButtonBase.defaultProps = {
-    clr: "white",
-    bgClr: "#346f83",
+    color: "white",
+    bg: "main",
+    as: "button",
+    margin: 3,
+    fontSize: "sm",
+    fontFamily: "mainFont",
+    p: [1,2],
+    hoverClr: "#346f83",
+    hoverBg: "white"
 }
 
-export function Button({ handleClick, children, bgClr, clr }) {
+export function Button({ handleClick, children, id, ...rest }) {
     return (
         <ButtonBase 
-        bgClr={bgClr}
-        clr={clr}
-        onClick={handleClick}>{ children }</ButtonBase>
+        
+        onClick={handleClick}
+        id={id}
+        {...rest}
+
+        >{ children }
+        </ButtonBase>
     )
 
 }
