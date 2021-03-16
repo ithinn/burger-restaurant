@@ -59,18 +59,31 @@ const theme = {
             menuItem: "20em"
         }
     },
+    shadows: {
+        R: '-5px 0px 15px 5px #000000',
+        L: '5px 0px 15px 5px #000000',
+    },
+
     variants: {
 
-        fgBox: {
+        fgBoxL: {
             backgroundColor: "white",
             color: "main",
             border: "article",
-            p: 2
+            p: 2,
+            boxShadow: "L"
+        },
+        fgBoxR: {
+            backgroundColor: "white",
+            color: "main",
+            border: "article",
+            p: 2,
+            boxShadow: "R"
         },
     
         bgBox: {
             bg: "gray",
-            color: "main",
+            color: "white",
             border: "4px solid white",
             p: 2
         }

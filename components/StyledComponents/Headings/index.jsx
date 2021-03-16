@@ -29,13 +29,13 @@ export const BlueH2 = styled(BlackH2)`
 export const BlueH3 = styled.h3`
         font-family: ${props => props.theme.fonts.mainFont};
         font-size: ${props => props.theme.fontSizes.sm};
-        color: ${props => props.clr};
+        
         text-align: ${props => props.textAlign};
 `
 
 BlueH3.defaultProps = {
     textAlign: "center",
-    clr: "#346f83"
+    color: "#346f83"
 }
 
 export const Paragraph = styled.p`

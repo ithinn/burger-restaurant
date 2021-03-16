@@ -9,12 +9,14 @@ import styled from "styled-components";
 import { Select } from "../StyledComponents/Inputs";
 import { Label, LabelAsButton } from "../StyledComponents/Labels";
 import {Flex, Box} from "reflexbox"
-import {Input, InvisibleCheckbox} from "../StyledComponents/Inputs";
+import {Input, Cb, InvisibleCheckbox} from "../StyledComponents/Inputs";
 import firebaseInstance from "../../config/firebase"
 import { useEffect } from "react";
+import { InlineLi, Ul, Li } from "../StyledComponents/Lists";
+
 
 const schema = object().shape({
-    
+    /*
     beefBurger: bool().required("Må være checked"),
     chickenBurger: bool().required("Må være checked"),
     soyBurger: bool().required("Må være checked"),
@@ -25,7 +27,7 @@ const schema = object().shape({
     sweetPotatoe: bool().required("Må være checked"),
     salad: bool().required("Må være checked"),
     pommesFrites: bool().required("Må være checked"),
-   
+   */
 })
 
 
@@ -44,25 +46,23 @@ function OrderItem( {listId, orderData} ) {
         resolver: yupResolver(schema)
     })
 
-    console.log(orderData);
+    
     useEffect(() => {
         console.log(errors)
     }, [errors])
 
-
+    
 
     const onSubmit =async (data, event) =>  {
         console.log("DATA", data);
 
         console.log(event.target.id);
-
-        let id = data.orderId;
+        let id = event.target.id
+        id = id.substring(0, id.length-4);
+        console.log(errors);
       
-
         const orderRef = firebaseInstance.firestore().collection("orders").doc(id);
 
-        
-        if (event.target.id === "todoForm") {
             return orderRef.update({
                 isOrdered: false,
                 isPrepared: true
@@ -74,30 +74,38 @@ function OrderItem( {listId, orderData} ) {
                 console.log(error);
             })
 
-        } else if (event.target.id === "preparedForm") {
-            return orderRef.update({
-                isPickedUp: true,
-                isPrepared: false,
-                orderNumber: "-"
-            })
-            .then(() => {
-                console.log("updated")
-            })
-            .catch((error) => {
-                console.log(error);
-            })
-        } 
-
-
-
-
-
-
-
-        //handleAdd(data);
     }
 
+    function listAddOns(item) {
+        let addOns = [];
+        for (let add in item) {
+            if (item[add] === true) {
+                addOns.push(add)
+            }
+        }
+        return addOns;
+    }
 
+    function onDelivery(event) {
+        console.log("ONDELIVERY", event.target.id);
+        
+        let id = event.target.id;
+        id = id.substring(0, id.length-3);
+
+        const orderRef = firebaseInstance.firestore().collection("orders").doc(id);
+
+        return orderRef.update({
+            isPickedUp: true,
+            isPrepared: false,
+            orderNumber: "-"
+        })
+        .then(() => {
+            console.log("updated")
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+    }
 
     return(
         <Flex 
@@ -115,21 +123,88 @@ function OrderItem( {listId, orderData} ) {
             </div>
 
 
-            <form id={listId + "Form"} onSubmit={handleSubmit(onSubmit)}>
-           
-                {orderData.orderList.map(item => {
-           
-                    return (
+            {orderData.isOrdered && (
+                <form id={orderData.id + "Form"} onSubmit={handleSubmit(onSubmit)}>
 
-                    <div>
-                        <Input type="checkbox" name={item.type} ref={register}/>
-                        <Label>{item.size.split(",").pop()} {item.name}</Label>
-                    </div>)
+                    {orderData.orderList.map((item, index) => {
+
+                    let addOns = listAddOns(item.addOns);
+                    let mappedAddOns = addOns.map(addOn => {
+                        return <InlineLi>{addOn}, </InlineLi>})
+                    
+                        
+                        return (
+                        <Box ml={3}>
+                            <input type="hidden" value={orderData.orderId} name="orderId"/>
+                            <Input id={index + item.name} type="checkbox" name={item.type} ref={register({ required: "Du må sjekke alle feltene" })}/>
+                            <Label htmlFor={index + item.name} ml={3}>
+                                {item.size.split(",").pop()} {item.name}
+                                
+                                {addOns.length > 0 && (
+                                    <>
+                                    <span> med </span>
+                                    <Ul>
+                                    {mappedAddOns}
+                                    </Ul>
+                                    </> )}
+                            </Label>
+                            
+                        </Box>
+                        )
+
+                    })}
+                    
+                    <Button type="submit">Submit</Button>
+                </form>
+            )}
+
+
+
+            {orderData.isPrepared && (
+                
+                <Box>
+                    {orderData.orderList.map(item => {
+
+                    let addOns = listAddOns(item.addOns);
+                    let mappedAddOns = addOns.map(addOn => {
+                        return <InlineLi>{addOn}, </InlineLi>
+                    })
+
+                    return (
+                    
+                        <Box>
+                            <ul>
+                                <Li listStyle="default">
+                                {item.size.split(",").pop()} {item.name} 
+                            {addOns.length > 0 && (
+                            <>
+                            <span> med </span>
+                            <Ul>
+                            {mappedAddOns}
+                            </Ul>
+                            </>
+                            )}
+                                </Li>
+                            </ul>
+                            
+                           
+                        </Box>
+
+                    )
 
                 })}
+
+                <Button width="93%" id={orderData.id+"Btn"} handleClick={event => onDelivery(event)}>Utlever</Button>
+          
+                      
                 
-                <Button type="submit">Submit</Button>
-            </form>
+                
+                </Box>
+
+                
+            )}
+
+
         </Flex>
     )
 }

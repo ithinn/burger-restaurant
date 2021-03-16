@@ -1,6 +1,7 @@
 import styled from "styled-components"
+import { Box } from "reflexbox/styled-components"
 
-export const Label = styled.label`
+export const Label = styled(Box)`
     font-size: ${props => props.theme.fontSizes.sm};
     color: ${props => props.theme.colors.main};
     font-family: ${props => props.theme.fonts.mainFont};
@@ -8,7 +9,8 @@ export const Label = styled.label`
     display: ${props => props.display}
 `
 Label.defaultProps = {
- 
+    as: "label",
+    ml: 0
 }
 
 export const LabelAsButton = styled(Label)`

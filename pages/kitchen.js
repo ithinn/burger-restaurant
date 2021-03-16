@@ -77,9 +77,7 @@ function Kitchen( {userData} ) {
     }
 
     function toggleLists(event) {
-        console.log(event.target);
 
-        
         if (event.target.id === "btntodo") {
             setToDoFocus(true);
             setPrepFocus(false);
@@ -89,9 +87,6 @@ function Kitchen( {userData} ) {
         }
     }
 
-    console.log("todo", toDoFocus);
-    console.log("preparet", prepFocus);
-
     return(
         <Layout>
             <SectionBase sectionWidth="100%" sectionHeight="40vh" bgImg='url("images/dinerChairs.jpg")'>
@@ -99,8 +94,8 @@ function Kitchen( {userData} ) {
             </SectionBase>
 
             <SectionBase align="flex-start" margin="5vh">
-                <KitchenList orders={orderedOrders} onSubmit={event => onSubmit(event)} btnText="Bestilt" id="todo" handleClick={event => toggleLists(event)} focus={toDoFocus}></KitchenList>
-                <KitchenList orders={orderedOrders} onSubmit={event => onSubmit(event)} btnText="Klar til henting" id="prepared" handleClick={event => toggleLists(event)} focus={prepFocus}></KitchenList>
+                <KitchenList orders={orderedOrders} side="L" onSubmit={event => onSubmit(event)} btnText="Bestilt" id="todo" handleClick={event => toggleLists(event)} focus={toDoFocus}></KitchenList>
+                <KitchenList orders={orderedOrders} side="R" onSubmit={event => onSubmit(event)} btnText="Klar til henting" id="prepared" handleClick={event => toggleLists(event)} focus={prepFocus}></KitchenList>
             </SectionBase>
         </Layout>
     )
