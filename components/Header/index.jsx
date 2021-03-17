@@ -16,7 +16,7 @@ import { useUser } from "../../context/UserContext";
 import UserNav from "../UserNav";
 import { useContext } from "react";
 
-function Header({userData, heading, isUser, isLoggedIn}) {
+function Header({userData, heading, isUser, isCart, isLoggedIn}) {
     const {user, loading, isAuthenticated} = useAuth();
     const userId = user ? user.uid : false;
     const router = useRouter();
@@ -24,13 +24,14 @@ function Header({userData, heading, isUser, isLoggedIn}) {
     const userContext = useUser();
     const userName = userContext.userName;
 
-
+    console.log(userName);
 
 
     return(
         <header>
             <NavBase>
 
+                {isCart &&(
                 <div className={utilStyles.buttonWrapper}>
                 {!basket.isCartChecked && isUser && (
                     <RoundButton position="fixed" id="cartBtn" handleClick={() => basket.checkCart()}>
@@ -43,6 +44,8 @@ function Header({userData, heading, isUser, isLoggedIn}) {
                     </RoundButton>
                 )}
                 </div>
+
+                )}
                 
 
                 <Link href="/">

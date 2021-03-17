@@ -14,7 +14,7 @@ const theme = {
     fonts: {
         mainFont: "oswald",
         sectionHeading: 'gastromond',
-        text: 'expo-serif-pro'
+        text: 'arial'
     },
     fontWeights: [
         0, 200, 400, 600, 900
@@ -62,6 +62,7 @@ const theme = {
     shadows: {
         R: '-5px 0px 15px 5px #000000',
         L: '5px 0px 15px 5px #000000',
+        card: "0 0 5px 5px rgba(0, 0, 0, .5)"
     },
 
     variants: {
@@ -86,7 +87,16 @@ const theme = {
             color: "white",
             border: "4px solid white",
             p: 2
+        },
+
+        card: {
+            width: "100%",
+            bg: "white",
+            boxShadow: "card",
+            m: 3,
+            p: 3     
         }
+
 }}
    /* 
     export default {

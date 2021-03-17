@@ -1,4 +1,5 @@
 import styled from "styled-components"
+import {Box, Flex} from "reflexbox/styled-components"
 
 export const NavBase = styled.nav`
     width: ${props => props.navWidth};
@@ -18,27 +19,24 @@ NavBase.defaultProps = {
     position: "none"
 }
 
-export const SectionBase = styled.section`
-    width: ${props => props.sectionWidth};
-    height: ${props => props.sectionHeight};
-    background: #f9f9f8;
-    border: 1px solid red;
+export const SectionBase = styled(Flex)`
     display: flex;
     flex-wrap: wrap;
-    margin: ${props => props.margin};
     background-image: ${props => props.bgImg};
     background-size: cover;
-    justify-content: ${props => props.justify};
-    align-items: ${props => props.align}
+
 `
 
 SectionBase.defaultProps = {
-    margin: "0",
-    sectionWidth: "96%",
-    sectionHeight: "auto",
+    as: "section",
+    m: "0 auto",
+    width: "96%",
+    height: "auto",
+    bg: "#f9f9f8",
     bgImg: "none",
-    justify: "center",
-    align: "center",
+    justifyContent: "center",
+    alignItems: "center",
+    border: "none"
 
 
 }

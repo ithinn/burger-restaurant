@@ -2,7 +2,7 @@ import GlobalStyle from "../GlobalStyle";
 import Header from "../Header";
 import Head from "next/head"
 
-function Layout( {isLoggedIn, children, home, login, register, restaurant, user} ) {
+function Layout( {status, isLoggedIn, children, home, login, register, restaurant, user} ) {
     return(
         <>  
             <Head>
@@ -12,14 +12,16 @@ function Layout( {isLoggedIn, children, home, login, register, restaurant, user}
             {home ? 
                 <Header isUser={false}/>
             : login ? 
-                <Header isUser={true} isLoggedIn={isLoggedIn}/>        
+                <Header isUser={true} isCart={false} isLoggedIn={isLoggedIn}/>        
             : register ? 
-                <Header  isUser={false}/>        
+                <Header  isUser={false} isCart={false}/>        
             : restaurant ? 
-                <Header isUser={false}/>
+                <Header isUser={false} isCart={false}/>
+            : status ? 
+                <Header isUser={true} isCart={false}/>
             : user ? 
-                <Header heading="Billy's burger" isUser={true} isLoggedIn={isLoggedIn}/>
-            : <Header isUser={false}/> }
+                <Header heading="Billy's burger" isUser={true} isCart={true}isLoggedIn={isLoggedIn}/>
+            : <Header isUser={false} isCart={false}/> }
             
             <main>{children}</main>
         </>

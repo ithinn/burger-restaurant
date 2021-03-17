@@ -190,7 +190,7 @@ function Order({userData, food}) {
             <section>
                 <BlackH2>Velkommen {userName}</BlackH2>
                 <BlueH1>Meny</BlueH1>
-                {menu}   
+                 
             </section>
         )
     }
@@ -206,6 +206,8 @@ function Order({userData, food}) {
        
         {isAuthenticated ? renderPage() : renderLoginFirst()}
         
+        {menu}  
+
         {basket.isCartChecked && (
         <Cart 
         foodData={food} 

@@ -7,26 +7,39 @@ import FlexContainer from "../components/FlexContainer";
 import Layout from "../components/Layout";
 import { useRouter } from "next/router";
 import {useAuth} from "../config/auth";
+import Icon from "../components/BurgerSvg";
+import {Flex, Box} from "reflexbox/styled-components"
+import { BlueH1, BlackH2, BlueH3, Pa } from "../components/StyledComponents/Headings"
+import { Ul, Li } from "../components/StyledComponents/Lists"
+import { SectionBase } from "../components/StyledComponents/Bases";
+import { useUser } from "../context/UserContext";
+import { useContext } from "react";
 
 function UserStatus({userData}) {
    
     //const [userId, setUserId] = useState(null);
     const [usersOrders, setUsersOrders] = useState([])
     //const [isLoggedIn, setIsLoggedIn] = useState(true);
-    let userName;
+    //let userName;
     const router = useRouter()
     const {user, loading, isAuthenticated} = useAuth();
     const userId = user ? user.uid : false;
     
+
+    const userContext = useUser();
+    const userName = userContext.userName;
+
+    console.log("USERNAME", userName);
+    /*
     //Get userName from Firestore
     userData.forEach(user => {
         if (userId) {
             if (user.id === userId) {
-                userName = user.name
+                userName = user.firstName
             }
         }
         
-    })
+    })*/
 
 
     //Get all the users orders that hasn't been picked up yet
@@ -34,7 +47,7 @@ function UserStatus({userData}) {
         if (userId) {
             let ref = firebaseInstance.firestore().collection("orders").where("userId", "==", userId)
             ref.onSnapshot((snapshot) => {
-                console.log("snapshot setter inn")
+
                 let data = [];
                 snapshot.forEach((doc) => {
                     data.push({
@@ -61,28 +74,8 @@ function UserStatus({userData}) {
             
     }
 
-    /*
-    //Redirect after signing out
-    const useUser = () => ({ user: null, loading: false })
-    const { user, loading } = useUser()
-    const router = useRouter()
     
-    useEffect(() => {
-        if (isLoggedIn === false) {
-            if (!(user || loading)) {
-                router.push('/order')
-                console.log("Logged out");
-            }
-
-            return <p>Redirecting...</p>
-        }
-
-      }, [isLoggedIn, user, loading])
-
-    
-     */
-    
-      if (loading) {
+    if (loading) {
         return <p>loading loading</p>
     }
 
@@ -92,53 +85,61 @@ function UserStatus({userData}) {
     }
 
 
-
-
-
-    console.log(usersOrders);
     return (
-        <Layout user>
-            <FlexContainer
-                direction="column" 
-                flexWidth="60%" 
-                border="1px solid blue" 
+        <Layout status>
+            <SectionBase
+                as="section"
+                flexDirection="column" 
+                border="1px solid blue"
+                m="2em auto"
                 >
 
-                <h2>{"Hei, " + userName + "! Takk for bestillingen"}</h2>
-                <FlexContainer 
-                    direction="row" 
-                    flexWidth="80%" 
+                <BlackH2>{"Hei, " + userName + "! Takk for bestillingen"}</BlackH2>
+                <Flex 
+                    direction="row"
+                    p={1}
+                    m="0 auto" 
+                    maxWidth="40em" 
+                    width="100%"
                     border="1px solid red" 
                     justify="center"
-                    align="center">
+                    align="center"
+                    flexWrap="wrap">
 
                     {usersOrders && (
                         usersOrders.map((order, index) => {
                             if (!order.isPickedUp) {
-                                return (
-                                    <article key={"order" + index}>
-                            
-                                        <OrderStatusCircle 
-                                            background={order.isOrdered ? "yellow" : "green"}>
-
-                                            <h3>{order.isOrdered ? "Du har bestilt" : "Bestillingen er klar!"}</h3>
-                                            <ul>
+                                
+                                return(
+                                    <Flex variant="card" >
+                                        <Box width="50%"  p={1}>
+                                            <BlueH3 textAlign="left">Bestillingsnummer: {order.orderNumber}</BlueH3>
+                                            <Ul>
                                                 {order.orderList.map(item => {
-                                                    return (<li key={"listItem" + item.title}>{item.count + " stk " + item.title + " " + item.size  }</li>)
+                                                    return (<Li listStyle="default" key={"listItem" + item.name}>{item.count + " stk " + item.name + " " + item.size.split(",").pop()  }</Li>)
                                                 })}
-                                            </ul>
-                                            <p>{order.isOrdered ? "Maten blir forberedt" : "Du kan hente maten i kassen"}</p>
-                                        </OrderStatusCircle>
+                                            </Ul>
+                                        </Box>
 
-                                    </article>
+                                        <Box width="50%" p={1}>
+                                            <Box>
+                                                <Icon 
+                                                    color={order.isOrdered ? "lightgray" : "green"}
+                                                    stroke={order.isOrdered ? "#346f83" : "green"}
+                                                    opacity={order.isOrdered ? ".3" : "1"}
+                                                ></Icon>
+                                            </Box>
+                                            <BlueH3 color={order.isOrdered ? "gray" : "green"}>{order.isOrdered ? "Maten blir forberedt" : "Du kan hente maten i kassen"}</BlueH3>
+                                        </Box>
+                                    </Flex>
                                 )
                             } 
                         })
                     )}
-                </FlexContainer>
+                </Flex>
 
                 <Button btnColor="purple" txtColor="white" handleClick={handleSignOutClick}>Logg ut</Button>
-                </FlexContainer> 
+            </SectionBase> 
         </Layout>
            
     )

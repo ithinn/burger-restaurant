@@ -1,26 +1,12 @@
-
-import FlexContainer from "../FlexContainer";
 import { Button } from "../StyledComponents/Button";
 import { BlueH2, BlueH3, Paragraph } from "../StyledComponents/Headings"
-import {useForm, useFieldArray, Controller } from "react-hook-form";
-import {yupResolver} from "@hookform/resolvers/yup"
-import {string, object} from "yup"
+import { useForm } from "react-hook-form";
 import Image from "next/image"
 import utilStyles from "../../styles/utils.module.css"
-import styled from "styled-components";
 import { Select } from "../StyledComponents/Inputs";
 import { Label, LabelAsButton } from "../StyledComponents/Labels";
 import {Flex, Box} from "reflexbox"
 import {Input, InvisibleCheckbox} from "../StyledComponents/Inputs";
-
-const schema = object().shape({
-    
-})
-
-const ImgBase = styled.div`
-    height: 20em;
-    width: 100%;
-`
 
 
 export function MenuItem( {foodData, handleAdd, itemData, type, index, sizes, isLoggedIn} ) {
@@ -36,7 +22,7 @@ export function MenuItem( {foodData, handleAdd, itemData, type, index, sizes, is
         defaultValues: {
            
         },
-        resolver: yupResolver(schema)
+       
     })
 
     const onSubmit =async (data) =>  {
@@ -62,23 +48,27 @@ export function MenuItem( {foodData, handleAdd, itemData, type, index, sizes, is
             </div>
          
             <Flex width="100%" justifyContent="center" padding="1em" flexWrap="wrap">
+                
                 <form onSubmit={handleSubmit(onSubmit)}>
                            
                            <div>
                                <input ref={register} type="hidden" name="name" value={itemData.name}/>
                                <input ref={register} type="hidden" name="count" value="1"/>
                                <input ref={register} type="hidden" name="type" value={itemData.type}/>
+                               <input ref={register} type="hidden" name="price" value={0}/>
                                <Label htmlFor="typeSize">Velg størrelse</Label>
                                <Select name="size" ref={register}>
+                                   
                                    {itemData.sizes.map((size, i) => {
                          
                                        return <option value={[i, size]}>{size}</option>
                                    })}
+
                                </Select>
-                               <input ref={register} type="hidden" name="price" value={0}/>
+                               
  
                                <BlueH3 textAlign="left">Legg til (+15,-):</BlueH3>
-                           {itemData.addOns !== undefined && (
+                                {itemData.addOns !== undefined && (
                            
                            <Flex width="96%" flexWrap="wrap" height="8em" alignItems="flex-start">
                                
@@ -107,42 +97,5 @@ export function MenuItem( {foodData, handleAdd, itemData, type, index, sizes, is
         </Flex>
         
     )
-
-
-/*
-  
-    return (
-        
-        <FlexContainer backgroundClr="white" flexHeight="auto" justify="center" align="center" direction="column" flexWidth="15em" key={type}>
-                            
-                            <Image
-                                    src="/images/soyaburger.jpg"
-                                    height={200}
-                                    width={300}
-                                    className={utilStyles.courseImg}
-                                />
-
-                            <BlueH3>{type}</BlueH3>
-                            <p>Beskrivelse beskrivelse beskrivelse</p>
-                            
-                                    
-                        
-                            <form onSubmit={handleSubmit(onSubmit)}>
-                                
-                                <div>
-                                    <input ref={register} type="hidden" name="title" value={type}/>
-                                    <input ref={register} type="hidden" name="count" value="1"/>
-                                    <Label htmlFor="typeSize">Velg størrelse</Label>
-                                    <Select name="size" ref={register}>
-                                        {sizes.map(size => {
-                                            return <option value={size}>{size}</option>
-                                        })}
-                                    </Select>
-                                </div>
-                                
-                                {isLoggedIn && (<Button btnBorder="none" txtColor="white" btnColor="#346f83" id={"btn" + type + index}>Legg til</Button>)}
-                            </form>        
-        </FlexContainer>  
-    )*/
 }
 
