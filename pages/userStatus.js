@@ -1,7 +1,7 @@
 import firebaseInstance from "../config/firebase";
 import readCollection from "./database/readCollection";
 import { useState, useEffect } from "react";
-import OrderStatusCircle from "../components/OrderStatusCircle";
+
 import { Button } from "../components/StyledComponents/Button";
 import FlexContainer from "../components/FlexContainer";
 import Layout from "../components/Layout";

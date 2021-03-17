@@ -40,8 +40,30 @@ SectionBase.defaultProps = {
     alignItems: "center",
     border: "none",
     bgPosition: "center"
+}
 
+export const LoginBase = styled.section`
+    background-image: url("/images/dinerChairs.jpg");
+    background-size: cover;
+    width: 100%;
+    height: 150;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+`
+
+
+export const FormBase = styled(Box)`
+    background-color: white;
+`
+
+FormBase.defaultProps = {
+    as: "article",
+    mt: "3em",
+    ml: "auto",
+    mr: "auto",
+    mb: "1em",
+    width: "20em",
+    p: 3
     
-
-
 }

@@ -11,7 +11,7 @@ import { Count } from "../StyledComponents";
 import { NavBase } from "../StyledComponents/Bases";
 import {useRouter} from "next/router"
 import {useAuth} from "../../config/auth";
-import { SmallP } from "../StyledComponents/Headings";
+import { SmallP, BlueH1 } from "../StyledComponents/Headings";
 import { useUser } from "../../context/UserContext";
 import UserNav from "../UserNav";
 import { useContext } from "react";
@@ -41,6 +41,8 @@ function Header({userData, heading, isUser, isCart, isLoggedIn}) {
                         className={utilStyles.logo}
                     />
                 </Link>
+
+                <BlueH1>{heading}</BlueH1>
                 
                 <Flex height="22vh">
 

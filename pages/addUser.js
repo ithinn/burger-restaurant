@@ -5,7 +5,7 @@ import Layout from "../components/Layout"
 import firebaseInstance from "../config/firebase"
 import readCollection from "./database/readCollection";
 import { useRouter } from "next/router";
-import { LoginBase, FormWrap } from "../components/LoginBase";
+import { LoginBase, FormBase } from "../components/StyledComponents/Bases";
 import {Input} from "../components/StyledComponents/Inputs";
 import {Label} from "../components/StyledComponents/Labels";
 import {useForm, useFieldArray, Controller } from "react-hook-form";
@@ -72,7 +72,7 @@ function AddUser() {
             const userCredential = await firebaseInstance.auth().createUserWithEmailAndPassword(data.email, data.password)
       
             const user = userCredential.user.uid;
-                setIsRegistered(true);
+                //setIsRegistered(true);
                 console.log(user + "is addded to auth");
             
             const collection = firebaseInstance.firestore().collection("users");
@@ -105,12 +105,9 @@ function AddUser() {
     console.log(formError);
 
     return(
-        <Layout>
-            <LoginBase register>
-            <BlueH1>Registrer deg</BlueH1>   
-            <FormWrap>
-
-             
+        <Layout register>
+            <LoginBase register> 
+            <FormBase variant="card" p="2em"> 
             <form 
                 onSubmit={handleSubmit(onSubmit)}
                 name="add-user"
@@ -206,7 +203,7 @@ function AddUser() {
 
                 <Button type="submit">Registrer deg</Button>
             </form>
-            </FormWrap>
+            </FormBase>
 
             <Link href="/user">
                 <a>Til login-siden</a>

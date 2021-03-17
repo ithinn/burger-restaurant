@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components"
-import { LoginBase, FormWrap } from "../components/LoginBase";
+import { LoginBase, FormBase } from "../components/StyledComponents/Bases";
 import { Input } from "../components/StyledComponents/Inputs"
 import { Label } from "../components/StyledComponents/Labels"
 import { Button } from "../components/StyledComponents/Button"
@@ -93,7 +93,7 @@ function Login({ handleSubmit }) {
             
             <h3>Logg inn</h3>
             
-            <FormWrap>
+            <FormBase variant="card" p="2em">
 
             
 
@@ -118,7 +118,7 @@ function Login({ handleSubmit }) {
         <Link href="/addUser">
             <a>...eller registrer deg som ny bruker</a>
         </Link>
-        </FormWrap>
+        </FormBase>
             
         </LoginBase> 
         :

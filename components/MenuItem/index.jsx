@@ -1,5 +1,5 @@
 import { Button } from "../StyledComponents/Button";
-import { BlueH2, BlueH3, Paragraph } from "../StyledComponents/Headings"
+import { BlueH2, BlueH3, Pa } from "../StyledComponents/Headings"
 import { useForm } from "react-hook-form";
 import Image from "next/image"
 import utilStyles from "../../styles/utils.module.css"
@@ -30,7 +30,7 @@ export function MenuItem( {foodData, handleAdd, itemData, type, index, sizes, is
     }
 
     return (
-        <Flex variant="card" height="auto" justifyContent="center" alignItems="space-between" flexDirection="column" as="article" width="17em">
+        <Flex variant="card" height="auto" justifyContent="center" alignItems="space-between" p={0} flexDirection="column" as="article" width="17em">
             
             
             <Image
@@ -43,7 +43,7 @@ export function MenuItem( {foodData, handleAdd, itemData, type, index, sizes, is
 
             <div>
                 <BlueH2>{itemData.name}</BlueH2>
-                <p>{itemData.description}</p>
+                <Pa>{itemData.description}</Pa>
                 <BlueH3 clr="#a62d2d">{itemData.prices[0] + "/" + itemData.prices[1] + "/" + itemData.prices[2]},-</BlueH3>
             </div>
          

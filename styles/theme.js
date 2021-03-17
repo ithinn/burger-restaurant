@@ -5,8 +5,9 @@ const theme = {
         0, '0.25rem', '0.5rem', '1rem', '2rem', '4rem'
     ], //spacing
     fontSizes: {
-        lg: '3rem',
-        md: '1.8rem',
+        xl: '3.5rem',
+        lg: '2.8rem',
+        md: '2rem',
         sm: '1.3rem',
         txt: "1rem"
         
@@ -14,7 +15,8 @@ const theme = {
     fonts: {
         mainFont: "oswald",
         sectionHeading: 'gastromond',
-        text: 'arial'
+        text: 'arial',
+        hand: 'cinderela'
     },
     fontWeights: [
         0, 200, 400, 600, 900
@@ -30,7 +32,7 @@ const theme = {
         
     },
     letterSpacings: [
-        0 , 1, 2, 3
+        0, 1, 2, 3
     ],
     lineHeights: [
         1, 1.5, 2
@@ -46,7 +48,8 @@ const theme = {
     },
     shadows: {
         coloredHeading: "4px 5px 1px #103f3f",
-        whiteHeading: "4px 5px 1px #d1d1d1"
+        whiteHeading: "4px 5px 1px #d1d1d1",
+        card: "0 0 5px 3px rgba(0, 0, 0, .5)"
     },
     zIndices: [
         0,1,2,3
@@ -59,11 +62,7 @@ const theme = {
             menuItem: "20em"
         }
     },
-    shadows: {
-        R: '-5px 0px 15px 5px #000000',
-        L: '5px 0px 15px 5px #000000',
-        card: "0 0 5px 3px rgba(0, 0, 0, .5)"
-    },
+   
 
     variants: {
 

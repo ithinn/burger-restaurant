@@ -7,14 +7,15 @@ function Layout( {status, isLoggedIn, children, home, login, register, restauran
         <>  
             <Head>
                 <link rel="stylesheet" href="https://use.typekit.net/gsa0dnm.css"></link>
+                
             </Head>
     
             {home ? 
                 <Header isUser={false}/>
             : login ? 
-                <Header isUser={true} isCart={false} isLoggedIn={isLoggedIn}/>        
+                <Header isUser={true} heading="Logg inn" isCart={false} isLoggedIn={isLoggedIn}/>        
             : register ? 
-                <Header  isUser={false} isCart={false}/>        
+                <Header  heading="Registrer deg" isUser={false} isCart={false}/>        
             : restaurant ? 
                 <Header isUser={false} isCart={false}/>
             : status ? 

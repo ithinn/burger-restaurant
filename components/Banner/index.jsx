@@ -1,7 +1,10 @@
-import {BlueH1, WhiteH1, H1} from "../StyledComponents/Headings";
+import {BlueH1, HandH2, WhiteH1, H1} from "../StyledComponents/Headings";
 import styled from "styled-components";
 import Link from "next/link";
 import {Button} from "../StyledComponents/Button";
+import { SectionBase } from "../StyledComponents/Bases";
+import { Flex } from "reflexbox/styled-components"
+
 
 const BannerBase = styled.section`
     width: 100%;
@@ -34,13 +37,22 @@ function Banner({isLoggedIn}) {
 
     return(
 
-        <BannerBase>
-            <BlueH1>Beste burgeren på Østlandet</BlueH1>
+        <SectionBase bgImg='url("/images/dinerFurniture.jpg")' flexDirection="column" height="60vh" bgPosition="top">
+            <HandH2>Beste burgeren på Østlandet</HandH2>
+
+            <Flex>
             <Link href="/login">
-            <Button bgClr="black">{isLoggedIn ? "Bestill nå" : "Logg inn"}</Button>
+                <Button bgClr="black">{isLoggedIn ? "Bestill nå" : "Logg inn"}</Button>
             </Link>
+
+            {!isLoggedIn && (
+            <Link href="/addUser">
+                <Button bgClr="black">Registrer ny bruker</Button>
+            </Link>
+            )}
+            </Flex>
             
-        </BannerBase>
+        </SectionBase>
 
     )
 }

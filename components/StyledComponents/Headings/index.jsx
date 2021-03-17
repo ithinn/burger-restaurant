@@ -4,15 +4,31 @@ export const BlueH1 = styled.h1`
     font-family: ${props => props.theme.fonts.mainFont};
     text-transform: uppercase;
     text-shadow: ${props => props.theme.shadows.coloredHeading};
-    font-size: ${props => props.theme.fontSizes.lg};
+    font-size: ${props => props.theme.fontSizes.xl};
     color: ${props => props.theme.colors.main};
     text-align: center;
+    letter-spacing: ${props => props.theme.letterSpacings[3]};
+
+    @media (max-width: 40em) {
+        font-size: ${props => props.theme.fontSizes.lg};
+    }
 `
 
 export const WhiteH1 = styled(BlueH1)`
     text-shadow: ${props => props.theme.shadows.whiteHeading};
     color: white;
 `
+
+export const HandH2 = styled.h2`
+
+    font-family: ${props => props.theme.fonts.hand};
+    font-size: ${props => props.theme.fontSizes.xl};
+    color: ${props => props.theme.colors.gray};
+    text-shadow: 5px 5px #333;
+    letter-spacing: ${props => props.theme.letterSpacings[2]};
+    
+`
+
 
 export const BlackH2 = styled.h2`
     font-family: ${props => props.theme.fonts.sectionHeading};

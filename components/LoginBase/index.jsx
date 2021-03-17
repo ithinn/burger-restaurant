@@ -1,5 +1,5 @@
 import styled from "styled-components";
-
+/*
 export const LoginBase = styled.section`
     background-image: url("/images/dinerChairs.jpg");
     background-size: cover;
@@ -11,7 +11,7 @@ export const LoginBase = styled.section`
 `
 export const FormWrap = styled.article`
     width: 20em;
-    margin: 0 auto;
+    margin: 3em auto 0 auto;
     background-color: white;
     padding: 2em;
-`
+`*/
