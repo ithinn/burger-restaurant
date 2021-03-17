@@ -6,7 +6,7 @@ import {Box, Flex} from "reflexbox";
 import { Label } from "../StyledComponents/Labels";
 import { Button, RoundButton } from "../StyledComponents/Button";
 import { BlueH2, BlueH3, BlackH2 } from "../StyledComponents/Headings";
-import { Li } from "../StyledComponents/Lists";
+import { Ul, InlineLi, Li } from "../StyledComponents/Lists";
 
 const CartBase = styled.article`
     width: 100%;
@@ -121,13 +121,10 @@ function Cart({ handleChange, handleRemove, sendOrder, foodData}) {
 
             <ul>
                 {basket.productLines && (basket.productLines.map((item, index) => {
-                    console.log(item);
+            
                     let addOns = listAddOns(item.addOns);
                     let size = item.size;
-
-         
-                    //sizeIndex = item.size.charAt(0);
-                    //sizeText = size.split(",").pop();
+                    sizeText = size.split(",").pop();
 
                 return (
                         
@@ -136,11 +133,11 @@ function Cart({ handleChange, handleRemove, sendOrder, foodData}) {
                         
                             <div>
                                 <BlueH3>{item.name + ", " + sizeText}  </BlueH3>
-                                <ul>
+                                <Ul>
                                 {addOns.map(addon => {
-                                    return <Li key={addon}>{addon}</Li>
+                                    return <Li listStyle="default" key={addon}>{addon} </Li>
                                 })}
-                                </ul>
+                                </Ul>
                                 
                                 <Label htmlFor={item + "inp"}>Velg antall: </Label>
                                 <CartInp onChange={event => handleChange(event)} id={item + "inp"} type="number" id={"count" + index} placeholder="velg antall" defaultValue={item.count}/>

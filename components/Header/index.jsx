@@ -4,7 +4,7 @@ import Image from "next/image";
 import utilStyles from '../../styles/utils.module.css'
 import {useBasket} from "../../context/BasketContext";
 import { RoundButton } from "../StyledComponents/Button"
-import { FiShoppingCart } from "react-icons/fi";
+import { FiPrinter, FiShoppingCart } from "react-icons/fi";
 import { IconContext } from "react-icons"
 import { ImUser } from "react-icons/im";
 import { Count } from "../StyledComponents";
@@ -15,6 +15,7 @@ import { SmallP } from "../StyledComponents/Headings";
 import { useUser } from "../../context/UserContext";
 import UserNav from "../UserNav";
 import { useContext } from "react";
+import { Flex } from "reflexbox/styled-components";
 
 function Header({userData, heading, isUser, isCart, isLoggedIn}) {
     const {user, loading, isAuthenticated} = useAuth();
@@ -31,23 +32,6 @@ function Header({userData, heading, isUser, isCart, isLoggedIn}) {
         <header>
             <NavBase>
 
-                {isCart &&(
-                <div className={utilStyles.buttonWrapper}>
-                {!basket.isCartChecked && isUser && (
-                    <RoundButton position="fixed" id="cartBtn" handleClick={() => basket.checkCart()}>
-                        <IconContext.Provider value={{ size: "2rem", className: "react-icons" }}>
-                            <FiShoppingCart/>
-                            {basket.productLines.length > 0 && (
-                                <Count>{basket.productLines.length}</Count>
-                            )} 
-                        </IconContext.Provider>
-                    </RoundButton>
-                )}
-                </div>
-
-                )}
-                
-
                 <Link href="/">
                     <Image
                         src="/images/logo-01.png"
@@ -57,6 +41,9 @@ function Header({userData, heading, isUser, isCart, isLoggedIn}) {
                         className={utilStyles.logo}
                     />
                 </Link>
+                
+                <Flex height="22vh">
+
                 
                 
                 {isUser && (
@@ -76,7 +63,7 @@ function Header({userData, heading, isUser, isCart, isLoggedIn}) {
                 </div>)}
 
 
-
+                
 
 
                 
@@ -84,8 +71,26 @@ function Header({userData, heading, isUser, isCart, isLoggedIn}) {
                     <UserNav></UserNav>
                     )}
                     
-                </>    
+                </> 
+                
                 )}
+
+                {isCart &&(
+                <div className={utilStyles.buttonWrapper}>
+                {!basket.isCartChecked && isUser && (
+                    <RoundButton position="fixed" id="cartBtn" handleClick={() => basket.checkCart()}>
+                        <IconContext.Provider value={{ size: "2rem", className: "react-icons" }}>
+                            <FiShoppingCart/>
+                            {basket.productLines.length > 0 && (
+                                <Count>{basket.productLines.length}</Count>
+                            )} 
+                        </IconContext.Provider>
+                    </RoundButton>
+                )}
+                </div>
+
+                )}          
+                </Flex>
 
                 
             </NavBase>

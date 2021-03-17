@@ -1,35 +1,23 @@
 import styled from "styled-components";
+import { Box } from "reflexbox/styled-components"
+import { BlackH2, BlueH2, BlueH1 } from "../StyledComponents/Headings"
+import { Ul, Li } from "../StyledComponents/Lists";
 
-const UlBase = styled.ul`
-    width: 30%;
-    height: auto;
-    font-size: 2rem;
-    
-`
-
-const Container = styled.div`
-    width: 50%;
-    height: auto;
-    padding: 1em;
-   
-
-`
 
 function StatusList( {heading, array} ) {
     console.log(array);
     return(
-    <>
-    <Container>
-    <h2>{heading}</h2>
-    <UlBase>
-    {array !== null && (array.map((item, index) => {
-            return <li>{item.orderNumber}</li>
-        }))}
-        
-        
-    </UlBase>
-    </Container>
-    </>);
+        <Box>
+            <BlueH1>{heading}</BlueH1>
+            <Ul>
+            {array !== null && (array.map((item, index) => {
+                    return <Li listStyle="default"><BlackH2 textAlign="left">{item.orderNumber}</BlackH2></Li>
+                }))}
+                
+                
+            </Ul>
+        </Box>  
+    );
 }
 
 export default StatusList;

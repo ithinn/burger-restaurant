@@ -8,7 +8,7 @@ import utilStyles from "../../styles/utils.module.css"
 import styled from "styled-components";
 import { Select } from "../StyledComponents/Inputs";
 import { Label, LabelAsButton } from "../StyledComponents/Labels";
-import {Flex, Box} from "reflexbox"
+import {Flex, Box} from "reflexbox/styled-components"
 import {Input, Cb, InvisibleCheckbox} from "../StyledComponents/Inputs";
 import firebaseInstance from "../../config/firebase"
 import { useEffect } from "react";
@@ -89,15 +89,16 @@ function OrderItem( {listId, orderData} ) {
     }
 
     return(
-        <Flex 
+        <Flex variant="card"
+            width="20em"
             as="article" 
             margin="1em" 
             bg="white" 
             height="auto" 
-            justifyContent="center" 
-            alignItems="space-between" 
+            justifyContent="flex-start" 
+            alignItems="center" 
             flexDirection="column" 
-            width="93%">
+            >
 
             <div>
                 <BlueH3>Ordernummer: {orderData.orderNumber}</BlueH3>
@@ -154,19 +155,19 @@ function OrderItem( {listId, orderData} ) {
                     return (
                     
                         <Box>
-                            <ul>
+                            <Ul>
                                 <Li listStyle="default">
                                 {item.size.split(",").pop()} {item.name} 
-                            {addOns.length > 0 && (
-                            <>
-                            <span> med </span>
-                            <Ul>
-                            {mappedAddOns}
-                            </Ul>
-                            </>
-                            )}
+                                {addOns.length > 0 && (
+                                    <>
+                                    <span> med </span>
+                                    <Ul display="inline">
+                                        {mappedAddOns}
+                                    </Ul>
+                                    </>
+                                )}
                                 </Li>
-                            </ul>
+                            </Ul>
                             
                            
                         </Box>

@@ -4,6 +4,8 @@ import FlexContainer from "../components/FlexContainer";
 import {useAuth} from "../config/auth";
 import firebaseInstance from "../config/firebase";
 import {useEffect, useState} from "react"
+import {SectionBase} from "../components/StyledComponents/Bases"
+import {Flex, Box} from "reflexbox/styled-components"
 
 function Restaurant() {
 
@@ -53,17 +55,14 @@ function Restaurant() {
         
         <Layout restaurant>
        
-        <FlexContainer
-                flexWidth="100%"
-                flexHeight="auto"
-                direction="column"
-                justify="center"
-                align="center">
-            
+        <SectionBase
+               flexDirection="row" width="100%" alignItems="flex-start" justifyContent="space-between">
+            <SectionBase m="0" width="13em" minHeight="100vh" bgImg='url("/images/dinerChairs.jpg")'></SectionBase>
             <StatusList array={orderedOrders} heading="Vi jobber med:"/>
             <StatusList array={preparedOrders} heading="Du kan hente:"/>
+            <SectionBase bgPosition="top" m="0" width="13em" height="100vh" bgImg='url("/images/dinerFurniture.jpg")'></SectionBase>
             
-        </FlexContainer>
+        </SectionBase>
         
         </Layout>
     

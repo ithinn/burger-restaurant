@@ -62,7 +62,7 @@ const theme = {
     shadows: {
         R: '-5px 0px 15px 5px #000000',
         L: '5px 0px 15px 5px #000000',
-        card: "0 0 5px 5px rgba(0, 0, 0, .5)"
+        card: "0 0 5px 3px rgba(0, 0, 0, .5)"
     },
 
     variants: {

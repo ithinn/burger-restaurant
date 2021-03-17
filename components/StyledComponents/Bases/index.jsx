@@ -16,7 +16,8 @@ NavBase.defaultProps = {
     justify: "space-between",
     align: "flex-start",
     bg: "white",
-    position: "none"
+    position: "none",
+  
 }
 
 export const SectionBase = styled(Flex)`
@@ -24,6 +25,7 @@ export const SectionBase = styled(Flex)`
     flex-wrap: wrap;
     background-image: ${props => props.bgImg};
     background-size: cover;
+    background-position: ${props => props.bgPosition};
 
 `
 
@@ -36,7 +38,10 @@ SectionBase.defaultProps = {
     bgImg: "none",
     justifyContent: "center",
     alignItems: "center",
-    border: "none"
+    border: "none",
+    bgPosition: "center"
+
+    
 
 
 }

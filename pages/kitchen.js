@@ -3,9 +3,9 @@ import Layout from "../components/Layout";
 import { useState, useEffect } from "react";
 import { Button } from "../components/StyledComponents/Button";
 import firebaseInstance from "../config/firebase";
-import { SectionBase } from "../components/StyledComponents/Bases"
+import { SectionBase, NavBase } from "../components/StyledComponents/Bases"
 import { Flex, Box } from "reflexbox";
-import KitchenList from "../components/KitchenList"
+import KitchenList2 from "../components/KitchenList2"
 import { BlueH1 } from "../components/StyledComponents/Headings"
 
 function Kitchen( {userData} ) {
@@ -78,7 +78,7 @@ function Kitchen( {userData} ) {
 
     function toggleLists(event) {
 
-        if (event.target.id === "btntodo") {
+        if (event.target.id === "todoBtn") {
             setToDoFocus(true);
             setPrepFocus(false);
         } else {
@@ -89,18 +89,38 @@ function Kitchen( {userData} ) {
 
     return(
         <Layout>
-            <SectionBase sectionWidth="100%" sectionHeight="40vh" bgImg='url("images/dinerChairs.jpg")'>
+            <SectionBase width="100%" height="40vh" bgImg='url("images/dinerChairs.jpg")'>
                 <BlueH1>Bestillinger</BlueH1>
+                <NavBase justify="center">
+                    <Button id="todoBtn" color="gray" handleClick={event => toggleLists(event)} >Bestilt</Button>
+                    <Button handleClick={event => toggleLists(event)}> Klar til henting</Button>
+                </NavBase>
             </SectionBase>
 
-            <SectionBase align="flex-start" margin="5vh">
-                <KitchenList orders={orderedOrders} side="L" onSubmit={event => onSubmit(event)} btnText="Bestilt" id="todo" handleClick={event => toggleLists(event)} focus={toDoFocus}></KitchenList>
-                <KitchenList orders={orderedOrders} side="R" onSubmit={event => onSubmit(event)} btnText="Klar til henting" id="prepared" handleClick={event => toggleLists(event)} focus={prepFocus}></KitchenList>
+            <SectionBase>
+                <KitchenList2 
+                    toDoFocus={toDoFocus}
+                    prepFocus={prepFocus}
+                    orders={orderedOrders} 
+                    onSubmit={event => onSubmit(event) } 
+                />
             </SectionBase>
+
         </Layout>
     )
 
 /*
+
+
+
+            <SectionBase flexWrap="wrap" alignItems="flex-start" margin="5vh">
+                <KitchenList orders={orderedOrders} side="L" onSubmit={event => onSubmit(event)} btnText="Bestilt" id="todo" handleClick={event => toggleLists(event)} focus={toDoFocus}></KitchenList>
+                <KitchenList orders={orderedOrders} side="R" onSubmit={event => onSubmit(event)} btnText="Klar til henting" id="prepared" handleClick={event => toggleLists(event)} focus={prepFocus}></KitchenList>
+            </SectionBase>
+
+
+
+
     return(
 
         <>

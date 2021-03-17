@@ -5,7 +5,7 @@ import Image from "next/image"
 import utilStyles from "../../styles/utils.module.css"
 import { Select } from "../StyledComponents/Inputs";
 import { Label, LabelAsButton } from "../StyledComponents/Labels";
-import {Flex, Box} from "reflexbox"
+import {Flex, Box} from "reflexbox/styled-components"
 import {Input, InvisibleCheckbox} from "../StyledComponents/Inputs";
 
 
@@ -30,7 +30,7 @@ export function MenuItem( {foodData, handleAdd, itemData, type, index, sizes, is
     }
 
     return (
-        <Flex margin="1em" bg="white" height="auto" justifyContent="center" alignItems="space-between" flexDirection="column" as="article" width="17em">
+        <Flex variant="card" height="auto" justifyContent="center" alignItems="space-between" flexDirection="column" as="article" width="17em">
             
             
             <Image
@@ -75,7 +75,6 @@ export function MenuItem( {foodData, handleAdd, itemData, type, index, sizes, is
                                {itemData.addOns.map((addOn, index) => {
                                    return (
                                        <Box marginTop="1em" key={addOn + index}>
-    
                                             <InvisibleCheckbox ref={register} type="checkbox" name={`addOns[${addOn}]`} defaultChecked={false} id={addOn}/>
                                             <LabelAsButton htmlFor={addOn}>{addOn}</LabelAsButton>
                                        </Box>
