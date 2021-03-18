@@ -9,13 +9,14 @@ export const NavBase = styled.nav`
     align-items: ${props => props.align};
     position: ${props => props.position};
     z-index: ${props => props.theme.zIndices[3]};
+
 `
 NavBase.defaultProps = {
     navWidth: "90%",
     navHeight: "20vh",
     justify: "space-between",
     align: "flex-start",
-    bg: "white",
+ 
     position: "none",
   
 }

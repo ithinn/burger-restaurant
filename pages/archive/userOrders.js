@@ -1,7 +1,7 @@
 import Layout from "../components/Layout";
 import readCollection from "./database/readCollection";
 import Select from "../components/Select";
-import FlexContainer from "../components/FlexContainer";
+
 import { Button } from "../components/StyledComponents/Button";
 import {useEffect, useState, useRef } from "react"
 //import RadioInput from "../components/RadioInput";
@@ -124,7 +124,7 @@ function UserOrders({userData, food}) {
         return(
             <>
             <h3>{category.id}</h3>
-            <FlexContainer>
+            <div>
         
                     {category.type.map((type, index) => {
                         return(
@@ -155,7 +155,7 @@ function UserOrders({userData, food}) {
 
                 
 
-            </FlexContainer>
+            </div>
             </>
         )
     })

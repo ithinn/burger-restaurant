@@ -1,8 +1,32 @@
 import { Flex } from "reflexbox/styled-components" 
 import OrderItem from "../OrderItem";
 import { BlueH2 } from "../StyledComponents/Headings"
+import { useState, useEffect } from "react";
+import firebaseInstance from "../../config/firebase";
 
-function KitchenList2({orders, toDoFocus, prepFocus, onSubmit}) {
+function KitchenList2({ handleAddOns, toDoFocus, prepFocus}) {
+
+    const [orders, setOrders] = useState(null)
+
+    useEffect(() => {
+
+        let ref = firebaseInstance.firestore().collection("orders").where("isPickedUp", "==", false)
+        ref.onSnapshot((snapshot) => {
+   
+            let data = [];
+
+            snapshot.forEach((doc) => {
+                data.push({
+                    id: doc.id,
+                    ...doc.data()
+                })
+            })
+
+           setOrders(data);
+        })
+
+    }, []);
+
 
     return (
         <>
@@ -17,7 +41,7 @@ function KitchenList2({orders, toDoFocus, prepFocus, onSubmit}) {
                     
                     {orders.map(order => {
                         if (order.isOrdered) {
-                        return <OrderItem orderData={order} onSubmit={onSubmit} />
+                        return <OrderItem handleAddOns={handleAddOns} orderData={order}/>
                         } 
                     })}
 
@@ -35,7 +59,7 @@ function KitchenList2({orders, toDoFocus, prepFocus, onSubmit}) {
                     
                     {orders.map(order => {
                         if (order.isPrepared) {
-                        return <OrderItem orderData={order} onSubmit={onSubmit} />
+                        return <OrderItem handleAddOns={handleAddOns} orderData={order} />
                         } 
                     })}
 

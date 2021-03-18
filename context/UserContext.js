@@ -15,7 +15,6 @@ export const User = ( {children} ) => {
     }
 
     const checkUserInfo = () => {
-        console.log("checkuserinfo", isUserIconChecked);
         isUserIconChecked ? setIsUserIconChecked(false) : setIsUserIconChecked(true);
     }
 

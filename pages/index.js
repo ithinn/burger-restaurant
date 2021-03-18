@@ -13,6 +13,7 @@ import Banner from "../components/Banner";
 import { BlueH1, BlackH2 } from "../components/StyledComponents/Headings";
 import { Flex, Box } from "reflexbox";
 import { useUser } from "../context/UserContext";
+import Skeleton from "../components/Skeleton";
 
 
 function Home({userData, food}) {
@@ -21,6 +22,7 @@ function Home({userData, food}) {
     const basket = useBasket();
     const userContext = useUser();
     const router = useRouter();
+    const [count, setCount] = useState(0)
 
     //FIND TODAYS DATE
     const today = new Date();
@@ -41,6 +43,29 @@ function Home({userData, food}) {
     
 
 //------------------------------------------------------------------------------------------------    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     //GET NUMBER OF EXISTING ORDERS AND SET ORDERNUMBER
     useEffect(() => {
@@ -63,23 +88,56 @@ function Home({userData, food}) {
 
     }, []);
 
-   
-    //LIST ADD-ONS WHEN ADDING AN ORDER 
-    function listAddOns(item) {
-        let addOns = [];
-        for (let add in item) {
-            if (item[add] === true) {
-                addOns.push(add)
-            }
-        }
-        return addOns;
+
+    useEffect(() => {
+        let ref = firebaseInstance
+        .firestore()
+        .collection("globals").doc("counter")
+
+        ref.onSnapshot((snapshot) => {
+            console.log("snapshot", snapshot.data().count);
+            snapshot.data().count
+            setCount(snapshot.data().count);
+        })
+
+    }, []);
+
+
+
+
+
+    const handleAdd = async () => {
+        const counterRef = firebaseInstance.firestore().collection("globals").doc("counter")
+
+        //const newDoc = firebaseInstance.firestore().collection("order").doc("counter") 
+        //const newDocRef = newDoc.set({test: 234})
+        orderRef = await orderOcllection.add({
+            
+        })
+
+        const counter = firebaseInstance.firestore().runTransaction((transaction) => {
+            return transaction.get(counterRef).then((doc) => {
+
+                const count =  doc.data().count;
+                let newCount = count + 1;
+                if (count < 61) {
+                    newCount = 1
+                }
+            
+                transaction.update(counterRef, {count: newCount});
+            })
+        })
+
+        return counter
+       
     }
-  
+
+   
     //ADD TO AN ORDER
     const onAdd = async (data) => {
 
         let price;
-        let addOns = listAddOns(data.addOns)
+        let addOns = basket.listAddOns(data.addOns)
         let addOnsPrice = 15 * addOns.length;
         let sizeIndex = data.size.charAt(0);
 
@@ -107,7 +165,7 @@ function Home({userData, food}) {
     const menu = food.map((category) => {
  
     return(
-        <div>
+        <div id="menu">
             <BlackH2>{category.id}</BlackH2>
         
             <Flex 
@@ -135,11 +193,14 @@ function Home({userData, food}) {
 
     //SEND THE ORDER TO THE DATABASE
     async function sendOrder(event) {
-      
+        
         if (isAuthenticated) {
-            console.log("submitted");
-     
+
+
+ 
             try {
+                //const {count} = handleAdd()
+                
                 const collection = firebaseInstance.firestore().collection("orders");
                 await collection.doc().set({
                     userId: userId,
@@ -148,11 +209,12 @@ function Home({userData, food}) {
                     isPickedUp: false,
                     orderList: basket.productLines,
                     orderDate: date,
-                    orderNumber: orderNumber,
+                    orderNumber: count,
                 })
                 
                 basket.emptyProductLine([]);
                 router.push("/userStatus");
+                handleAdd();
             }
             catch(error) {
                 console.log(error);
@@ -178,11 +240,14 @@ function Home({userData, food}) {
     
     
     if (loading) {
-        return <p>loading loading</p>
+        return <Skeleton/>
     }
 
     return(
-        <Layout user>
+        <Layout home>
+
+            <h1>{count}</h1>
+            <button onClick={handleAdd}>Add</button>
        
             <Banner isLoggedIn={isAuthenticated} userId={userId}/>
         

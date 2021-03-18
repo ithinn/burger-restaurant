@@ -60,22 +60,21 @@ export function MenuItem( {foodData, handleAdd, itemData, type, index, sizes, is
                                <Select name="size" ref={register}>
                                    
                                    {itemData.sizes.map((size, i) => {
-                         
                                        return <option value={[i, size]}>{size}</option>
                                    })}
 
                                </Select>
                                
  
-                               <BlueH3 textAlign="left">Legg til (+15,-):</BlueH3>
-                                {itemData.addOns !== undefined && (
+                            <BlueH3 textAlign="left">Legg til (+15,-):</BlueH3>
+                            {itemData.addOns !== undefined && (
                            
-                           <Flex width="96%" flexWrap="wrap" height="8em" alignItems="flex-start">
+                            <Flex as="article" ml="auto" mr="auto" width="50%" flexWrap="wrap" justifyContent="flex-start" height="auto" alignItems="flex-start">
                                
                                {itemData.addOns.map((addOn, index) => {
                                    return (
-                                       <Box marginTop="1em" key={addOn + index}>
-                                            <InvisibleCheckbox ref={register} type="checkbox" name={`addOns[${addOn}]`} defaultChecked={false} id={addOn}/>
+                                       <Box key={addOn + index}>
+                                            <InvisibleCheckbox ref={register} type="checkbox" name={`addOns[${addOn + index}]`} defaultChecked={false} id={addOn}/>
                                             <LabelAsButton htmlFor={addOn}>{addOn}</LabelAsButton>
                                        </Box>
                                    )

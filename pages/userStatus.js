@@ -1,51 +1,39 @@
 import firebaseInstance from "../config/firebase";
 import readCollection from "./database/readCollection";
 import { useState, useEffect } from "react";
-
 import { Button } from "../components/StyledComponents/Button";
-import FlexContainer from "../components/FlexContainer";
 import Layout from "../components/Layout";
 import { useRouter } from "next/router";
 import {useAuth} from "../config/auth";
 import Icon from "../components/BurgerSvg";
 import {Flex, Box} from "reflexbox/styled-components"
 import { BlueH1, BlackH2, BlueH3, Pa } from "../components/StyledComponents/Headings"
-import { Ul, Li } from "../components/StyledComponents/Lists"
 import { SectionBase } from "../components/StyledComponents/Bases";
 import { useUser } from "../context/UserContext";
 import { useContext } from "react";
+import { Ul, Li } from "../components/StyledComponents/Lists"
+import Skeleton from "../components/Skeleton"
 
-function UserStatus({userData}) {
+function UserStatus() {
    
-    //const [userId, setUserId] = useState(null);
+
     const [usersOrders, setUsersOrders] = useState([])
-    //const [isLoggedIn, setIsLoggedIn] = useState(true);
-    //let userName;
+    const [preparedOrders, setPreparedOrders] = useState([]);
     const router = useRouter()
     const {user, loading, isAuthenticated} = useAuth();
-    const userId = user ? user.uid : false;
     
-
+    //Get userId and userName
+    const userId = user ? user.uid : false;
     const userContext = useUser();
     const userName = userContext.userName;
 
-    console.log("USERNAME", userName);
-    /*
-    //Get userName from Firestore
-    userData.forEach(user => {
-        if (userId) {
-            if (user.id === userId) {
-                userName = user.firstName
-            }
-        }
-        
-    })*/
-
-
+  
     //Get all the users orders that hasn't been picked up yet
     useEffect(() => {
         if (userId) {
-            let ref = firebaseInstance.firestore().collection("orders").where("userId", "==", userId)
+            let ref = firebaseInstance.firestore().collection("orders")
+            .where("userId", "==", userId).where("isPickedUp", "==", false)
+
             ref.onSnapshot((snapshot) => {
 
                 let data = [];
@@ -55,19 +43,62 @@ function UserStatus({userData}) {
                         ...doc.data()
                     })
                 })
+
                 setUsersOrders(data);
-            
             })
         }
        
     }, [userId]);
 
 
+    useEffect(() => {
+        if (usersOrders) {
+            let ref = firebaseInstance.firestore().collection("orders").where("isPrepared", "==", true)
+            ref.onSnapshot((snapshot) => {
+
+                let data = [];
+                snapshot.forEach((doc) => {
+                    data.push({
+                        id: doc.id,
+                        ...doc.data()
+                    })
+                })
+
+                setPreparedOrders(data);
+            })
+        }
+       
+    }, [usersOrders]);
+
+
+console.log(preparedOrders);
+console.log(usersOrders);
+
+ 
     //Sign out 
     function handleSignOutClick() {
+        
+        
         firebaseInstance.auth().signOut().then(() => {
-           
-            console.log("is signed out")
+
+            let orderId;
+            let ref = firebaseInstance.firestore().collection("orders");
+
+            preparedOrders.forEach(order => {
+                orderId = order.id
+                ref.doc(orderId)
+                .update({
+                    isPrepared: false,
+                    isPickedUp: true,
+                })
+                .then(() => {
+                console.log("updated, isPickedUp")
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+            })
+
           }).catch((error) => {
             console.log(error);
           });
@@ -76,12 +107,12 @@ function UserStatus({userData}) {
 
     
     if (loading) {
-        return <p>loading loading</p>
+        return <Skeleton/>
     }
 
     if (!isAuthenticated) {
         router.push('/login');
-        return <p>Ikke logget inn</p>
+        return <p>Du er ikke logget inn</p>
     }
 
 
@@ -107,12 +138,13 @@ function UserStatus({userData}) {
                     flexWrap="wrap">
 
                     {usersOrders && (
-                        usersOrders.map((order, index) => {
+                        usersOrders.map(order => {
+                            
                             if (!order.isPickedUp) {
                                 
                                 return(
                                     <Flex variant="card" >
-                                        <Box width="50%"  p={1}>
+                                        <Box width="50%" p={1}>
                                             <BlueH3 textAlign="left">Bestillingsnummer: {order.orderNumber}</BlueH3>
                                             <Ul>
                                                 {order.orderList.map(item => {
@@ -129,7 +161,9 @@ function UserStatus({userData}) {
                                                     opacity={order.isOrdered ? ".3" : "1"}
                                                 ></Icon>
                                             </Box>
-                                            <BlueH3 color={order.isOrdered ? "gray" : "green"}>{order.isOrdered ? "Maten blir forberedt" : "Du kan hente maten i kassen"}</BlueH3>
+                                            <BlueH3 color={order.isOrdered ? "gray" : "green"}>
+                                                {order.isOrdered ? "Maten blir forberedt" : "Du kan hente maten i kassen"}
+                                            </BlueH3>
                                         </Box>
                                     </Flex>
                                 )
@@ -146,17 +180,4 @@ function UserStatus({userData}) {
 }
 
 export default UserStatus;
-
-
-UserStatus.getInitialProps = async () => {
-    try {
-        const userData = await readCollection("users")
-        return { userData }
-    }
-    catch (error) {
-        return {
-            error: error.message
-        }
-    } 
-}
 

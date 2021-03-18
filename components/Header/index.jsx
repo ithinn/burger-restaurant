@@ -16,6 +16,7 @@ import { useUser } from "../../context/UserContext";
 import UserNav from "../UserNav";
 import { useContext } from "react";
 import { Flex } from "reflexbox/styled-components";
+import Logo from "../Logo";
 
 function Header({userData, heading, isUser, isCart, isLoggedIn}) {
     const {user, loading, isAuthenticated} = useAuth();
@@ -32,17 +33,8 @@ function Header({userData, heading, isUser, isCart, isLoggedIn}) {
         <header>
             <NavBase>
 
-                <Link href="/">
-                    <Image
-                        src="/images/logo-01.png"
-                        width={155}
-                        height={180}
-                        alt={"logo"}
-                        className={utilStyles.logo}
-                    />
-                </Link>
-
-                <BlueH1>{heading}</BlueH1>
+                <Logo/>
+                <BlueH1 position="absolute" bottom="4em">{heading}</BlueH1>
                 
                 <Flex height="22vh">
 

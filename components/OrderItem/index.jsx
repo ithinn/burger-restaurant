@@ -1,91 +1,73 @@
 
+//-------------------------------------------------------/Style
 import { Button } from "../StyledComponents/Button";
-import { BlueH2, BlueH3, Paragraph } from "../StyledComponents/Headings"
-import {useForm, useFieldArray, Controller } from "react-hook-form";
-import {yupResolver} from "@hookform/resolvers/yup"
-import {string, object, bool} from "yup"
-import utilStyles from "../../styles/utils.module.css"
-import styled from "styled-components";
-import { Select } from "../StyledComponents/Inputs";
-import { Label, LabelAsButton } from "../StyledComponents/Labels";
-import {Flex, Box} from "reflexbox/styled-components"
-import {Input, Cb, InvisibleCheckbox} from "../StyledComponents/Inputs";
+import { BlueH3, Pa } from "../StyledComponents/Headings"
+import { InlineLi, Ul, Li } from "../StyledComponents/Lists";
+import { Label } from "../StyledComponents/Labels";
+import { Flex, Box } from "reflexbox/styled-components"
+import { Input } from "../StyledComponents/Inputs";
+//-------------------------------------------------------/config/react
 import firebaseInstance from "../../config/firebase"
 import { useEffect } from "react";
-import { InlineLi, Ul, Li } from "../StyledComponents/Lists";
+import { useForm } from "react-hook-form";
+import { useBasket } from "../../context/BasketContext";
 
-
-function OrderItem( {listId, orderData} ) {
+function OrderItem( { handleAddOns, orderData} ) {
     const {
         register, 
         handleSubmit, 
-        reset, 
-        watch, 
         formState: {isSubmitSuccessful}, 
         errors} = useForm({
-        mode: "onChange",
-        defaultValues: {
-           
-        }
-    })
+                mode: "onChange",
+        });
+    
+    const basket = useBasket();
 
+
+    
     
     useEffect(() => {
         console.log(errors)
     }, [errors])
 
-    
-    function listAddOns(item) {
-        let addOns = [];
-        for (let add in item) {
-            if (item[add] === true) {
-                addOns.push(add)
-            }
-        }
-        return addOns;
-    }
-    
 
-    const onSubmit =async (data, event) =>  {
+    const onSubmit = async (data, event) =>  {
      
         let id = event.target.id
         id = id.substring(0, id.length-4);
 
         const orderRef = firebaseInstance.firestore().collection("orders").doc(id);
 
-            return orderRef.update({
+        try {
+            await orderRef.update({
                 isOrdered: false,
                 isPrepared: true
             })
-            .then(() => {
-                console.log("updated")
-            })
-            .catch((error) => {
-                console.log(error);
-            })
-
+        }
+        catch (error) {
+            console.log(error);
+        }
     }
 
 
-    function onDelivery(event) {
-        console.log("ONDELIVERY", event.target.id);
-        
+    const onDelivery = async (event) => {
+   
         let id = event.target.id;
         id = id.substring(0, id.length-3);
 
         const orderRef = firebaseInstance.firestore().collection("orders").doc(id);
 
-        return orderRef.update({
-            isPickedUp: true,
-            isPrepared: false,
-            orderNumber: "-"
-        })
-        .then(() => {
-            console.log("updated")
-        })
-        .catch((error) => {
+        try {
+            await orderRef.update({
+                isPickedUp: true,
+                isPrepared: false,
+                orderNumber: "-"
+            })
+        }
+        catch (error) {
             console.log(error);
-        })
+        }
+        
     }
 
     return(
@@ -109,10 +91,12 @@ function OrderItem( {listId, orderData} ) {
                 <form id={orderData.id + "Form"} onSubmit={handleSubmit(onSubmit)}>
 
                     {orderData.orderList.map((item, index) => {
-
-                    let addOns = listAddOns(item.addOns);
-                    let mappedAddOns = addOns.map(addOn => {
-                        return <InlineLi>{addOn}, </InlineLi>})
+                    
+                        let addOns = handleAddOns(item.addOns);
+                        
+                        let mappedAddOns = addOns.map(addOn => {
+                            return <InlineLi>{addOn}, </InlineLi>
+                        })
                     
                         
                         return (
@@ -130,6 +114,11 @@ function OrderItem( {listId, orderData} ) {
                                     </Ul>
                                     </> )}
                             </Label>
+
+                            {errors[item.type] && (
+                                <Pa clr="#a62d2d" fontStyle="italic" textAlign="left">
+                                    {errors[item.type].message}
+                                </Pa>)}
                             
                         </Box>
                         )
@@ -147,7 +136,7 @@ function OrderItem( {listId, orderData} ) {
                 <Box>
                     {orderData.orderList.map(item => {
 
-                    let addOns = listAddOns(item.addOns);
+                    let addOns = basket.listAddOns(item.addOns);
                     let mappedAddOns = addOns.map(addOn => {
                         return <InlineLi>{addOn}, </InlineLi>
                     })

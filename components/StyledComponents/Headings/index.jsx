@@ -8,16 +8,31 @@ export const BlueH1 = styled.h1`
     color: ${props => props.theme.colors.main};
     text-align: center;
     letter-spacing: ${props => props.theme.letterSpacings[3]};
+    position: ${props => props.position};
+    top: ${props => props.top};
+    left: ${props => props.left};
+    right: ${props => props.right};
+    bottom: ${props => props.bottom};
+
+
 
     @media (max-width: 40em) {
         font-size: ${props => props.theme.fontSizes.lg};
     }
 `
+BlueH1.defaultProps = {
+    position: "none",
+    top: "0",
+    left: "0",
+    bottom: "0",
+    right: "0",
+}
 
 export const WhiteH1 = styled(BlueH1)`
     text-shadow: ${props => props.theme.shadows.whiteHeading};
     color: white;
 `
+
 
 export const HandH2 = styled.h2`
 
@@ -26,9 +41,13 @@ export const HandH2 = styled.h2`
     color: ${props => props.theme.colors.gray};
     text-shadow: 5px 5px #333;
     letter-spacing: ${props => props.theme.letterSpacings[2]};
+    text-align: center;
+
+    @media (max-width: 40em) {
+        font-size: ${props => props.theme.fontSizes.lg};
+    }
     
 `
-
 
 export const BlackH2 = styled.h2`
     font-family: ${props => props.theme.fonts.sectionHeading};
@@ -60,13 +79,6 @@ BlueH3.defaultProps = {
 };
 
 
-/*
-    
-    
-    
-    /*
-*/
-
 export const Pa = styled.p`
     font-family: ${props => props.theme.fonts.text};
     font-size: ${props => props.theme.fontSizes.txt};
@@ -74,7 +86,7 @@ export const Pa = styled.p`
     font-size: ${props => props.theme.fontSizes.txt};
     color: ${props => props.clr};
     text-align: ${props => props.textAlign};
-    font-style: ${props => props.style};
+    font-style: ${props => props.fontStyle};
 
 `
 Pa.defaultProps = {
@@ -82,7 +94,6 @@ Pa.defaultProps = {
     clr: "#346f83",
     fontStyle: "normal" 
 }
-
 
 
 export const SmallP = styled.p`

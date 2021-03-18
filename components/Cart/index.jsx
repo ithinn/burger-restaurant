@@ -1,6 +1,5 @@
 import React from "react"
 import {useBasket} from "../../context/BasketContext";
-import FlexContainer from "../FlexContainer"
 import styled from "styled-components";
 import {Box, Flex} from "reflexbox";
 import { Label } from "../StyledComponents/Labels";

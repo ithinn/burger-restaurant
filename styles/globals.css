@@ -14,10 +14,12 @@ body {
 
 header {
   width: 100%;
-  height: 22vh;
+  height: 29vh;
   display: flex;
   align-items: center;
   justify-content: center;
+ 
+ 
 }
 
 main {

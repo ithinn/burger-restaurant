@@ -8,35 +8,26 @@ const BasketContext = createContext({
     total: 0,
     removeItem: () => {},
     updateProductLines: () => {},
-    
-    
 })
 
 export const Basket = ( {children} ) => {
 
-
     const [productLines, setProductLines] = useState([]);
     const [isCartChecked, setIsCartChecked] = useState(false);
     const [total, setTotal] = useState(0)
-    const [userName, setUserName] = useState(null)
 
     const addProductLine = (product) => {
-        
         setProductLines([...productLines, product]);
-    
     }
 
     const emptyProductLine = () => {
         setProductLines([]);
     }
 
-
     function updateProductLines(index, value) {
 
         let tempArray = [...productLines];
-
         let basePrice = tempArray[index].basePrice;
-
         tempArray[index] = {...tempArray[index], count: value,  price: basePrice * value}
 
         setProductLines(tempArray);
@@ -45,7 +36,6 @@ export const Basket = ( {children} ) => {
     function removeItem(index) {
 
         let tempArray = [...productLines];
-        
         tempArray.splice(index, 1);
 
         setProductLines(tempArray);
@@ -66,8 +56,18 @@ export const Basket = ( {children} ) => {
         window.scrollTo(0, 0);
     }
 
+    const listAddOns = (item) => {
+        let addOns = [];
+        for (let add in item) {
+            if (item[add] === true) {
+                addOns.push(add)
+            }
+        }
+        return addOns;
+    }
+
     return(
-        <BasketContext.Provider value={{emptyProductLine, removeItem, productLines, updateProductLines, addProductLine, isCartChecked, checkCart, total}}>{children}</BasketContext.Provider>
+        <BasketContext.Provider value={{listAddOns, emptyProductLine, removeItem, productLines, updateProductLines, addProductLine, isCartChecked, checkCart, total}}>{children}</BasketContext.Provider>
     )
 }
 
