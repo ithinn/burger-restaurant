@@ -10,11 +10,12 @@ import Cart from "../components/Cart";
 import { MenuItem } from "../components/MenuItem"
 import { useBasket } from "../context/BasketContext";
 import Banner from "../components/Banner";
-import { BlueH1, BlackH2 } from "../components/StyledComponents/Headings";
+import { BlueH1, BlackH2, HandH2 } from "../components/StyledComponents/Headings";
 import { Flex, Box } from "reflexbox";
 import { useUser } from "../context/UserContext";
 import Skeleton from "../components/Skeleton";
-
+import { Button } from "../components/StyledComponents/Button";
+import { Overlay } from "../components/StyledComponents/Overlay";
 
 function Home({userData, food}) {
 
@@ -112,7 +113,7 @@ function Home({userData, food}) {
         //const newDoc = firebaseInstance.firestore().collection("order").doc("counter") 
         //const newDocRef = newDoc.set({test: 234})
         orderRef = await orderOcllection.add({
-            
+
         })
 
         const counter = firebaseInstance.firestore().runTransaction((transaction) => {
@@ -196,11 +197,8 @@ function Home({userData, food}) {
         
         if (isAuthenticated) {
 
-
- 
             try {
-                //const {count} = handleAdd()
-                
+
                 const collection = firebaseInstance.firestore().collection("orders");
                 await collection.doc().set({
                     userId: userId,
@@ -246,21 +244,37 @@ function Home({userData, food}) {
     return(
         <Layout home>
 
-            <h1>{count}</h1>
-            <button onClick={handleAdd}>Add</button>
-       
-            <Banner isLoggedIn={isAuthenticated} userId={userId}/>
+            <Banner bgImg={'url("/images/dinerFurniture.jpg")'}>
+                <HandH2>Beste burgeren på Østlandet</HandH2>
+
+                <Flex>
+                    <Link href={isAuthenticated ? "#menu" : "/login"}>
+                        <Button p={3} fontSize="md" bgClr="black">{isAuthenticated ? "Bestill nå" : "Logg inn"}</Button>
+                    </Link>
+
+                    {!isAuthenticated && (
+                    <Link href="/addUser">
+                        <Button bgClr="black">Registrer ny bruker</Button>
+                    </Link>
+                    )}
+
+                </Flex>
+            </Banner>
         
             <BlueH1>Meny</BlueH1>
             
             {menu}  
 
             {basket.isCartChecked && (
+            <>
             <Cart 
-            foodData={food} 
-            sendOrder={event => sendOrder(event)} 
-            handleRemove={event => handleRemove(event)} 
-            handleChange={event => handleChange(event)}/>)}
+                sendOrder={event => sendOrder(event)} 
+                handleRemove={event => handleRemove(event)} 
+                handleChange={event => handleChange(event)}/>
+            
+            <Overlay height="200vh"/>
+            </>
+            )}
         
         </Layout>
     )

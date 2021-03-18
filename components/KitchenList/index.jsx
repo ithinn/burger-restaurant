@@ -1,129 +1,81 @@
-import { FiPrinter } from "react-icons/fi";
-import { Button } from "../StyledComponents/Button"
-import { Flex, Box } from "reflexbox/styled-components" 
+//---------------------------------------------------------React/Firebase
+import { useState, useEffect } from "react";
+import firebaseInstance from "../../config/firebase";
+//---------------------------------------------------------Style
+import { Flex } from "reflexbox/styled-components" 
 import OrderItem from "../OrderItem";
-import {Overlay} from "../StyledComponents/Overlay"
+import { BlueH2 } from "../StyledComponents/Headings"
 
-function KitchenList( {orders, id, side, handleClick, onSubmit, focus, btnText } ) {
-    console.log(orders);
-    
-    
-    return(
+
+function KitchenList({ handleAddOns, toDoFocus, prepFocus}) {
+
+    const [orders, setOrders] = useState(null)
+
+    useEffect(() => {
+
+        let ref = firebaseInstance
+        .firestore()
+        .collection("orders")
+        .where("isPickedUp", "==", false)
+
+        ref.onSnapshot((snapshot) => {
+   
+            let data = [];
+            snapshot.forEach((doc) => {
+                data.push({
+                    id: doc.id,
+                    ...doc.data()
+                })
+            })
+
+           setOrders(data);
+        })
+
+    }, []);
+
+
+    return (
         <>
-
-       
-        <Flex as="article" height="auto" minHeight="10vh" minWidth="30em" width="50%" flexDirection="column" p={0} mt={1}>
-           
-           
-            <Button bg={!focus ? "#333" : "#333"} margin={0} handleClick={handleClick} id={"btn" + id} >
-                {btnText}
-            </Button>
-
-        {orders !== null && focus &&(
-
-            <>
-            <Box opacity={!focus ? ".1" : "1"} as="article">
-
-           
-                {id==="todo" && (
-
-                    <>
+        {orders !== null && (
+        
+        <div>
+            {toDoFocus && (
+                <>
+                <BlueH2>Bestilte ordre</BlueH2>
+                
+                <Flex as="article" flexWrap="wrap" justifyContent="center">
+                    
                     {orders.map(order => {
                         if (order.isOrdered) {
-                            return <OrderItem  listId={id} orderData={order} onSubmit={onSubmit} />
+                        return <OrderItem handleAddOns={handleAddOns} orderData={order}/>
                         } 
                     })}
-                    </>
 
-                )}
+                </Flex>
 
-                {id==="prepared" && (
-                    <>
+                </>
+                
+            )}
+
+            {prepFocus && (
+                <>
+                <BlueH2>Klar til henting</BlueH2>
+                
+                <Flex as="article" flexWrap="wrap" justifyContent="center">
+                    
                     {orders.map(order => {
                         if (order.isPrepared) {
-                            return <OrderItem listId={id} orderData={order} onSubmit={onSubmit} />
+                        return <OrderItem handleAddOns={handleAddOns} orderData={order} />
                         } 
                     })}
-                    </>
 
-                )}
-           
-            </Box>
-
-          </>
-            
+                </Flex>
+                </>
+            )}
+        </div>
         )}
-           
-            
-
-               
-
-        </Flex>
-         
         </>
     )
 }
 
-export default KitchenList;
-
-
-
-
-/*
-    return(
-        <>
-
-       
-        <Flex as="article" height="auto" minWidth="30em" width="50%" flexDirection="column" p={0} variant={focus && side==="L" ? "fgBoxL" : focus && side === "R" ? "fgBoxR" : "bgBox"}>
-           
-           
-            <Button bg={!focus ? "#333" : "#333"} margin={0} handleClick={handleClick} id={"btn" + id} >
-                {btnText}
-            </Button>
-
-        {orders !== null && focus &&(
-
-            <>
-            <Box opacity={!focus ? ".1" : "1"} boxShadow={focus && id === "todo" ? "fgBoxL" : focus && id === "prepared" ? "fgBoxR" : null }as="article">
-
-           
-                {id==="todo" && (
-
-                    <>
-                    {orders.map(order => {
-                        if (order.isOrdered) {
-                            return <OrderItem listId={id} orderData={order} onSubmit={onSubmit} />
-                        } 
-                    })}
-                    </>
-
-                )}
-
-                {id==="prepared" && (
-                    <>
-                    {orders.map(order => {
-                        if (order.isPrepared) {
-                            return <OrderItem listId={id} orderData={order} onSubmit={onSubmit} />
-                        } 
-                    })}
-                    </>
-
-                )}
-           
-            </Box>
-
-          </>
-            
-        )}
-           
-            
-
-               
-
-        </Flex>
-         
-        </>
-    )*/
-
-//
-//{!focus && (<Overlay minHeight="110vh"></Overlay>)}
+export default KitchenList

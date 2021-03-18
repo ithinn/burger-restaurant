@@ -19,7 +19,6 @@ export const LabelAsButton = styled(Label)`
     padding: ${props => props.theme.space[1]};
     
     
-    
    &:hover {
         background-color: ${props => props.theme.colors.brown};
         color: white;

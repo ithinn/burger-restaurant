@@ -23,8 +23,8 @@ function Restaurant() {
                 justifyContent="space-between">
 
                 <SectionBase m="0" width="13em" minHeight="100vh" bgImg='url("/images/dinerChairs.jpg")'></SectionBase>
-                <StatusList id="ordered" heading="Vi jobber med:"/>
-                <StatusList id="prepared" heading="Du kan hente:"/>
+                    <StatusList id="ordered" heading="Vi jobber med:"/>
+                    <StatusList id="prepared" heading="Du kan hente:"/>
                 <SectionBase bgPosition="top" m="0" width="13em" height="100vh" bgImg='url("/images/dinerFurniture.jpg")'></SectionBase>
                 
             </SectionBase>

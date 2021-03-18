@@ -1,172 +1,113 @@
+//------------------------------------------------------------React
 import React from "react"
 import {useBasket} from "../../context/BasketContext";
-import styled from "styled-components";
-import {Box, Flex} from "reflexbox";
+//------------------------------------------------------------Styling
+import {Box, Flex} from "reflexbox/styled-components";
 import { Label } from "../StyledComponents/Labels";
-import { Button, RoundButton } from "../StyledComponents/Button";
-import { BlueH2, BlueH3, BlackH2 } from "../StyledComponents/Headings";
-import { Ul, InlineLi, Li } from "../StyledComponents/Lists";
-
-const CartBase = styled.article`
-    width: 100%;
-    height: auto;
-    background: white;
-    position: absolute;
-    top: 0;
-    padding: 1em;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    z-index: 5
-`
-
-const CloseCartBtn = styled.button`
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    color: ${props => props.theme.colors.blue};
-    background-color: white;
-    border: 2px solid ${props => props.theme.colors.blue};
-    position: relative;
-    
-   
-
-`
-
-const RemoveBtn = styled(CloseCartBtn)`
-    position: static;
-    margin-left: 1em;
-
-`
+import { Input } from "../StyledComponents/Inputs";
+import { Button, RoundBtn } from "../StyledComponents/Button";
+import { BlueH2, BlueH3, BlackH2, Pa } from "../StyledComponents/Headings";
+import { Ul, Li } from "../StyledComponents/Lists";
+import { SectionBase } from "../StyledComponents/Bases";
 
 
-const CartP = styled.p`
-    font-size: 1rem;
-    color: #346f83;
-    font-family: "oswald";
-    
-`
-
-const CartInp = styled.input`
-    font-size: 1rem;
-    border: 2px solid #346f83;
-    color: #346f83;
-    font-family: "oswald";
-    width: 3em;
-`
-
-let addOnTest = [];
-let sizeIndex;
-let sizeText;
-
-function Cart({ handleChange, handleRemove, sendOrder, foodData}) {
-
+function Cart({ handleChange, handleRemove, sendOrder }) {
+    let sizeText;
     const basket = useBasket();
     
- 
-    function listAddOns(item) {
-
-        //console.log("IN LISTADDONS; ITEM", item)
-        let addOns = [];
-        for (let add in item) {
-            if (item[add] === true) {
-                addOns.push(add)
-            }
-        }
-
-        return addOns;
-    }
-
-
-
-/*
-    function findPrice(sizeIndex, itemIndex, course) {
-        console.log(itemIndex);
-        let price;
-        let addOns = listAddOns(course.addOns);
-        let addOnsPrice = (15 * addOns.length);
-
-        //Uses index to get the right price for this course from the database
-        foodData.forEach(item => {
-    
-            item.details.forEach(el => {
-                if (el.name === course.name) {
-                    price = el.prices[sizeIndex] 
-                }
-            })
-        })
-
-        price = (Number(price) + addOnsPrice) * course.count;
-        //debugger;
-        basket.addSum(course.name, itemIndex, price);
-   
-        return(<BlueH3>{price},- </BlueH3>)
-    }
-
-*/
-
-  
     return(
-        <CartBase>
-            <Flex width="300px" alignItems="center" justifyContent="space-around"> 
-
+        <SectionBase 
+            variant="card" 
+            p={3} 
+            width={[1, 1/2, 1/4]} 
+            position="absolute" 
+            zIndices="3">
+                
+            <Flex 
+                width="300px" 
+                alignItems="center" 
+                justifyContent="space-around">
+                 
                 <BlackH2>Handlekurv</BlackH2>
-                <RoundButton btnWidth="40px" btnHeight="40px" id="closeCartBtn" handleClick={() => basket.checkCart()} >X</RoundButton>
-
+                <RoundBtn 
+                    btnWidth="40px" 
+                    btnHeight="40px" 
+                    id="closeCartBtn" 
+                    handleClick={() => basket.checkCart()}>X
+                </RoundBtn>
             </Flex>
 
+            <Box>
+                {basket.productLines.length < 1 &&(
+                    <Pa>Du har ikke handlet noe enda</Pa>
+                )}
 
-            {basket.productLines.length < 1 &&(<CartP>Du har ikke handlet noe enda</CartP>)}
+                <Ul>
+                    {basket.productLines && (basket.productLines.map((item, index) => {
+                
+                        let addOns = basket.listAddOns(item.addOns);
+                        let size = item.size;
+                        sizeText = size.split(",").pop();
 
-            <ul>
-                {basket.productLines && (basket.productLines.map((item, index) => {
-            
-                    let addOns = listAddOns(item.addOns);
-                    let size = item.size;
-                    sizeText = size.split(",").pop();
+                        return (
+                            <Li key={item, index}>
+                                <Flex 
+                                    width="300px" 
+                                    flexDirection="column" 
+                                    variant="card" 
+                                    alignItems="center" 
+                                    justifyContent="space-around" 
+                                    marginBottom="2em">
 
-                return (
-                        
-                    <Li key={item, index}>
-                        <Flex width="300px" alignItems="center" justifyContent="space-around" marginBottom="2em">
-                        
-                            <div>
-                                <BlueH3>{item.name + ", " + sizeText}  </BlueH3>
-                                <Ul>
-                                {addOns.map(addon => {
-                                    return <Li listStyle="default" key={addon}>{addon} </Li>
-                                })}
-                                </Ul>
+    
+                                    <RoundBtn 
+                                        width="40px" 
+                                        height="40px" 
+                                        onClick={event => handleRemove(event)} 
+                                        id={"removeBtn" + index}>X
+                                    </RoundBtn>
                                 
-                                <Label htmlFor={item + "inp"}>Velg antall: </Label>
-                                <CartInp onChange={event => handleChange(event)} id={item + "inp"} type="number" id={"count" + index} placeholder="velg antall" defaultValue={item.count}/>
-                            </div>
-                        
-                        <p>Pris: {item.price}</p>
-                           
-                        <RemoveBtn onClick={event => handleRemove(event)} id={"removeBtn" + index}>X</RemoveBtn>
-                                
-                        </Flex>
+                                    <Box>
+                                        <BlueH3 >{item.name + ", " + sizeText}  </BlueH3>
+                                        <Ul padding="1em">
 
-                        
-                    
-                    </Li>)
-                }))}
-            </ul>
+                                            {addOns.map(addon => {
+                                                return <Li listStyle="default" key={addon}>{addon} </Li>
+                                            })}
 
-            <BlueH3>Total: {basket.total}</BlueH3>
+                                        </Ul>
+                                    
+                                        <Flex alignItems="center">
+                                            <Label htmlFor={item + "inp"}>Antall: </Label>
+                                            <Input 
+                                                marginB="0" 
+                                                inpWidth="4em" 
+                                                onChange={event => handleChange(event)} 
+                                                type="number" 
+                                                id={"count" + index} 
+                                                defaultValue={item.count}/>
+                                        </Flex>
 
-            
+                                        <BlueH3 textAlign="left" color="#a62d2d">Pris: {item.price},-</BlueH3>
+                                    </Box>
+                                </Flex>
+                            </Li>
+                        ) 
+                    }))}
+                </Ul>
+            </Box>
 
-            <Button handleClick={event => sendOrder(event)} >Send inn</Button>
-        
-        </CartBase>
-       
-        
+            <Flex flexDirection="column" alignItems="center">
+                <BlueH2 >Total: {basket.total},-</BlueH2>
+                <Button 
+                    fontSize="md" 
+                    handleClick={event => sendOrder(event)}>Send bestilling
+                </Button>
+            </Flex>
+
+        </SectionBase>  
     )
 }
 
 export default Cart;
 
-// {findPrice(sizeIndex, index, item)}
-                        

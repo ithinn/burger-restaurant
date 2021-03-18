@@ -1,12 +1,13 @@
-import styled from "styled-components";
+//---------------------------------------------------------------Firebase/React
+import { useState, useEffect } from "react"
+import firebaseInstance from "../../config/firebase"
+//---------------------------------------------------------------Style
 import { Box } from "reflexbox/styled-components"
 import { BlackH2, BlueH2, BlueH1 } from "../StyledComponents/Headings"
 import { Ul, Li } from "../StyledComponents/Lists";
-import { useState, useEffect } from "react"
-import firebaseInstance from "../../config/firebase"
+
 
 function StatusList( {id, heading} ) {
-
 
     const [orderedOrders, setOrderedOrders] = useState(null);
     const [preparedOrders, setPreparedOrders] = useState(null)
@@ -14,7 +15,11 @@ function StatusList( {id, heading} ) {
     //Get incoming orders
     useEffect(() => {
         
-        let ref = firebaseInstance.firestore().collection("orders").where("isOrdered", "==", true)
+        let ref = firebaseInstance
+        .firestore()
+        .collection("orders")
+        .where("isOrdered", "==", true)
+
         ref.onSnapshot((snapshot) => {
          
             let data = [];
@@ -24,16 +29,20 @@ function StatusList( {id, heading} ) {
                     ...doc.data()
                 })
             })
-
             setOrderedOrders(data);
         })
 
     }, []);
 
+    
     //Get orders that are ready for pickup
     useEffect(() => {
         
-        let ref = firebaseInstance.firestore().collection("orders").where("isPrepared", "==", true)
+        let ref = firebaseInstance
+        .firestore()
+        .collection("orders")
+        .where("isPrepared", "==", true)
+
         ref.onSnapshot((snapshot) => {
        
             let data = [];
@@ -43,35 +52,37 @@ function StatusList( {id, heading} ) {
                     ...doc.data()
                 })
             })
-
             setPreparedOrders(data);
         })
 
     }, []);
 
-
-
     return(
         <Box>
             <BlueH1>{heading}</BlueH1>
+            
             <Ul>
+                {orderedOrders !== null && id === "ordered" &&(
+                    <>
+                    {orderedOrders.map((item, index) => {
+                        return 
+                            <Li listStyle="default">
+                                <BlackH2 textAlign="left">{item.orderNumber}</BlackH2>
+                            </Li>
+                    })}
+                    </>
+                )}
 
-            {orderedOrders !== null && id === "ordered" &&(
-                <>
-                {orderedOrders.map((item, index) => {
-                    return <Li listStyle="default"><BlackH2 textAlign="left">{item.orderNumber}</BlackH2></Li>
-                })}
-                </>
-            )}
-
-            {preparedOrders !== null && id === "prepared" &&(
-                <>
-                {preparedOrders.map((item, index) => {
-                    return <Li listStyle="default"><BlackH2 textAlign="left">{item.orderNumber}</BlackH2></Li>
-                })}
-                </>
-            )}
-  
+                {preparedOrders !== null && id === "prepared" &&(
+                    <>
+                    {preparedOrders.map((item, index) => {
+                        return 
+                            <Li listStyle="default">
+                                <BlackH2 textAlign="left">{item.orderNumber}</BlackH2>
+                            </Li>
+                    })}
+                    </>
+                )}
             </Ul>
         </Box>  
     );

@@ -71,11 +71,13 @@ export const BlueH3 = styled.h3`
         font-size: ${props => props.theme.fontSizes.sm};
         color: ${props => props.color};
         text-align: ${props => props.textAlign};
+    
 `
 
 BlueH3.defaultProps = {
     textAlign: "center",
-    color: "#346f83"
+    color: "#346f83",
+
 };
 
 

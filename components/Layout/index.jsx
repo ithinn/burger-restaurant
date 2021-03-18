@@ -1,4 +1,3 @@
-import GlobalStyle from "../GlobalStyle";
 import Header from "../Header";
 import Head from "next/head"
 
@@ -7,7 +6,6 @@ function Layout( {status, isLoggedIn, children, home, login, register, restauran
         <>  
             <Head>
                 <link rel="stylesheet" href="https://use.typekit.net/gsa0dnm.css"></link>
-                
             </Head>
     
             {home ? 

@@ -5,7 +5,7 @@ import { Button } from "../components/StyledComponents/Button";
 import Layout from "../components/Layout";
 import { useRouter } from "next/router";
 import {useAuth} from "../config/auth";
-import Icon from "../components/BurgerSvg";
+import BurgerSvg from "../components/BurgerSvg";
 import {Flex, Box} from "reflexbox/styled-components"
 import { BlueH1, BlackH2, BlueH3, Pa } from "../components/StyledComponents/Headings"
 import { SectionBase } from "../components/StyledComponents/Bases";
@@ -69,10 +69,6 @@ function UserStatus() {
         }
        
     }, [usersOrders]);
-
-
-console.log(preparedOrders);
-console.log(usersOrders);
 
  
     //Sign out 
@@ -155,11 +151,11 @@ console.log(usersOrders);
 
                                         <Box width="50%" p={1}>
                                             <Box>
-                                                <Icon 
+                                                <BurgerSvg 
                                                     color={order.isOrdered ? "lightgray" : "green"}
                                                     stroke={order.isOrdered ? "#346f83" : "green"}
                                                     opacity={order.isOrdered ? ".3" : "1"}
-                                                ></Icon>
+                                                ></BurgerSvg>
                                             </Box>
                                             <BlueH3 color={order.isOrdered ? "gray" : "green"}>
                                                 {order.isOrdered ? "Maten blir forberedt" : "Du kan hente maten i kassen"}

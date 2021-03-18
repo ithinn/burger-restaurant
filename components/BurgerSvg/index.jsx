@@ -1,6 +1,6 @@
 import React from "react";
 
-function Icon({color, stroke, opacity}) {
+function BurgerSvg({color, stroke, opacity}) {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 53.7 43.4">
       <path
@@ -14,4 +14,4 @@ function Icon({color, stroke, opacity}) {
   );
 }
 
-export default Icon;
+export default BurgerSvg;

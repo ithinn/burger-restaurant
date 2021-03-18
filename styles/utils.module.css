@@ -16,9 +16,7 @@
     object-position: bottom;
 }
 
-.logo {
-    margin-top: 1em;
-}
+
 
 .buttonWrapper {
     width: 60px;
@@ -27,6 +25,3 @@
     margin: .5em;
 }
 
-.logo:hover {
-    opacity: .5;
-}

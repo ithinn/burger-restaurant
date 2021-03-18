@@ -23,10 +23,13 @@ export const InlineLi = styled(Li)`
 `
 
 export const Ul = styled.ul`
-    
+    padding: ${props => props.padding};
+    display: ${props => props.display};
+    padding-top: ${props => props.pt}
     
 `
 Ul.defaultProps = {
-    padding: 0,
-    display: "block"
+    padding: "0",
+    display: "block",
+    pt: "0"
 }

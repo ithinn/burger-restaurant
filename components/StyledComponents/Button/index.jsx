@@ -10,6 +10,11 @@ const ButtonBase = styled(Box)`
         color: ${props => props.hoverClr};
         background-color: ${props => props.hoverBg};
     }
+
+    &:active {
+        background-color: white;
+        color: ${props => props.theme.colors.main}
+    }
 `
 
 ButtonBase.defaultProps = {
@@ -20,8 +25,8 @@ ButtonBase.defaultProps = {
     fontSize: "sm",
     fontFamily: "mainFont",
     p: [1,2],
-    hoverClr: "#346f83",
-    hoverBg: "white"
+    hoverClr: "white",
+    hoverBg: "rgba(0, 0, 0, .5)"
 }
 
 export function Button({ handleClick, children, id, ...rest }) {
@@ -38,11 +43,8 @@ export function Button({ handleClick, children, id, ...rest }) {
 
 }
 
-const RoundButtonBase = styled.button`
+const RoundBtnBase = styled(Box)`
     border: ${props => props.theme.borders.element};
-    color: ${props => props.theme.colors.main};
-    width: ${props => props.btnWidth};
-    height: ${props => props.btnHeight};
     border-radius: ${props => props.theme.radii.round};
     position: ${props => props.position};
  
@@ -57,10 +59,13 @@ const RoundButtonBase = styled.button`
     align-items: center;
 `
 
-RoundButtonBase.defaultProps = {
+RoundBtnBase.defaultProps = {
     position: "none",
-    btnWidth: "60px",
-    btnHeight: "60px",
+    width: "60px",
+    height: "60px",
+    color: "main",
+    bg: "rgba(255, 255, 255, 0.5)",
+    p: 1
 }
 /*
 top: "8vh",
@@ -74,17 +79,13 @@ top: "8vh",
     left: ${props => props.left};
        z-index: ${props => props.theme.zIndices[3]}; 
 */
-export function RoundButton({ handleClick, children, top, position, left, right, btnWidth, btnHeight }) {
+export function RoundBtn({ handleClick, children, ...rest }) {
     return (
-        <RoundButtonBase 
+        <RoundBtnBase 
         onClick={handleClick}
-        top={top}
-        left={left}
-        position={position}
-        right={right}
-        btnWidth={btnWidth}
-        btnHeight={btnHeight}
-        >{ children }</RoundButtonBase>
+        
+        {...rest}
+        >{ children }</RoundBtnBase>
     )
 
 }

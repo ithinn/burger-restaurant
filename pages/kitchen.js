@@ -3,10 +3,11 @@ import { useState, useEffect } from "react";
 import { Button } from "../components/StyledComponents/Button";
 import firebaseInstance from "../config/firebase";
 import { SectionBase, NavBase } from "../components/StyledComponents/Bases"
-import KitchenList2 from "../components/KitchenList2"
+import KitchenList from "../components/KitchenList"
 import { useAuth } from "../config/auth";
 import Skeleton from "../components/Skeleton"
 import { useBasket } from "../context/BasketContext";
+import Banner from "../components/Banner"
 
 function Kitchen() {
 
@@ -34,9 +35,7 @@ function Kitchen() {
     return(
         <Layout>
             
-            <SectionBase width="100%" height="40vh" bgImg='url("images/dinerChairs.jpg")'>
-
-                
+            <Banner bgImg='url("images/dinerChairs.jpg")'>
                 <NavBase justify="center">
                     <Button 
                         fontSize="md" id="todoBtn" 
@@ -48,14 +47,13 @@ function Kitchen() {
                         handleClick={event => toggleLists(event)}> Klar til henting
                     </Button>
                 </NavBase>
-            </SectionBase>
+            </Banner>
 
             <SectionBase>
-                <KitchenList2 
+                <KitchenList 
                     toDoFocus={toDoFocus}
                     prepFocus={prepFocus}
-                    handleAddOns={item => basket.listAddOns(item)}
-                     
+                    handleAddOns={item => basket.listAddOns(item)} 
                 />
             </SectionBase>
             

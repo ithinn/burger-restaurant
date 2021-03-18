@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import utilStyles from '../../styles/utils.module.css'
 import {useBasket} from "../../context/BasketContext";
-import { RoundButton } from "../StyledComponents/Button"
+import { RoundBtn } from "../StyledComponents/Button"
 import { FiPrinter, FiShoppingCart } from "react-icons/fi";
 import { IconContext } from "react-icons"
 import { ImUser } from "react-icons/im";
@@ -34,21 +34,19 @@ function Header({userData, heading, isUser, isCart, isLoggedIn}) {
             <NavBase>
 
                 <Logo/>
-                <BlueH1 position="absolute" bottom="4em">{heading}</BlueH1>
+                <BlueH1 >{heading}</BlueH1>
                 
-                <Flex height="22vh">
+                <Flex height="auto">
 
-                
-                
                 {isUser && (
                 <>
                 {!userContext.isUserIconChecked && (
                 <div className={utilStyles.buttonWrapper}>
-                    <RoundButton handleClick={event => userContext.checkUserInfo(event)}>
+                    <RoundBtn handleClick={event => userContext.checkUserInfo(event)}>
                         {<IconContext.Provider value={{ size: "2rem", className: "react-icons" }}>
                             <ImUser/> 
                         </IconContext.Provider>}
-                    </RoundButton>
+                    </RoundBtn>
                     {userName !== undefined && (
                         <SmallP >{userName}</SmallP>
                     )}
@@ -72,14 +70,14 @@ function Header({userData, heading, isUser, isCart, isLoggedIn}) {
                 {isCart &&(
                 <div className={utilStyles.buttonWrapper}>
                 {!basket.isCartChecked && isUser && (
-                    <RoundButton position="fixed" id="cartBtn" handleClick={() => basket.checkCart()}>
+                    <RoundBtn position="fixed" id="cartBtn" handleClick={() => basket.checkCart()}>
                         <IconContext.Provider value={{ size: "2rem", className: "react-icons" }}>
                             <FiShoppingCart/>
                             {basket.productLines.length > 0 && (
                                 <Count>{basket.productLines.length}</Count>
                             )} 
                         </IconContext.Provider>
-                    </RoundButton>
+                    </RoundBtn>
                 )}
                 </div>
 

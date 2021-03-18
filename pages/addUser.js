@@ -47,8 +47,8 @@ function AddUser() {
             resolver: yupResolver(schema)
         })
 
-    const {user, loading, isAuthenticated} = useAuth();
-    const userId = user ? user.uid : false;
+    const { loading } = useAuth();
+
 
     //Get todays date
     const today = new Date();

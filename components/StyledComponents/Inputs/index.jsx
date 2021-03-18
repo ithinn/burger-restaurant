@@ -4,10 +4,15 @@ import {Box} from "reflexbox/styled-components"
 export const Input = styled.input`
     font-family: ${props => props.theme.fonts.mainFont};
     border: ${props => props.error ? props.theme.borders.error : props.theme.borders.element};
-    margin-bottom: 1em;
+    margin-bottom: ${props => props.marginB};
     font-size: ${props => props.theme.fontSizes.sm};
-
+    width: ${props => props.inpWidth}
 `
+
+Input.defaultProps = {
+    inpWidth: "auto",
+    marginB: "1em",
+}
 
 /*
 export const Cb = styled(Input)`
@@ -27,6 +32,8 @@ export const Select = styled.select`
 export const InvisibleCheckbox = styled.input`
     width: .1px;
     height: .1px;
+    margin-bottom: 2em;
+    display: inline;
 
     
     

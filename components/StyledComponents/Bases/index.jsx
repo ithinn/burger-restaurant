@@ -1,6 +1,14 @@
 import styled from "styled-components"
 import {Box, Flex} from "reflexbox/styled-components"
 
+
+export const ImgBase = styled.img`
+    width: 100%;
+    height: 10vh;
+    object-fit: cover;
+    object-position: bottom;
+`
+
 export const NavBase = styled.nav`
     width: ${props => props.navWidth};
     height: ${props => props.navHeight};
@@ -16,7 +24,6 @@ NavBase.defaultProps = {
     navHeight: "20vh",
     justify: "space-between",
     align: "flex-start",
- 
     position: "none",
   
 }
@@ -27,7 +34,10 @@ export const SectionBase = styled(Flex)`
     background-image: ${props => props.bgImg};
     background-size: cover;
     background-position: ${props => props.bgPosition};
-
+    position: ${props => props.position};
+    top: ${props => props.top};
+    right: ${props => props.right};
+    z-index: ${props => props.zIndices}
 `
 
 SectionBase.defaultProps = {
@@ -40,7 +50,12 @@ SectionBase.defaultProps = {
     justifyContent: "center",
     alignItems: "center",
     border: "none",
-    bgPosition: "center"
+    bgPosition: "center",
+    position: "none",
+    zIndices: 0,
+    top: "0",
+    right: "0"
+    
 }
 
 export const LoginBase = styled.section`
@@ -68,3 +83,4 @@ FormBase.defaultProps = {
     p: 3
     
 }
+
