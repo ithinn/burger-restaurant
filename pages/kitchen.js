@@ -1,12 +1,13 @@
+//------------------------------------------------------React, Firebase, Context
+import { useState } from "react";
+import { useAuth } from "../config/auth";
+import { useBasket } from "../context/BasketContext";
+//------------------------------------------------------Components
 import Layout from "../components/Layout";
-import { useState, useEffect } from "react";
 import { Button } from "../components/StyledComponents/Button";
-import firebaseInstance from "../config/firebase";
 import { SectionBase, NavBase } from "../components/StyledComponents/Bases"
 import KitchenList from "../components/KitchenList"
-import { useAuth } from "../config/auth";
 import Skeleton from "../components/Skeleton"
-import { useBasket } from "../context/BasketContext";
 import Banner from "../components/Banner"
 
 function Kitchen() {

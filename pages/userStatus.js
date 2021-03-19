@@ -1,40 +1,44 @@
+//-------------------------------------------------------------------------React, Next, Context, Firebase
 import firebaseInstance from "../config/firebase";
-import readCollection from "./database/readCollection";
-import { useState, useEffect } from "react";
-import { Button } from "../components/StyledComponents/Button";
-import Layout from "../components/Layout";
 import { useRouter } from "next/router";
 import {useAuth} from "../config/auth";
-import BurgerSvg from "../components/BurgerSvg";
-import {Flex, Box} from "reflexbox/styled-components"
-import { BlueH1, BlackH2, BlueH3, Pa } from "../components/StyledComponents/Headings"
-import { SectionBase } from "../components/StyledComponents/Bases";
+import { useState, useEffect } from "react";
 import { useBasket } from "../context/BasketContext";
 import { useUser } from "../context/UserContext";
-import { useContext } from "react";
-import { Ul, Li, InlineLi } from "../components/StyledComponents/Lists"
+//-------------------------------------------------------------------------Components
 import Skeleton from "../components/Skeleton"
+import Layout from "../components/Layout";
+import BurgerSvg from "../components/BurgerSvg";
+import {Flex, Box} from "reflexbox/styled-components"
+import { BlackH2, BlueH3 } from "../components/StyledComponents/Headings"
+import { SectionBase } from "../components/StyledComponents/Bases";
+import { Button } from "../components/StyledComponents/Button";
+import { Ul, Li, InlineLi } from "../components/StyledComponents/Lists"
+
 
 function UserStatus() {
-   
-
+//------------------------------------------------------------------------Definitions
     const [usersOrders, setUsersOrders] = useState([])
     const [preparedOrders, setPreparedOrders] = useState([]);
     const router = useRouter()
     const {user, loading, isAuthenticated} = useAuth();
+    const basket = useBasket();
     
     //Get userId and userName
     const userId = user ? user.uid : false;
     const userContext = useUser();
     const userName = userContext.userName;
-    const basket = useBasket();
-  
+    
 
+//------------------------------------------------------------------------Realtime listeners
     //Get all the users orders that hasn't been picked up yet
     useEffect(() => {
         if (userId) {
-            let ref = firebaseInstance.firestore().collection("orders")
-            .where("userId", "==", userId).where("isPickedUp", "==", false)
+            let ref = firebaseInstance
+            .firestore()
+            .collection("orders")
+            .where("userId", "==", userId)
+            .where("isPickedUp", "==", false)
 
             return ref.onSnapshot((snapshot) => {
 
@@ -49,13 +53,18 @@ function UserStatus() {
                 setUsersOrders(data);
             })
         }
-       
     }, [userId]);
 
 
+    //Filter out the user's orders where isPrepared === true
     useEffect(() => {
         if (usersOrders) {
-            let ref = firebaseInstance.firestore().collection("orders").where("isPrepared", "==", true)
+            let ref = firebaseInstance
+            .firestore()
+            .collection("orders")
+            .where("userId", "==", userId)
+            .where("isPrepared", "==", true)
+
             return ref.onSnapshot((snapshot) => {
 
                 let data = [];
@@ -72,16 +81,17 @@ function UserStatus() {
        
     }, [usersOrders]);
 
- 
+//-------------------------------------------------------------------------Functions 
+    
     //Sign out 
     function handleSignOutClick() {
-        
-        
+    
         firebaseInstance.auth().signOut().then(() => {
 
             let orderId;
             let ref = firebaseInstance.firestore().collection("orders");
 
+            //Update all the prepared orders
             preparedOrders.forEach(order => {
                 orderId = order.id
                 ref.doc(orderId)
@@ -90,7 +100,7 @@ function UserStatus() {
                     isPickedUp: true,
                 })
                 .then(() => {
-                console.log("updated, isPickedUp")
+              
                 })
                 .catch(error => {
                     console.log(error);
@@ -110,7 +120,7 @@ function UserStatus() {
 
     if (!isAuthenticated) {
         router.push('/');
-        return <p>Du er ikke logget inn</p>
+        return <Skeleton text="Du er ikke logget inn"/>
     }
 
 
@@ -136,20 +146,20 @@ function UserStatus() {
                     flexWrap="wrap">
 
                     {usersOrders && (
-                        usersOrders.map(order => {
+                        usersOrders.map((order, index) => {
                             
                             if (!order.isPickedUp) {
                                 
                                 return(
-                                    <Flex variant="card" >
+                                    <Flex variant="card" key={order+index} >
                                         <Box width="50%" p={1}>
                                             <BlueH3 textAlign="left">Bestillingsnummer: {order.orderNumber}</BlueH3>
                                             <Ul padding="1.2em">
                                                 {order.orderList.map(item => {
                                                     
                                                     let addOns = basket.listAddOns(item.addOns);
-                                                    let mappedAddOns = addOns.map(addOn => {
-                                                        return <InlineLi>{addOn}, </InlineLi>
+                                                    let mappedAddOns = addOns.map((addOn, index) => {
+                                                        return <InlineLi key={addOn + index}>{addOn}, </InlineLi>
                                                     })
                                                     
                                                     return (

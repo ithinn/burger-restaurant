@@ -33,7 +33,7 @@ export const InvisibleCheckbox = styled.input`
     width: .1px;
     height: .1px;
     margin-bottom: 2em;
-    display: inline;
+    
 
     
     

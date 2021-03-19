@@ -1,49 +1,48 @@
-import Layout from "../components/Layout";
-import readCollection from "./database/readCollection";
+//------------------------------------------------------------------------------React/Next/Context/Firebase
 import { useEffect, useState, useRef } from "react"
-import firebaseInstance from "firebase";
 import Link from "next/link";
-import utilStyles from '../styles/utils.module.css'
-import { useAuth } from "../config/auth";
 import { useRouter } from "next/router";
-import Cart from "../components/Cart";
-import { MenuItem } from "../components/MenuItem"
 import { useBasket } from "../context/BasketContext";
-import Banner from "../components/Banner";
-import { BlueH1, BlackH2, HandH2 } from "../components/StyledComponents/Headings";
-import { Flex, Box } from "reflexbox";
+import { useAuth } from "../config/auth";
 import { useUser } from "../context/UserContext";
+import readCollection from "./database/readCollection";
+import firebaseInstance from "firebase";
+//------------------------------------------------------------------------------Components
+import Layout from "../components/Layout";
+import Banner from "../components/Banner";
+import Cart from "../components/Cart";
 import Skeleton from "../components/Skeleton";
+import { MenuItem } from "../components/MenuItem"
+import { BlueH1, BlackH2, HandH2 } from "../components/StyledComponents/Headings";
+import { Flex } from "reflexbox";
 import { Button } from "../components/StyledComponents/Button";
 import { Overlay } from "../components/StyledComponents/Overlay";
 
-function Home({userData, food}) {
 
+function Home({userData, food}) {
+//-------------------------------------------------------------------------------Definitions
     const [orderNumber, setOrderNumber] = useState(null);
     const basket = useBasket();
     const userContext = useUser();
     const router = useRouter();
-    const [count, setCount] = useState(0)
 
-    //FIND TODAYS DATE
+    //Find todays date
     const today = new Date();
     const date = today.getDate() + "." + (today.getMonth()+1) + "." + today.getFullYear();
     
-    //GET USER-ID AND USERNAME
+    //Get userId and userName
     const {user, loading, isAuthenticated} = useAuth();
     const userId = user ? user.uid : false;
     let userName;
-    
-    
-    userData.forEach(user => {
-        if (user.id === userId) {
-            userName = user.firstName
-            userContext.getUserName(userName);
-        }
-    })
-    
 
-//------------------------------------------------------------------------------------------------    
+    useEffect(() => {
+        userData.forEach(user => {
+            if (user.id === userId) {
+                userName = user.firstName
+                userContext.getUserName(userName);
+            }
+        })
+    }, [])
 
     //Set orderNumber based on the counter in the database
     useEffect(() => {
@@ -58,12 +57,17 @@ function Home({userData, food}) {
         })
 
     }, []);
+       
 
-    
+//---------------------------------------------------------------------------------Functions 
+
     //Update the counter in the database
     const handleCount = async () => {
 
-        const counterRef = firebaseInstance.firestore().collection("globals").doc("counter");
+        const counterRef = firebaseInstance
+        .firestore()
+        .collection("globals")
+        .doc("counter");
 
         await firebaseInstance.firestore().runTransaction((transaction) => {
             return transaction.get(counterRef).then((doc) => {
@@ -79,7 +83,7 @@ function Home({userData, food}) {
     }
 
 
-    //ADD TO AN ORDER
+    //Add to an order
     const onAdd = async (data) => {
 
         let price;
@@ -104,10 +108,9 @@ function Home({userData, food}) {
         newData = {...newData, price: price, basePrice: price}
         
         basket.addProductLine(newData)
-  
     }
 
-    //MAP OUT THE MENU
+    //Map out the menu
     const menu = food.map((category, index) => {
  
     return(
@@ -137,8 +140,8 @@ function Home({userData, food}) {
     });
 
 
-    //SEND THE ORDER TO THE DATABASE
-    async function sendOrder(event) {
+    //Send the order to the database
+    async function sendOrder() {
         
         if (isAuthenticated) {
 
@@ -166,13 +169,13 @@ function Home({userData, food}) {
         }
     }
 
-    //REMOVE ITEM FROM CART
+    //Remove item from cart
     function handleRemove(event) {
         let index = event.target.id.replace(/[^0-9.]/g, "");
         basket.removeItem(index);
     }
 
-    //CHANGE AMOUNT OF PRODUCTS IN CART
+    //Change amount of products in the cart
     function handleChange(event) {
         let index = event.target.id.replace(/[^0-9.]/g, "");
         let value = Number(event.target.value);
@@ -180,7 +183,7 @@ function Home({userData, food}) {
     }    
 
 
-//---------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------Render
     
     
     if (loading) {
@@ -194,13 +197,19 @@ function Home({userData, food}) {
                 <HandH2>Beste burgeren på Østlandet</HandH2>
 
                 <Flex>
-                    <Link href={isAuthenticated ? "#menu" : "/login"}>
-                        <Button p={3} fontSize="md" bgClr="black">{isAuthenticated ? "Bestill nå" : "Logg inn"}</Button>
+                    <Link passHref href={isAuthenticated ? "#menu" : "/login"}>
+                        <a>
+                            <Button p={3} fontSize="md">
+                                {isAuthenticated ? "Bestill nå" : "Logg inn"}
+                            </Button>
+                        </a>
                     </Link>
 
                     {!isAuthenticated && (
-                    <Link href="/addUser">
-                        <Button bgClr="black">Registrer ny bruker</Button>
+                    <Link passHref href="/addUser">
+                        <a>
+                            <Button p={3} fontSize="md">Registrer ny bruker</Button>
+                        </a>
                     </Link>
                     )}
 

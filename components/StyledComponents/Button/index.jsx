@@ -9,6 +9,7 @@ const ButtonBase = styled(Box)`
     &:hover {
         color: ${props => props.hoverClr};
         background-color: ${props => props.hoverBg};
+        border: 2px solid white;
     }
 
     &:active {

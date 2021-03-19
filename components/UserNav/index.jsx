@@ -21,7 +21,4 @@ function UserNav() {
 }
 
 export default UserNav;
-/*
-<Link href="/userStatus">
-<a>Se dine ordre</a>
-</Link>*/
+

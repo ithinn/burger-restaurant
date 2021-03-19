@@ -1,17 +1,20 @@
-import { useState, useEffect } from "react";
-import { Button } from "../components/StyledComponents/Button"
-import Link from "next/link"
-import Layout from "../components/Layout"
-import firebaseInstance from "../config/firebase"
-import { useRouter } from "next/router";
-import { LoginBase, FormBase } from "../components/StyledComponents/Bases";
-import { Input } from "../components/StyledComponents/Inputs";
-import { Label } from "../components/StyledComponents/Labels";
+//-------------------------------------------------------------React, Next, Firebase
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup"
 import { string, object } from "yup"
-import Skeleton from "../components/Skeleton";
+import firebaseInstance from "../config/firebase"
 import { useAuth } from "../config/auth";
+import Link from "next/link"
+import { useRouter } from "next/router";
+//-------------------------------------------------------------Components
+import Skeleton from "../components/Skeleton";
+import Layout from "../components/Layout"
+import { Button } from "../components/StyledComponents/Button"
+import { LoginBase, FormBase } from "../components/StyledComponents/Bases";
+import { Input } from "../components/StyledComponents/Inputs";
+import { Label } from "../components/StyledComponents/Labels";
+
 
 const schema = object().shape({
     
@@ -33,10 +36,10 @@ const schema = object().shape({
 })
 
 
-
 function AddUser() {
 
-    const [error, setError] = useState(null)
+//---------------------------------------------------------------------------------Definitions
+
     const router = useRouter()
     const {
         register, 
@@ -49,19 +52,19 @@ function AddUser() {
 
     const { loading } = useAuth();
 
-
     //Get todays date
     const today = new Date();
     const date = today.getDate() + "." + (today.getMonth()+1) + "." + today.getFullYear();
 
-//-------------------------------------------------------------------------------------------------        
+//----------------------------------------------------------------------------------Functions       
     
     //Submit registration form
     const onSubmit = async (data) => {
     
         try{
             
-            const userCredential = await firebaseInstance.auth().createUserWithEmailAndPassword(data.email, data.password)
+            const userCredential = await firebaseInstance
+            .auth().createUserWithEmailAndPassword(data.email, data.password)
       
             const user = userCredential.user.uid;
    
@@ -81,9 +84,11 @@ function AddUser() {
 
         }
         catch(error) {
-            setError(error.message)
+            console.log(error);
         }
     }
+
+    //------------------------------------------------------------------------------Render
 
     if(loading) {
         return <Skeleton/>
@@ -184,7 +189,7 @@ function AddUser() {
 
                         {errors.phone && (<p>{errors.phone?.message}</p>)}
 
-                        <Button type="submit">Registrer deg</Button>
+                        <Button type="submit" >Registrer deg</Button>
                     </form>
                 </FormBase>
 

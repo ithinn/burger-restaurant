@@ -1,10 +1,10 @@
-//-----------------------------------------------------Firebase, next, react
+//-----------------------------------------------------------Firebase, Next, React
 import { useState } from "react";
 import { useAuth } from "../config/auth";
 import { useRouter } from "next/router";
 import firebaseInstance from "../config/firebase"
 import Link from "next/link"
-//-----------------------------------------------------Components
+//-----------------------------------------------------------Components
 import Skeleton from "../components/Skeleton";
 import { LoginBase, FormBase } from "../components/StyledComponents/Bases";
 import { Input } from "../components/StyledComponents/Inputs"
@@ -21,19 +21,20 @@ function Login() {
     const {loading, isAuthenticated} = useAuth();
     const router = useRouter();
 
-    
-    //Login to the page
+
+    //Log in to the page
     function handleSubmit(event) {
         event.preventDefault();
 
         firebaseInstance.auth().signInWithEmailAndPassword(email, password)
-            .then(() => {router.push("/");})
+            .then(() => {
+                router.push("/");})
             .catch((error) => {  
                 setError(error.message);
             });
     }
 
-    
+
     //Set state of email and password
     function handleChange(event) {
         event.target.id === "mailInp" ? 
@@ -41,6 +42,7 @@ function Login() {
     }
 
 
+    //Show the error message 
     function logError() {
         if (error) {
             return<p>{error}</p>
@@ -85,7 +87,7 @@ function Login() {
             :
 
             <LoginBase>
-                <Skeleton text="Du sendes til siden"/>
+                <Skeleton/>
             </LoginBase>}
         </Layout>
     )

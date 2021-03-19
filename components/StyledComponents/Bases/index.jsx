@@ -1,6 +1,12 @@
 import styled from "styled-components"
 import {Box, Flex} from "reflexbox/styled-components"
 
+export const HeadingWrapper = styled(Flex)`
+        position: absolute;
+        justify-content: center;
+        width: 100%;
+        margin: 0 auto;
+    `
 
 export const ImgBase = styled.img`
     width: 100%;

@@ -1,33 +1,43 @@
-//-------------------------------------------------------------Context
+//-------------------------------------------------------------Context & Next
 import {useBasket} from "../../context/BasketContext";
 import { useUser } from "../../context/UserContext";
+import Link from "next/link"
+import Image from "next/image"
+
 //-------------------------------------------------------------Style
 import styled from "styled-components";
 import utilStyles from '../../styles/utils.module.css'
 import Logo from "../Logo";
 import { RoundBtn } from "../StyledComponents/Button"
-import { FiShoppingCart } from "react-icons/fi";
+import { FiPrinter, FiShoppingCart } from "react-icons/fi";
 import { IconContext } from "react-icons"
 import { ImUser } from "react-icons/im";
 import { Count } from "../StyledComponents";
-import { NavBase } from "../StyledComponents/Bases";
+import { NavBase, HeadingWrapper } from "../StyledComponents/Bases";
 import { SmallP, BlueH1 } from "../StyledComponents/Headings";
 import { Flex } from "reflexbox/styled-components";
+import { useEffect, useState } from "react";
 
 
 function Header({heading, isUser, isCart }) {
 
- 
     const basket = useBasket();
     const userContext = useUser();
-    const userName = userContext.userName;
+    const [userName, setUserName] = useState(null);
+    //let userName;
+
+    //setUserName(userContext.userName);
+    let test = userContext.userName;
+    console.log("TEST", test);
+
+    useEffect(() => {
+        console.log("oppdatert")
+        setUserName(test);
+    }, [test])
+
     
-    const HeadingWrapper = styled(Flex)`
-        position: absolute;
-        justify-content: center;
-        width: 100%;
-        margin: 0 auto;
-    `
+    
+    console.log("HEADER", userName)
 
     return(
         <header>
@@ -37,24 +47,40 @@ function Header({heading, isUser, isCart }) {
 
             <NavBase align="center">
 
-                <Logo/>
+
+            <Link passHref href="/">
+                <a>
+                <Image
+                    src="/images/logo-01.png"
+                    width={130}
+                    height={150}
+                    alt="logo"
+                />
+                </a>
+            </Link>
+              
         
                 <Flex height="auto">
                     {isUser && (
                         <>
-                        {!userContext.isUserIconChecked && (
+                        
                             <div className={utilStyles.buttonWrapper}>
-                                <RoundBtn handleClick={event => userContext.checkUserInfo(event)}>
-                                    {<IconContext.Provider value={{ size: "2rem", className: "react-icons" }}>
-                                        <ImUser/> 
-                                    </IconContext.Provider>}
-                                </RoundBtn>
+                                
+                                <Link passHref href="/userStatus">
+                                    <a>
+                                    <RoundBtn handleClick={event => userContext.checkUserInfo(event)}>
+                                        {<IconContext.Provider value={{ size: "2rem", className: "react-icons" }}>
+                                            <ImUser/> 
+                                        </IconContext.Provider>}
+                                    </RoundBtn>
+                                    </a>
+                                </Link>
                                 
                                 {userName !== undefined && (
                                     <SmallP >{userName}</SmallP>
                                 )} 
                             </div>
-                        )}
+                        
                         </> 
                     )}
 

@@ -18,7 +18,7 @@ function KitchenList({ handleAddOns, toDoFocus, prepFocus}) {
         .collection("orders")
         .where("isPickedUp", "==", false)
 
-        ref.onSnapshot((snapshot) => {
+        return ref.onSnapshot((snapshot) => {
    
             let data = [];
             snapshot.forEach((doc) => {

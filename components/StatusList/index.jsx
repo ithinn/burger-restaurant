@@ -20,7 +20,7 @@ function StatusList( {id, heading} ) {
         .collection("orders")
         .where("isOrdered", "==", true)
 
-        ref.onSnapshot((snapshot) => {
+        return ref.onSnapshot((snapshot) => {
          
             let data = [];
             snapshot.forEach((doc) => {
@@ -43,7 +43,7 @@ function StatusList( {id, heading} ) {
         .collection("orders")
         .where("isPrepared", "==", true)
 
-        ref.onSnapshot((snapshot) => {
+        return ref.onSnapshot((snapshot) => {
        
             let data = [];
             snapshot.forEach((doc) => {

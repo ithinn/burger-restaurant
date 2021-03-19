@@ -6,14 +6,17 @@ export const Logo = () => {
 
     return(
         <Box >
-            <Link href="/">
+            <Link passHref href="/">
+                <a>
                 <Image
                     src="/images/logo-01.png"
                     width={130}
                     height={150}
                     alt="logo"
                 />
+                </a>
             </Link>
+
         </Box>
     )
 }

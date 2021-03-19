@@ -11,6 +11,7 @@ function Banner({children, bgImg }) {
             height="auto"
             minHeight="50vh" 
             bgPosition="top">
+            
         
             {children}
             

@@ -140,7 +140,7 @@ function OrderItem( { handleAddOns, orderData} ) {
                     return (
                     
                         <Box>
-                            <Ul>
+                            <Ul ml="1em">
                                 <Li listStyle="default">
                                 {item.size.split(",").pop()} {item.name} 
                                 {addOns.length > 0 && (
