@@ -1,4 +1,8 @@
-
+//-------------------------------------------------------/config/react
+import firebaseInstance from "../../config/firebase"
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { useBasket } from "../../context/BasketContext";
 //-------------------------------------------------------/Style
 import { Button } from "../StyledComponents/Button";
 import { BlueH3, Pa } from "../StyledComponents/Headings"
@@ -6,11 +10,7 @@ import { InlineLi, Ul, Li } from "../StyledComponents/Lists";
 import { Label } from "../StyledComponents/Labels";
 import { Flex, Box } from "reflexbox/styled-components"
 import { Input } from "../StyledComponents/Inputs";
-//-------------------------------------------------------/config/react
-import firebaseInstance from "../../config/firebase"
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { useBasket } from "../../context/BasketContext";
+
 
 function OrderItem( { handleAddOns, orderData} ) {
     const {
@@ -22,14 +22,6 @@ function OrderItem( { handleAddOns, orderData} ) {
         });
     
     const basket = useBasket();
-
-
-    
-    
-    useEffect(() => {
-        console.log(errors)
-    }, [errors])
-
 
     const onSubmit = async (data, event) =>  {
      
@@ -67,7 +59,6 @@ function OrderItem( { handleAddOns, orderData} ) {
         catch (error) {
             console.log(error);
         }
-        
     }
 
     return(
@@ -86,13 +77,14 @@ function OrderItem( { handleAddOns, orderData} ) {
                 <BlueH3>Ordernummer: {orderData.orderNumber}</BlueH3>
             </div>
 
-
+            <Ul>
             {orderData.isOrdered && (
+                <Li>
                 <form id={orderData.id + "Form"} onSubmit={handleSubmit(onSubmit)}>
 
                     {orderData.orderList.map((item, index) => {
                     
-                        let addOns = handleAddOns(item.addOns);
+                        let addOns = basket.listAddOns(item.addOns);
                         
                         let mappedAddOns = addOns.map(addOn => {
                             return <InlineLi>{addOn}, </InlineLi>
@@ -105,14 +97,16 @@ function OrderItem( { handleAddOns, orderData} ) {
                             <Input id={index + item.name} type="checkbox" name={item.type} ref={register({ required: "Du må sjekke alle feltene" })}/>
                             <Label htmlFor={index + item.name} ml={3}>
                                 {item.size.split(",").pop()} {item.name}
-                                
+                                <Ul ml="2em" >
                                 {addOns.length > 0 && (
                                     <>
-                                    <span> med </span>
-                                    <Ul>
+                                  
                                     {mappedAddOns}
-                                    </Ul>
+                                  
                                     </> )}
+
+                                </Ul>
+                                
                             </Label>
 
                             {errors[item.type] && (
@@ -127,7 +121,9 @@ function OrderItem( { handleAddOns, orderData} ) {
                     
                     <Button type="submit">Ferdig</Button>
                 </form>
+                </Li>
             )}
+            </Ul>
 
 
 

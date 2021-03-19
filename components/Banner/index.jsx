@@ -8,7 +8,8 @@ function Banner({children, bgImg }) {
             bgImg={bgImg} 
             flexDirection="column" 
             width="100%" 
-            height="50vh" 
+            height="auto"
+            minHeight="50vh" 
             bgPosition="top">
         
             {children}

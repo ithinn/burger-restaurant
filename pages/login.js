@@ -1,23 +1,24 @@
-import { useState, useEffect } from "react";
+//-----------------------------------------------------Firebase, next, react
+import { useState } from "react";
+import { useAuth } from "../config/auth";
+import { useRouter } from "next/router";
+import firebaseInstance from "../config/firebase"
+import Link from "next/link"
+//-----------------------------------------------------Components
+import Skeleton from "../components/Skeleton";
 import { LoginBase, FormBase } from "../components/StyledComponents/Bases";
 import { Input } from "../components/StyledComponents/Inputs"
 import { Label } from "../components/StyledComponents/Labels"
 import { Button } from "../components/StyledComponents/Button"
-import Link from "next/link"
 import Layout from "../components/Layout"
-import firebaseInstance from "../config/firebase"
-import { useRouter } from "next/router";
-import {useAuth} from "../config/auth";
-import Skeleton from "../components/Skeleton";
+
 
 function Login() {
 
     const [email, setEmail] = useState(null);
     const [password, setPassword] = useState(null);
     const [error, setError] = useState(null);
-        
-    const {user, loading, isAuthenticated} = useAuth();
-    const userId = user ? user.uid : false;
+    const {loading, isAuthenticated} = useAuth();
     const router = useRouter();
 
     
@@ -46,20 +47,16 @@ function Login() {
         }
     }
 
-    if (loading) {
-        return <p>loading loading</p>
-    }
 
- 
+    if (loading) {
+        return <Skeleton/>
+    }
 
     return(
         <Layout login isLoggedIn={isAuthenticated}>
         
         {isAuthenticated === false ?     
             <LoginBase>
-            
-                <h3>Logg inn</h3>
-            
                 <FormBase variant="card" p="2em">
                     <form
                         onSubmit={event => handleSubmit(event)}

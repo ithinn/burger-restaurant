@@ -45,95 +45,40 @@ function Home({userData, food}) {
 
 //------------------------------------------------------------------------------------------------    
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    //GET NUMBER OF EXISTING ORDERS AND SET ORDERNUMBER
-    useEffect(() => {
-        let ref = firebaseInstance
-        .firestore()
-        .collection("orders")
-        .where("isPickedUp", "==", false)
-
-        ref.onSnapshot((snapshot) => {
-          
-            let data = [];
-            snapshot.forEach((doc) => {
-                data.push({
-                    id: doc.id,
-                    ...doc.data()
-                })
-            })
-            setOrderNumber(data.length + 101)
-        })
-
-    }, []);
-
-
+    //Set orderNumber based on the counter in the database
     useEffect(() => {
         let ref = firebaseInstance
         .firestore()
         .collection("globals").doc("counter")
 
-        ref.onSnapshot((snapshot) => {
-            console.log("snapshot", snapshot.data().count);
+        return ref.onSnapshot((snapshot) => {
+           
             snapshot.data().count
-            setCount(snapshot.data().count);
+            setOrderNumber(snapshot.data().count);
         })
 
     }, []);
 
+    
+    //Update the counter in the database
+    const handleCount = async () => {
 
+        const counterRef = firebaseInstance.firestore().collection("globals").doc("counter");
 
-
-
-    const handleAdd = async () => {
-        const counterRef = firebaseInstance.firestore().collection("globals").doc("counter")
-
-        //const newDoc = firebaseInstance.firestore().collection("order").doc("counter") 
-        //const newDocRef = newDoc.set({test: 234})
-        orderRef = await orderOcllection.add({
-
-        })
-
-        const counter = firebaseInstance.firestore().runTransaction((transaction) => {
+        await firebaseInstance.firestore().runTransaction((transaction) => {
             return transaction.get(counterRef).then((doc) => {
-
-                const count =  doc.data().count;
-                let newCount = count + 1;
-                if (count < 61) {
+                const count = doc.data().count;
+                let newCount = count +1;
+                if (newCount > 100) {
                     newCount = 1
                 }
-            
+
                 transaction.update(counterRef, {count: newCount});
             })
         })
-
-        return counter
-       
     }
 
-   
+
     //ADD TO AN ORDER
     const onAdd = async (data) => {
 
@@ -163,10 +108,10 @@ function Home({userData, food}) {
     }
 
     //MAP OUT THE MENU
-    const menu = food.map((category) => {
+    const menu = food.map((category, index) => {
  
     return(
-        <div id="menu">
+        <div key={"key" + index} id="menu">
             <BlackH2>{category.id}</BlackH2>
         
             <Flex 
@@ -207,12 +152,13 @@ function Home({userData, food}) {
                     isPickedUp: false,
                     orderList: basket.productLines,
                     orderDate: date,
-                    orderNumber: count,
+                    orderNumber: orderNumber,
                 })
                 
                 basket.emptyProductLine([]);
                 router.push("/userStatus");
-                handleAdd();
+                basket.checkCart(false);
+                handleCount();
             }
             catch(error) {
                 console.log(error);
@@ -272,7 +218,7 @@ function Home({userData, food}) {
                 handleRemove={event => handleRemove(event)} 
                 handleChange={event => handleChange(event)}/>
             
-            <Overlay height="200vh"/>
+            <Overlay position="fixed" height="100vh"/>
             </>
             )}
         

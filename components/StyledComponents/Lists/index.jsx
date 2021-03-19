@@ -10,7 +10,8 @@ export const Li = styled.li`
 Li.defaultProps = {
     listStyle: "none",
     color: "#346f83",
-    fontFamily: "oswald"
+    fontFamily: "oswald",
+    
 }
 
 
@@ -25,11 +26,13 @@ export const InlineLi = styled(Li)`
 export const Ul = styled.ul`
     padding: ${props => props.padding};
     display: ${props => props.display};
-    padding-top: ${props => props.pt}
+    padding-top: ${props => props.pt};
+    margin-left: ${props => props.ml};
     
 `
 Ul.defaultProps = {
     padding: "0",
     display: "block",
-    pt: "0"
+    pt: "0",
+    ml: "0"
 }

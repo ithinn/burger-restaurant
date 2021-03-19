@@ -13,7 +13,7 @@ export const BlueH1 = styled.h1`
     left: ${props => props.left};
     right: ${props => props.right};
     bottom: ${props => props.bottom};
-
+    margin: ${props => props.margin};
 
 
     @media (max-width: 40em) {
@@ -26,6 +26,7 @@ BlueH1.defaultProps = {
     left: "0",
     bottom: "0",
     right: "0",
+    margin: "0",
 }
 
 export const WhiteH1 = styled(BlueH1)`

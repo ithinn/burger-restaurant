@@ -44,7 +44,9 @@ const theme = {
         error: "2px solid red"
     },
     radii: {
-        round: "50%"
+        round: "50%",
+        rounded: "30px"
+
     },
     shadows: {
         coloredHeading: "4px 5px 1px #103f3f",
@@ -65,36 +67,24 @@ const theme = {
    
 
     variants: {
-
-        fgBoxL: {
-            backgroundColor: "white",
-            color: "main",
-            border: "article",
-            p: 2,
-            boxShadow: "L"
-        },
-        fgBoxR: {
-            backgroundColor: "white",
-            color: "main",
-            border: "article",
-            p: 2,
-            boxShadow: "R"
-        },
-    
-        bgBox: {
-            bg: "gray",
-            color: "white",
-            border: "4px solid white",
-            p: 2
-        },
-
         card: {
             width: "100%",
             bg: "white",
             boxShadow: "card",
             m: 3,
             p: 3     
+        },
+        number: {
+            width: "70px",
+            height: "70px",
+            bg: "white",
+            border: "element",
+            m: 3,
+            p: 0,
+            radii: "rounded"
+
         }
+
 
 }}
    /* 

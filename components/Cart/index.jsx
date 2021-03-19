@@ -21,7 +21,8 @@ function Cart({ handleChange, handleRemove, sendOrder }) {
             p={3} 
             width={[1, 1/2, 1/4]} 
             position="absolute" 
-            zIndices="3">
+            zIndices="3"
+            >
                 
             <Flex 
                 width="300px" 
@@ -52,12 +53,14 @@ function Cart({ handleChange, handleRemove, sendOrder }) {
                         return (
                             <Li key={item, index}>
                                 <Flex 
-                                    width="300px" 
+                                    width="100%"
                                     flexDirection="column" 
                                     variant="card" 
                                     alignItems="center" 
                                     justifyContent="space-around" 
-                                    marginBottom="2em">
+                                    margin="0"
+                                    marginBottom="2em"
+                                    >
 
     
                                     <RoundBtn 

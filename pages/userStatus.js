@@ -9,9 +9,10 @@ import BurgerSvg from "../components/BurgerSvg";
 import {Flex, Box} from "reflexbox/styled-components"
 import { BlueH1, BlackH2, BlueH3, Pa } from "../components/StyledComponents/Headings"
 import { SectionBase } from "../components/StyledComponents/Bases";
+import { useBasket } from "../context/BasketContext";
 import { useUser } from "../context/UserContext";
 import { useContext } from "react";
-import { Ul, Li } from "../components/StyledComponents/Lists"
+import { Ul, Li, InlineLi } from "../components/StyledComponents/Lists"
 import Skeleton from "../components/Skeleton"
 
 function UserStatus() {
@@ -26,15 +27,16 @@ function UserStatus() {
     const userId = user ? user.uid : false;
     const userContext = useUser();
     const userName = userContext.userName;
-
+    const basket = useBasket();
   
+
     //Get all the users orders that hasn't been picked up yet
     useEffect(() => {
         if (userId) {
             let ref = firebaseInstance.firestore().collection("orders")
             .where("userId", "==", userId).where("isPickedUp", "==", false)
 
-            ref.onSnapshot((snapshot) => {
+            return ref.onSnapshot((snapshot) => {
 
                 let data = [];
                 snapshot.forEach((doc) => {
@@ -54,7 +56,7 @@ function UserStatus() {
     useEffect(() => {
         if (usersOrders) {
             let ref = firebaseInstance.firestore().collection("orders").where("isPrepared", "==", true)
-            ref.onSnapshot((snapshot) => {
+            return ref.onSnapshot((snapshot) => {
 
                 let data = [];
                 snapshot.forEach((doc) => {
@@ -107,7 +109,7 @@ function UserStatus() {
     }
 
     if (!isAuthenticated) {
-        router.push('/login');
+        router.push('/');
         return <p>Du er ikke logget inn</p>
     }
 
@@ -142,9 +144,26 @@ function UserStatus() {
                                     <Flex variant="card" >
                                         <Box width="50%" p={1}>
                                             <BlueH3 textAlign="left">Bestillingsnummer: {order.orderNumber}</BlueH3>
-                                            <Ul>
+                                            <Ul padding="1.2em">
                                                 {order.orderList.map(item => {
-                                                    return (<Li listStyle="default" key={"listItem" + item.name}>{item.count + " stk " + item.name + " " + item.size.split(",").pop()  }</Li>)
+                                                    
+                                                    let addOns = basket.listAddOns(item.addOns);
+                                                    let mappedAddOns = addOns.map(addOn => {
+                                                        return <InlineLi>{addOn}, </InlineLi>
+                                                    })
+                                                    
+                                                    return (
+                                                    <Li listStyle="default" key={"listItem" + item.name}>
+                                                        {item.count + " stk " + item.name + " " + item.size.split(",").pop()}
+                                                        <Ul>
+                                                            {addOns.length > 0 && (
+                                                                <>
+                                                                <span> med </span>
+                                                                {mappedAddOns}
+                                                                </>
+                                                            )}
+                                                        </Ul>
+                                                    </Li>)
                                                 })}
                                             </Ul>
                                         </Box>

@@ -20,12 +20,15 @@ function Restaurant() {
                 flexDirection="row" 
                 width="100%" 
                 alignItems="flex-start" 
-                justifyContent="space-between">
+                justifyContent="space-around"
+                bgImg='url("/images/dinerChairs.jpg")'
+                minHeight="100vh">
 
-                <SectionBase m="0" width="13em" minHeight="100vh" bgImg='url("/images/dinerChairs.jpg")'></SectionBase>
-                    <StatusList id="ordered" heading="Vi jobber med:"/>
-                    <StatusList id="prepared" heading="Du kan hente:"/>
-                <SectionBase bgPosition="top" m="0" width="13em" height="100vh" bgImg='url("/images/dinerFurniture.jpg")'></SectionBase>
+               
+                <StatusList id="ordered" heading="Vi jobber med:"/>
+                
+                <StatusList id="prepared" heading="Du kan hente:"/>
+                
                 
             </SectionBase>
         </Layout>

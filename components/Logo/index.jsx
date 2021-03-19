@@ -11,7 +11,7 @@ export const Logo = () => {
                     src="/images/logo-01.png"
                     width={130}
                     height={150}
-                    alt={"logo"}
+                    alt="logo"
                 />
             </Link>
         </Box>

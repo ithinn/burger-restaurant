@@ -15,7 +15,7 @@ function Layout( {status, isLoggedIn, children, home, login, register, restauran
             : register ? 
                 <Header  heading="Registrer deg" isUser={false} isCart={false}/>        
             : restaurant ? 
-                <Header isUser={false} isCart={false}/>
+                <Header heading="Bestillinger" isUser={false} isCart={false}/>
             : status ? 
                 <Header isUser={true} isCart={false}/>
             : <Header isUser={false} heading="Bestillinger" isCart={false}/> }

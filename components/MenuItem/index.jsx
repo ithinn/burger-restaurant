@@ -70,7 +70,7 @@ export function MenuItem( {index, isLoggedIn, handleAdd, itemData, sizes} ) {
                         <Select name="size" ref={register}>
     
                             {itemData.sizes.map((size, i) => {
-                               return <option value={[i, size]}>{size}</option>
+                               return <option key={size} value={[i, size]}>{size}</option>
                             })}
 
                         </Select>
@@ -88,8 +88,8 @@ export function MenuItem( {index, isLoggedIn, handleAdd, itemData, sizes} ) {
                             {itemData.addOns.map((addOn, index) => {
                                return (
                                    <Box key={addOn + index}>
-                                        <InvisibleCheckbox ref={register} type="checkbox" name={`addOns[${addOn + index}]`} defaultChecked={false} id={addOn}/>
-                                        <LabelAsButton htmlFor={addOn}>{addOn}</LabelAsButton>
+                                        <InvisibleCheckbox ref={register} type="checkbox" name={`addOns[${addOn}]`} defaultChecked={false} id={itemData.type + addOn}/>
+                                        <LabelAsButton htmlFor={itemData.type + addOn}>{addOn}</LabelAsButton>
                                    </Box>
                                )
                             })}

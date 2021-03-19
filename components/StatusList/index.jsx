@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react"
 import firebaseInstance from "../../config/firebase"
 //---------------------------------------------------------------Style
-import { Box } from "reflexbox/styled-components"
+import { Box, Flex } from "reflexbox/styled-components"
 import { BlackH2, BlueH2, BlueH1 } from "../StyledComponents/Headings"
 import { Ul, Li } from "../StyledComponents/Lists";
 
@@ -34,7 +34,7 @@ function StatusList( {id, heading} ) {
 
     }, []);
 
-    
+    console.log("ORDEREDORDERS", orderedOrders)
     //Get orders that are ready for pickup
     useEffect(() => {
         
@@ -58,17 +58,22 @@ function StatusList( {id, heading} ) {
     }, []);
 
     return(
-        <Box>
-            <BlueH1>{heading}</BlueH1>
+        <Box variant="card" width="44%">
+            <BlackH2>{heading}</BlackH2>
             
-            <Ul>
+            <Ul padding="3em">
+                <Flex>
                 {orderedOrders !== null && id === "ordered" &&(
                     <>
                     {orderedOrders.map((item, index) => {
-                        return 
-                            <Li listStyle="default">
-                                <BlackH2 textAlign="left">{item.orderNumber}</BlackH2>
-                            </Li>
+                        console.log("ITEM", item);
+                        return (
+                            <Flex alignItems="center" justifyContent="center" variant="number">
+                                <Li>
+                                    <BlackH2 textAlign="left">{item.orderNumber}</BlackH2>
+                                </Li>
+                            </Flex>
+                            )  
                     })}
                     </>
                 )}
@@ -76,13 +81,17 @@ function StatusList( {id, heading} ) {
                 {preparedOrders !== null && id === "prepared" &&(
                     <>
                     {preparedOrders.map((item, index) => {
-                        return 
-                            <Li listStyle="default">
-                                <BlackH2 textAlign="left">{item.orderNumber}</BlackH2>
-                            </Li>
+                        return (
+                            <Flex alignItems="center" justifyContent="center" variant="number">
+                                <Li>
+                                    <BlackH2 textAlign="left">{item.orderNumber}</BlackH2>
+                                </Li>
+                            </Flex>
+                            )
                     })}
                     </>
                 )}
+                </Flex>
             </Ul>
         </Box>  
     );
