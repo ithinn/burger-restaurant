@@ -1,7 +1,7 @@
 //------------------------------------------------------------React
 import React from "react"
 import {useBasket} from "../../context/BasketContext";
-//------------------------------------------------------------Styling
+//------------------------------------------------------------Components
 import {Box, Flex} from "reflexbox/styled-components";
 import { Label } from "../StyledComponents/Labels";
 import { Input } from "../StyledComponents/Inputs";

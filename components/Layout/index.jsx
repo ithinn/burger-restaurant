@@ -1,7 +1,7 @@
 import Header from "../Header";
 import Head from "next/head"
 
-function Layout( {status, isLoggedIn, children, home, login, register, restaurant, user} ) {
+function Layout( {status, isLoggedIn, children, home, login, register, restaurant } ) {
     return(
         <>  
             <Head>

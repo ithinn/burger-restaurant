@@ -2,11 +2,11 @@ import styled from "styled-components"
 import {Box, Flex} from "reflexbox/styled-components"
 
 export const HeadingWrapper = styled(Flex)`
-        position: absolute;
-        justify-content: center;
-        width: 100%;
-        margin: 0 auto;
-    `
+    position: absolute;
+    justify-content: center;
+    width: 100%;
+    margin: 0 auto;
+`
 
 export const ImgBase = styled.img`
     width: 100%;
@@ -31,8 +31,8 @@ NavBase.defaultProps = {
     justify: "space-between",
     align: "flex-start",
     position: "none",
-  
 }
+
 
 export const SectionBase = styled(Flex)`
     display: flex;
@@ -61,8 +61,8 @@ SectionBase.defaultProps = {
     zIndices: 0,
     top: "0",
     right: "0"
-    
 }
+
 
 export const LoginBase = styled.section`
     background-image: url("/images/dinerChairs.jpg");
@@ -86,7 +86,6 @@ FormBase.defaultProps = {
     mr: "auto",
     mb: "1em",
     width: "20em",
-    p: 3
-    
+    p: 3   
 }
 

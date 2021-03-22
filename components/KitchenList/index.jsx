@@ -1,9 +1,9 @@
 //---------------------------------------------------------React/Firebase
 import { useState, useEffect } from "react";
 import firebaseInstance from "../../config/firebase";
-//---------------------------------------------------------Style
-import { Flex } from "reflexbox/styled-components" 
+//---------------------------------------------------------Components
 import OrderItem from "../OrderItem";
+import { Flex } from "reflexbox/styled-components" 
 import { BlueH2 } from "../StyledComponents/Headings"
 
 
@@ -11,6 +11,7 @@ function KitchenList({ handleAddOns, toDoFocus, prepFocus}) {
 
     const [orders, setOrders] = useState(null)
 
+    //Realtime listener - filters orders where isPickedUp === false
     useEffect(() => {
 
         let ref = firebaseInstance

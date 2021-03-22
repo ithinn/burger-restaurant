@@ -1,7 +1,7 @@
 //-----------------------------------------------------------React/next
 import { useForm } from "react-hook-form";
 import Image from "next/image"
-//------------------------------------------------------------Style
+//-----------------------------------------------------------Components/Style
 import utilStyles from "../../styles/utils.module.css"
 import { Select } from "../StyledComponents/Inputs";
 import { Label, LabelAsButton } from "../StyledComponents/Labels";
@@ -88,8 +88,16 @@ export function MenuItem( {index, isLoggedIn, handleAdd, itemData, sizes} ) {
                             {itemData.addOns.map((addOn, index) => {
                                return (
                                    <Box key={addOn + index}>
-                                        <InvisibleCheckbox ref={register} type="checkbox" name={`addOns[${addOn}]`} defaultChecked={false} id={itemData.type + addOn}/>
-                                        <LabelAsButton htmlFor={itemData.type + addOn}>{addOn}</LabelAsButton>
+                                        <InvisibleCheckbox 
+                                            ref={register} 
+                                            type="checkbox" 
+                                            name={`addOns[${addOn}]`} 
+                                            defaultChecked={false} 
+                                            id={itemData.type + addOn}/>
+
+                                        <LabelAsButton htmlFor={itemData.type + addOn}>
+                                            {addOn}
+                                        </LabelAsButton>
                                    </Box>
                                )
                             })}

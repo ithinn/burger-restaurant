@@ -20,6 +20,7 @@ export const BlueH1 = styled.h1`
         font-size: ${props => props.theme.fontSizes.lg};
     }
 `
+
 BlueH1.defaultProps = {
     position: "none",
     top: "0",
@@ -36,7 +37,6 @@ export const WhiteH1 = styled(BlueH1)`
 
 
 export const HandH2 = styled.h2`
-
     font-family: ${props => props.theme.fonts.hand};
     font-size: ${props => props.theme.fontSizes.xl};
     color: ${props => props.theme.colors.gray};
@@ -47,7 +47,6 @@ export const HandH2 = styled.h2`
     @media (max-width: 40em) {
         font-size: ${props => props.theme.fontSizes.lg};
     }
-    
 `
 
 export const BlackH2 = styled.h2`
@@ -55,30 +54,29 @@ export const BlackH2 = styled.h2`
     font-size: ${props => props.theme.fontSizes.md};
     color: ${props => props.theme.colors.black};
     text-align: ${props => props.textAlign};
-
 `
 
 BlackH2.defaultProps = {
     textAlign: "center"
 }
 
+
 export const BlueH2 = styled(BlackH2)`
     font-family: ${props => props.theme.fonts.mainFont};
     color: ${props => props.theme.colors.main};
 `
+
 
 export const BlueH3 = styled.h3`
         font-family: ${props => props.theme.fonts.mainFont};
         font-size: ${props => props.theme.fontSizes.sm};
         color: ${props => props.color};
         text-align: ${props => props.textAlign};
-    
 `
 
 BlueH3.defaultProps = {
     textAlign: "center",
     color: "#346f83",
-
 };
 
 
@@ -90,8 +88,8 @@ export const Pa = styled.p`
     color: ${props => props.clr};
     text-align: ${props => props.textAlign};
     font-style: ${props => props.fontStyle};
-
 `
+
 Pa.defaultProps = {
     textAlign: "center",
     clr: "#346f83",

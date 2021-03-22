@@ -1,8 +1,6 @@
-import {Flex} from "reflexbox";
 import { NavBase } from "../StyledComponents/Bases";
-import { Li } from "../StyledComponents/Lists";
 import { Button } from "../StyledComponents/Button";
-import { Link } from "next/link"
+
 function UserNav() {
     return (
         <NavBase
@@ -10,12 +8,7 @@ function UserNav() {
             navHeight="auto"
             position="absolute"
         >
-
-        
-           
             <Button>Logg ut</Button>
-          
-
         </NavBase>
     )
 }

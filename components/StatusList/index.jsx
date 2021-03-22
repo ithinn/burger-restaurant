@@ -1,9 +1,9 @@
-//---------------------------------------------------------------Firebase/React
+//-----------------------------------------------------------------------Firebase/React
 import { useState, useEffect } from "react"
 import firebaseInstance from "../../config/firebase"
-//---------------------------------------------------------------Style
+//-----------------------------------------------------------------------Components
 import { Box, Flex } from "reflexbox/styled-components"
-import { BlackH2, BlueH2, BlueH1 } from "../StyledComponents/Headings"
+import { BlackH2 } from "../StyledComponents/Headings"
 import { Ul, Li } from "../StyledComponents/Lists";
 
 
@@ -11,7 +11,8 @@ function StatusList( {id, heading} ) {
 
     const [orderedOrders, setOrderedOrders] = useState(null);
     const [preparedOrders, setPreparedOrders] = useState(null)
-    
+
+//-----------------------------------------------------------------------Realtime listeners on "orders"
     //Get incoming orders
     useEffect(() => {
         
@@ -34,7 +35,7 @@ function StatusList( {id, heading} ) {
 
     }, []);
 
-    console.log("ORDEREDORDERS", orderedOrders)
+
     //Get orders that are ready for pickup
     useEffect(() => {
         
@@ -57,12 +58,14 @@ function StatusList( {id, heading} ) {
 
     }, []);
 
+//------------------------------------------------------------------------------------Render
+
     return(
         <Box variant="card" width="44%">
             <BlackH2>{heading}</BlackH2>
             
             <Ul padding="3em">
-                <Flex>
+                <Flex height="auto" flexWrap="wrap">
                 {orderedOrders !== null && id === "ordered" &&(
                     <>
                     {orderedOrders.map((item, index) => {

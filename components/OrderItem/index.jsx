@@ -1,9 +1,9 @@
-//-------------------------------------------------------/config/react
+//-------------------------------------------------------/Config/React
 import firebaseInstance from "../../config/firebase"
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useBasket } from "../../context/BasketContext";
-//-------------------------------------------------------/Style
+//-------------------------------------------------------/Components
 import { Button } from "../StyledComponents/Button";
 import { BlueH3, Pa } from "../StyledComponents/Headings"
 import { InlineLi, Ul, Li } from "../StyledComponents/Lists";
@@ -12,7 +12,8 @@ import { Flex, Box } from "reflexbox/styled-components"
 import { Input } from "../StyledComponents/Inputs";
 
 
-function OrderItem( { handleAddOns, orderData} ) {
+function OrderItem( { orderData} ) {
+
     const {
         register, 
         handleSubmit, 
@@ -23,6 +24,8 @@ function OrderItem( { handleAddOns, orderData} ) {
     
     const basket = useBasket();
 
+//----------------------------------------------------------------------------------Functions
+    //Submits form if all checkboxes is checked 
     const onSubmit = async (data, event) =>  {
      
         let id = event.target.id
@@ -41,7 +44,7 @@ function OrderItem( { handleAddOns, orderData} ) {
         }
     }
 
-
+    //Changes state of an order after it is picked up by the customer
     const onDelivery = async (event) => {
    
         let id = event.target.id;
@@ -61,6 +64,7 @@ function OrderItem( { handleAddOns, orderData} ) {
         }
     }
 
+//---------------------------------------------------------------------------------------------Render
     return(
         <Flex variant="card"
             width="20em"
@@ -94,17 +98,20 @@ function OrderItem( { handleAddOns, orderData} ) {
                         return (
                         <Box ml={3}>
                             <input type="hidden" value={orderData.orderId} name="orderId"/>
-                            <Input id={index + item.name} type="checkbox" name={item.type} ref={register({ required: "Du må sjekke alle feltene" })}/>
+                            <Input 
+                                id={index + item.name} 
+                                type="checkbox" 
+                                name={item.type} 
+                                ref={register({ required: "Du må sjekke alle feltene" })}/>
+
                             <Label htmlFor={index + item.name} ml={3}>
                                 {item.size.split(",").pop()} {item.name}
                                 <Ul ml="2em" >
-                                {addOns.length > 0 && (
-                                    <>
-                                  
-                                    {mappedAddOns}
-                                  
-                                    </> )}
-
+                                    {addOns.length > 0 && (
+                                        <>
+                                        {mappedAddOns}
+                                        </> 
+                                    )}
                                 </Ul>
                                 
                             </Label>
@@ -112,19 +119,18 @@ function OrderItem( { handleAddOns, orderData} ) {
                             {errors[item.type] && (
                                 <Pa clr="#a62d2d" fontStyle="italic" textAlign="left">
                                     {errors[item.type].message}
-                                </Pa>)}
-                            
+                                </Pa>
+                            )}
                         </Box>
                         )
-
-                    })}
+                    }
+                    )}
                     
                     <Button type="submit">Ferdig</Button>
                 </form>
                 </Li>
             )}
             </Ul>
-
 
 
             {orderData.isPrepared && (
@@ -152,26 +158,19 @@ function OrderItem( { handleAddOns, orderData} ) {
                                     </>
                                 )}
                                 </Li>
-                            </Ul>
-                            
-                           
+                            </Ul>  
                         </Box>
-
                     )
+                    })}
 
-                })}
-
-                <Button width="93%" id={orderData.id+"Btn"} handleClick={event => onDelivery(event)}>Utlevert</Button>
-          
-                      
-                
-                
+                    <Button 
+                        width="93%" 
+                        id={orderData.id+"Btn"} 
+                        handleClick={event => 
+                        onDelivery(event)}>Utlevert
+                    </Button>
                 </Box>
-
-                
             )}
-
-
         </Flex>
     )
 }
