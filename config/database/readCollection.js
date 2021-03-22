@@ -1,22 +1,29 @@
-import firebaseInstance from "../../config/firebase";
+import firebaseInstance from "../firebase";
 
 
 async function readCollection(text) {
+
+    try {
+        const collection = await firebaseInstance.firestore().collection(text)
+        const readCollection = await collection.get()
     
-    const collection = await firebaseInstance.firestore().collection(text)
-    const readCollection = await collection.get()
-
-
-    let returnArray = [];
-
-    readCollection.forEach(item => {
-      returnArray.push({
-        id: item.id,
-        ...item.data()
-      })
-    })
-  
-    return(returnArray);
+    
+        let returnArray = [];
+    
+        readCollection.forEach(item => {
+          returnArray.push({
+            id: item.id,
+            ...item.data()
+          })
+        })
+      
+        return(returnArray);
+    } 
+    catch(error) {
+        console.log(error);
+    }
+    
+    
 
 }
 

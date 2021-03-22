@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import { useBasket } from "../context/BasketContext";
 import { useAuth } from "../config/auth";
 import { useUser } from "../context/UserContext";
-import readCollection from "./database/readCollection";
+import readCollection from "../config/database/readCollection";
 import firebaseInstance from "firebase";
 //------------------------------------------------------------------------------Components
 import Layout from "../components/Layout";
