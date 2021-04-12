@@ -1,4 +1,4 @@
-School project: Create an ordering system for a burger restaurant using Next.js, Firebase and realtime-updates between the kitchen view, the restaurant view and the customers view.
+
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
